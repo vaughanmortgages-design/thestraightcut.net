@@ -1,23 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Straight Cut Guide — Shop Smarter. Live Better.</title>
-<meta name="description" content="The Straight Cut Guide is a premium affiliate shopping guide for Amazon finds, eBay deals, travel, pets, cars, home, tech, gifts and everyday essentials.">
-<style>
-:root{--bg:#111;--card:#1a1a1a;--gold:#f5b620;--copper:#c9783a;--cream:#fff7e8;--muted:#bdb8ad;--line:rgba(255,255,255,.14)}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--cream);font-family:Inter,Arial,sans-serif}a{color:inherit}.top{position:sticky;top:0;z-index:5;background:rgba(13,13,13,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{max-width:1240px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:18px 22px}.logo{font-family:Georgia,serif;font-size:30px;font-weight:900;text-decoration:none;letter-spacing:-.04em}.logo span{color:var(--gold)}.links{display:flex;gap:18px;font-size:14px;font-weight:800}.links a{text-decoration:none;color:#eee}.hero{min-height:86vh;display:grid;align-items:end;background:linear-gradient(90deg,rgba(0,0,0,.86),rgba(0,0,0,.44)),url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2200&q=80') center/cover}.wrap{max-width:1240px;margin:auto;padding:70px 22px}.kicker{display:inline-block;background:var(--gold);color:#111;font-weight:950;padding:9px 14px;border-radius:999px;margin-bottom:18px}.hero h1{font-family:Georgia,serif;font-size:clamp(54px,9vw,116px);line-height:.86;letter-spacing:-.07em;margin:0 0 20px;max-width:920px}.hero p{font-size:clamp(18px,2vw,24px);line-height:1.45;color:#e8e1d3;max-width:720px}.buttons{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:14px 22px;border-radius:999px;text-decoration:none;font-weight:950;border:1px solid rgba(255,255,255,.2)}.btn.gold{background:var(--gold);color:#111;border:0}.btn.white{background:var(--cream);color:#111}.section{padding:78px 22px}.head{max-width:1240px;margin:0 auto 30px;display:flex;justify-content:space-between;align-items:end;gap:20px}.head h2{font-family:Georgia,serif;font-size:clamp(36px,5vw,70px);letter-spacing:-.05em;line-height:.95;margin:0}.head p{color:var(--muted);max-width:520px}.grid{max-width:1240px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:28px;overflow:hidden;min-height:260px;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.18)}.card .img{height:150px;background:#222 center/cover}.card .body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}.tag{color:var(--gold);font-weight:950;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.card h3{font-size:22px;margin:0}.card p{color:var(--muted);line-height:1.45;margin:0;flex:1}.card a{background:var(--gold);color:#111;border-radius:999px;text-align:center;padding:12px 14px;text-decoration:none;font-weight:950;margin-top:10px}.feature{background:#090909}.split{max-width:1240px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}.panel{min-height:420px;border-radius:34px;overflow:hidden;position:relative;background:#222 center/cover}.panel:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.78))}.panel div{position:absolute;left:28px;right:28px;bottom:28px}.panel h3{font-family:Georgia,serif;font-size:44px;line-height:.98;margin:8px 0}.panel p{color:#e8e1d3}.pricebar{background:var(--gold);color:#111;padding:16px 22px;font-weight:950;overflow:hidden;white-space:nowrap}.footer{background:#050505;border-top:1px solid var(--line);padding:40px 22px;color:#aaa}.footer .wrap2{max-width:1240px;margin:auto;display:flex;justify-content:space-between;gap:20px}.notice{font-size:13px;color:#aaa;max-width:720px}@media(max-width:900px){.links{display:none}.grid{grid-template-columns:1fr}.split{grid-template-columns:1fr}.hero{min-height:78vh}.footer .wrap2{display:block}.card .img{height:190px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Straight Cut Guide | Shop Smarter. Save More. Every Day.</title>
+  <meta name="description" content="Discover premium shopping guides, trending products, deal roundups, Amazon best sellers, eBay finds, and curated gift picks at The Straight Cut Guide.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:title" content="The Straight Cut Guide | Shop Smarter. Save More. Every Day.">
+  <meta property="og:description" content="Explore today's deals, trending products, and curated shopping guides in a premium ecommerce magazine experience.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1800&q=80">
+  <meta name="theme-color" content="#121212">
+  <style>
+    :root {
+      --bg: #121212;
+      --bg-soft: #1a1a1a;
+      --card: #1f1f1f;
+      --text: #f7f3ea;
+      --muted: #c8c1b3;
+      --line: rgba(255,255,255,.14);
+      --gold: #d8b36c;
+      --gold-strong: #f4c978;
+      --white: #fff;
+      --shadow: 0 20px 48px rgba(0,0,0,.36);
+      --radius: 24px;
+      --container: min(1320px, 100% - 2.5rem);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    .ticker {
+      background: linear-gradient(90deg, #c7993f, #f0cc88, #c7993f);
+      color: #181818;
+      font-weight: 800;
+      font-size: .875rem;
+      padding: .55rem 1rem;
+      text-align: center;
+      letter-spacing: .02em;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(18,18,18,.9);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-wrap {
+      width: var(--container);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .85rem 0;
+    }
+
+    .brand {
+      text-decoration: none;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      font-size: clamp(1.25rem, 1.6vw, 1.7rem);
+      white-space: nowrap;
+    }
+
+    .brand span { color: var(--gold-strong); }
+
+    .quick-nav {
+      display: flex;
+      gap: .5rem;
+      overflow: auto;
+      scrollbar-width: none;
+      white-space: nowrap;
+      padding-bottom: .2rem;
+    }
+
+    .quick-nav::-webkit-scrollbar { display: none; }
+
+    .quick-nav a {
+      text-decoration: none;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #f4e8d3;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .4rem .75rem;
+      transition: .25s ease;
+    }
+
+    .quick-nav a:hover,
+    .quick-nav a:focus-visible {
+      border-color: var(--gold);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: end;
+      background:
+        linear-gradient(110deg, rgba(0,0,0,.88) 26%, rgba(0,0,0,.5) 60%, rgba(0,0,0,.38) 100%),
+        url("https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=2300&q=80") center / cover no-repeat;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      width: var(--container);
+      margin: 0 auto;
+      padding: clamp(4rem, 9vh, 7rem) 0 clamp(2.5rem, 5vh, 4rem);
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(216,179,108,.16);
+      border: 1px solid rgba(216,179,108,.44);
+      color: #f9e6be;
+      border-radius: 999px;
+      padding: .45rem .9rem;
+      font-size: .78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 13ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 7.8vw, 5.7rem);
+      line-height: .92;
+      letter-spacing: -.05em;
+      text-wrap: balance;
+    }
+
+    .hero p {
+      margin: 1.2rem 0 0;
+      max-width: 62ch;
+      color: #eee2cd;
+      font-size: clamp(1rem, 1.9vw, 1.35rem);
+    }
+
+    .hero-cta {
+      margin-top: 1.7rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: .78rem 1.2rem;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      transition: .22s ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+
+    .btn-primary {
+      background: var(--gold-strong);
+      color: #111;
+      border-color: transparent;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+
+    .section {
+      padding: clamp(2.8rem, 7vw, 5.5rem) 0;
+    }
+
+    .section-wrap {
+      width: var(--container);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      letter-spacing: -.03em;
+      line-height: .96;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 60ch;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+
+    .card {
+      grid-column: span 12;
+      background: linear-gradient(170deg, #242424, #1a1a1a);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: clip;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transform: translateY(0);
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+    }
+
+    .card:hover,
+    .card:focus-within {
+      transform: translateY(-6px);
+      border-color: rgba(216,179,108,.55);
+      box-shadow: 0 28px 58px rgba(0,0,0,.45);
+    }
+
+    .card figure {
+      margin: 0;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: #0f0f0f;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.01);
+      transition: transform .42s ease;
+    }
+
+    .card:hover img,
+    .card:focus-within img { transform: scale(1.06); }
+
+    .card-body {
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: .65rem;
+      flex: 1;
+    }
+
+    .eyebrow {
+      color: #f7d9a1;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .72rem;
+      font-weight: 800;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+      line-height: 1.2;
+      text-wrap: balance;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .94rem;
+      flex: 1;
+    }
+
+    .card .btn {
+      margin-top: .35rem;
+      width: fit-content;
+      min-width: 132px;
+    }
+
+    .feature-band {
+      background: #0d0d0d;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 2.2rem 0 2.7rem;
+      background: #0b0b0b;
+    }
+
+    .footer-wrap {
+      width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .footer small { color: var(--muted); }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .85rem;
+      color: #f4e8d3;
+      font-size: .95rem;
+    }
+
+    @media (min-width: 700px) {
+      .card { grid-column: span 6; }
+    }
+
+    @media (min-width: 1060px) {
+      .card { grid-column: span 4; }
+      .header-wrap { gap: 1.2rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="pricebar">🔥 Today on The Straight Cut: Amazon finds · eBay deals · Gifts for him · Gifts for her · Pets · Cars · Travel · Deals under $20 · Shop smarter, not harder.</div>
-<header class="top"><nav class="nav"><a class="logo" href="/">The Straight <span>Cut</span> Guide</a><div class="links"><a href="#amazon">Amazon</a><a href="#ebay">eBay</a><a href="#under20">Under $20</a><a href="#travel">Travel</a><a href="#gumroad">Digital</a></div></nav></header>
-<section class="hero"><div class="wrap"><span class="kicker">Click. Shop. Save.</span><h1>Shop Smarter. Live Better.</h1><p>A premium affiliate shopping guide for Amazon finds, eBay deals, travel, pets, cars, home, tech, gifts and everyday essentials.</p><div class="buttons"><a class="btn gold" href="#amazon">Explore Amazon Picks</a><a class="btn white" href="#under20">Deals Under $20</a></div></div></section>
-<section class="section" id="amazon"><div class="head"><h2>Amazon suggestions.</h2><p>Fast-moving finds, seasonal picks, gift ideas and everyday upgrades worth checking first.</p></div><div class="grid"><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Amazon</span><h3>Trending Finds</h3><p>Popular items people are buying right now across home, tech and lifestyle.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Amazon</a></div></article><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Kitchen</span><h3>Kitchen Upgrades</h3><p>Smart tools, organizers, coffee gear and daily-use products.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=kitchen+gadgets&tag=straightcutgu-20">Shop Kitchen</a></div></article><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Tech</span><h3>Tech Essentials</h3><p>Chargers, desk gear, smart home picks and useful gadgets.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=tech+gadgets&tag=straightcutgu-20">Shop Tech</a></div></article><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Office</span><h3>Work Setup</h3><p>Office chairs, monitors, keyboards, lighting and productivity tools.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+office&tag=straightcutgu-20">Shop Office</a></div></article></div></section>
-<section class="section feature"><div class="split"><div class="panel" id="ebay" style="background-image:url('https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1300&q=80')"><div><span class="tag">eBay Deals</span><h3>Millions of deals. One trusted guide.</h3><p>Refurbished tech, collectibles, auto gear, parts, fashion and hard-to-find products.</p><a class="btn gold" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Browse eBay Deals</a></div></div><div class="panel" style="background-image:url('https://images.unsplash.com/photo-1577415124269-fc1140a69e91?auto=format&fit=crop&w=1300&q=80')"><div><span class="tag">Sales Special</span><h3>Deals under $20.</h3><p>Small upgrades, gifts, accessories and useful everyday products that do not break the budget.</p><a class="btn gold" href="#under20">See Under $20</a></div></div></div></section>
-<section class="section" id="under20"><div class="head"><h2>Shop by price.</h2><p>Quick buying sections for people who want useful ideas without overthinking it.</p></div><div class="grid"><article class="card"><div class="body"><span class="tag">Budget</span><h3>Under $20</h3><p>Impulse-friendly finds, gifts, organizers, gadgets and household helpers.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=deals+under+20&tag=straightcutgu-20">Shop Under $20</a></div></article><article class="card"><div class="body"><span class="tag">Value</span><h3>Under $50</h3><p>Better gifts, small appliances, tech accessories and practical upgrades.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=deals+under+50&tag=straightcutgu-20">Shop Under $50</a></div></article><article class="card"><div class="body"><span class="tag">Gift Guide</span><h3>For Him</h3><p>Tools, tech, car accessories, grilling, office gear and everyday carry.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=gifts+for+men&tag=straightcutgu-20">Shop For Him</a></div></article><article class="card"><div class="body"><span class="tag">Gift Guide</span><h3>For Her</h3><p>Beauty, home, travel, wellness, tech, fashion and thoughtful gifts.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=gifts+for+women&tag=straightcutgu-20">Shop For Her</a></div></article></div></section>
-<section class="section"><div class="head"><h2>Pets, cars & travel.</h2><p>Real shopping categories people come back to again and again.</p></div><div class="grid"><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Pets</span><h3>Dogs & Cats</h3><p>Pet beds, toys, bowls, travel gear, grooming and smart pet products.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=pet+supplies&tag=straightcutgu-20">Shop Pets</a></div></article><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Cars</span><h3>Cars & Garage</h3><p>Dash cams, detailing, emergency kits, road trip gear and garage essentials.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=car+accessories&tag=straightcutgu-20">Shop Cars</a></div></article><article class="card" id="travel"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Travel</span><h3>Hotels & Stays</h3><p>Hotels.com, VRBO-style stays, luggage, packing gear and trip essentials.</p><a target="_blank" rel="sponsored nofollow" href="https://www.hotels.com/">Plan Travel</a></div></article><article class="card"><div class="img" style="background-image:url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80')"></div><div class="body"><span class="tag">Home</span><h3>Home & Storage</h3><p>Organization, garage storage, kitchen systems and space-saving finds.</p><a target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+organization&tag=straightcutgu-20">Shop Home</a></div></article></div></section>
-<section class="section feature" id="gumroad"><div class="head"><h2>Digital products.</h2><p>Original Straight Cut guides and downloads for contractors, homeowners and people trying to move faster.</p></div><div class="grid"><article class="card"><div class="body"><span class="tag">Gumroad</span><h3>Claude for Contractors</h3><p>A practical AI workflow guide for contractors and trades.</p><a target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">View Store</a></div></article><article class="card"><div class="body"><span class="tag">Gumroad</span><h3>Kitchen Edition</h3><p>CAD $4.99 kitchen-focused guide. Description and file verification pending.</p><a target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">View Product</a></div></article><article class="card"><div class="body"><span class="tag">Gumroad</span><h3>Bank Said No</h3><p>CAD $4.99 guide for people looking at next-step options after rejection.</p><a target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">View Product</a></div></article><article class="card"><div class="body"><span class="tag">Disclosure</span><h3>Affiliate Notice</h3><p>Some links are affiliate links. We may earn a commission at no extra cost to you.</p><a href="affiliate-disclosure.html">Read Disclosure</a></div></article></div></section>
-<footer class="footer"><div class="wrap2"><div><b>The Straight Cut Guide</b><p class="notice">Affiliate Disclosure: Some links on this website are affiliate links. We may earn a commission if you purchase or apply through those links, at no additional cost to you.</p></div><div><a href="affiliate-disclosure.html">Affiliate Disclosure</a> · <a href="privacy-policy.html">Privacy</a> · <a href="terms-of-use.html">Terms</a> · <a href="contact.html">Contact</a></div></div></footer>
+  <div class="ticker">SHOPPING • DEALS • SAVINGS • DISCOVERY • Curated every day for faster, smarter shopping</div>
+
+  <header class="site-header">
+    <div class="header-wrap">
+      <a class="brand" href="/">The Straight <span>Cut</span> Guide</a>
+      <nav class="quick-nav" aria-label="Primary">
+        <a href="#todays-deals">Today's Deals</a>
+        <a href="#under-20">Under $20</a>
+        <a href="#trending">Trending</a>
+        <a href="#best-sellers">Best Sellers</a>
+        <a href="#ebay-finds">eBay Finds</a>
+        <a href="#new-arrivals">New Arrivals</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <span class="hero-kicker">Premium online shopping destination</span>
+        <h1 id="hero-title">SHOP SMARTER.<br>SAVE MORE.<br>EVERY DAY.</h1>
+        <p>Discover the internet's best products, trending deals, gift ideas and shopping guides—all in one place.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">SHOP AMAZON</a>
+          <a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">SHOP EBAY</a>
+          <a class="btn btn-secondary" href="#todays-deals">TODAY'S DEALS</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="todays-deals">
+      <div class="section-wrap">
+        <div class="section-head">
+          <h2>Today's Deals</h2>
+          <p>Daily picks from Amazon and eBay with practical buys, hot categories, and quick-win discounts.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <figure><img loading="eager" fetchpriority="high" src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=80" alt="Modern logistics center with parcel sorting lines"></figure>
+            <div class="card-body">
+              <span class="eyebrow">Deal Roundup</span>
+              <h3>Top daily savings in every category</h3>
+              <p>Start with the broad Amazon storefront and quickly jump into live offers and trending markdowns.</p>
+              <a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a>
+            </div>
+          </article>
+          <article class="card">
+            <figure><img loading="lazy" src="https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1400&q=80" alt="Warehouse shelves stacked with packaged products"></figure>
+            <div class="card-body">
+              <span class="eyebrow">Value Finds</span>
+              <h3>Fresh picks under $20</h3>
+              <p>Impulse-friendly accessories, kitchen wins, and useful upgrades that stay budget friendly.</p>
+              <a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=deals+under+20&tag=straightcutgu-20">Shop Now</a>
+            </div>
+          </article>
+          <article class="card">
+            <figure><img loading="lazy" src="https://images.unsplash.com/photo-1529078155058-5d716f45d604?auto=format&fit=crop&w=1400&q=80" alt="Delivery van loaded with ecommerce parcels"></figure>
+            <div class="card-body">
+              <span class="eyebrow">Market Spotlight</span>
+              <h3>eBay flash opportunities</h3>
+              <p>Explore deals across refurbished tech, rare finds, and everyday essentials.</p>
+              <a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section feature-band" id="under-20">
+      <div class="section-wrap">
+        <div class="section-head">
+          <h2>Deals Under $20</h2>
+          <p>Small spend, high value. Find practical products that solve daily needs without overspending.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <figure><img loading="lazy" src="https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=1400&q=80" alt="Shopping cart in modern retail aisle"></figure>
+            <div class="card-body"><span class="eyebrow">Budget Buys</span><h3>Everyday upgrades under $20</h3><p>Low-cost picks for desk setups, kitchen prep, travel organization and home cleanup.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=deals+under+20&tag=straightcutgu-20">Shop Now</a></div>
+          </article>
+          <article class="card">
+            <figure><img loading="lazy" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80" alt="Cooking tools arranged on bright kitchen counter"></figure>
+            <div class="card-body"><span class="eyebrow">Kitchen Deals</span><h3>Prep and storage favorites</h3><p>Discover compact gadgets and storage helpers that make meal prep faster and easier.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=kitchen+gadgets&tag=straightcutgu-20">Shop Now</a></div>
+          </article>
+          <article class="card">
+            <figure><img loading="lazy" src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80" alt="Home office accessories on wooden desk"></figure>
+            <div class="card-body"><span class="eyebrow">Workspace</span><h3>Affordable office essentials</h3><p>Grab practical office accessories and productivity boosters at wallet-friendly prices.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+office&tag=straightcutgu-20">Shop Now</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="trending">
+      <div class="section-wrap">
+        <div class="section-head"><h2>Trending Products</h2><p>High-interest categories shoppers are actively searching and buying this week.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1400&q=80" alt="Latest consumer electronics arranged on table"></figure><div class="card-body"><span class="eyebrow">Electronics</span><h3>Top-rated tech picks</h3><p>Chargers, smart devices and performance gadgets people keep adding to cart.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=tech+gadgets&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1400&q=80" alt="Popular products featured in upscale store display"></figure><div class="card-body"><span class="eyebrow">Popular Picks</span><h3>What's trending right now</h3><p>From lifestyle upgrades to home products, this section spotlights momentum items.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1577415124269-fc1140a69e91?auto=format&fit=crop&w=1400&q=80" alt="Shoppers carrying packages in urban district"></figure><div class="card-body"><span class="eyebrow">eBay Trend Watch</span><h3>New buyer activity on eBay</h3><p>Find inventory shifts, collector demand, and timely category opportunities.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section feature-band" id="best-sellers">
+      <div class="section-wrap">
+        <div class="section-head"><h2>Amazon Best Sellers</h2><p>Dependable categories with repeat purchases and strong social proof.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=1400&q=80" alt="Customer receiving ecommerce package at doorstep"></figure><div class="card-body"><span class="eyebrow">Best Seller List</span><h3>Amazon best-selling picks</h3><p>Browse broad bestseller categories to find products backed by strong buyer demand.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1400&q=80" alt="Home storage and organization products"></figure><div class="card-body"><span class="eyebrow">Home</span><h3>Best-selling home organization</h3><p>Storage systems, utility products and daily-use home essentials.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+organization&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80" alt="Car detailing products in garage scene"></figure><div class="card-body"><span class="eyebrow">Automotive</span><h3>Top auto accessories</h3><p>Road-ready gear and practical upgrades for drivers and DIY garages.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=car+accessories&tag=straightcutgu-20">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ebay-finds">
+      <div class="section-wrap">
+        <div class="section-head"><h2>eBay Finds</h2><p>Hard-to-find products, auction opportunities, and value-driven listings to watch.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1400&q=80" alt="Parcel warehouse with sorting racks"></figure><div class="card-body"><span class="eyebrow">eBay Picks</span><h3>Curated finds worth watching</h3><p>Explore smart buys from multiple categories with active demand and broad selection.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1400&q=80" alt="Refurbished electronics and accessories on table"></figure><div class="card-body"><span class="eyebrow">Refurbished</span><h3>Tech deals with strong value</h3><p>Great for budget-conscious shoppers looking for quality electronics and accessories.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80" alt="Gift shopping bags and retail displays"></figure><div class="card-body"><span class="eyebrow">Seasonal Finds</span><h3>Great timing on specialty inventory</h3><p>Tap into category trends and time-sensitive opportunities from trusted sellers.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section feature-band" id="new-arrivals">
+      <div class="section-wrap">
+        <div class="section-head"><h2>New Arrivals</h2><p>Fresh inventory and latest launches across practical categories shoppers care about most.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1400&q=80" alt="Online order fulfillment in modern warehouse"></figure><div class="card-body"><span class="eyebrow">Latest Drops</span><h3>Recently added online picks</h3><p>Stay ahead with newly listed products and recently expanded category options.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1400&q=80" alt="Consumer electronics on modern shelf display"></figure><div class="card-body"><span class="eyebrow">Tech Launches</span><h3>New electronics releases</h3><p>See fast-moving gadgets and accessories being added to top shopping lists.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=tech+gadgets&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=1400&q=80" alt="Home decor and storage products in modern room"></figure><div class="card-body"><span class="eyebrow">Home Refresh</span><h3>New home and kitchen favorites</h3><p>Explore useful kitchen and home additions that keep routines simple and efficient.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=kitchen+gadgets&tag=straightcutgu-20">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="section-wrap">
+        <div class="section-head"><h2>Shop by Category</h2><p>Navigate quickly through priority categories: Home, Kitchen, Electronics, Tools, Automotive, Pets, Travel, and curated gift guides.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1493666438817-866a91353ca9?auto=format&fit=crop&w=1400&q=80" alt="Modern home interior with organized shelves"></figure><div class="card-body"><span class="eyebrow">Home</span><h3>Home essentials and organization</h3><p>Declutter your space with practical products for better daily flow.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+organization&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1400&q=80" alt="Kitchen tools arranged on countertop"></figure><div class="card-body"><span class="eyebrow">Kitchen</span><h3>Kitchen prep and smart tools</h3><p>Cook faster with compact tools, daily-use gadgets, and easy storage.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=kitchen+gadgets&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1400&q=80" alt="Electronics workspace with laptop and accessories"></figure><div class="card-body"><span class="eyebrow">Electronics</span><h3>Performance tech and accessories</h3><p>Smart picks for office setups, charging, connectivity, and productivity.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=tech+gadgets&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=1400&q=80" alt="Hand tools organized in workshop"></figure><div class="card-body"><span class="eyebrow">Tools</span><h3>Must-have tools for projects</h3><p>Reliable picks for maintenance, assembly, repairs, and workshop use.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+office&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&q=80" alt="Automotive detailing and driving accessories"></figure><div class="card-body"><span class="eyebrow">Automotive</span><h3>Road-ready auto accessories</h3><p>Useful upgrades for comfort, safety, and cleaner daily driving.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=car+accessories&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=1400&q=80" alt="Happy dog with modern pet accessories"></figure><div class="card-body"><span class="eyebrow">Pets</span><h3>Pet comfort and travel gear</h3><p>Favorite products for feeding, rest, play, transport, and routines.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=pet+supplies&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80" alt="Traveler planning trip with suitcase and phone"></figure><div class="card-body"><span class="eyebrow">Travel</span><h3>Trips, stays, and travel planning</h3><p>Plan your next getaway and browse hotel options for smart travel value.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.hotels.com/">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1400&q=80" alt="Gift wrapped packages and seasonal decor"></figure><div class="card-body"><span class="eyebrow">Gifts For Him</span><h3>Tools, tech, and practical upgrades</h3><p>Gift ideas for birthdays, holidays, and milestone occasions.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=gifts+for+men&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80" alt="Elegant gift items and accessories on table"></figure><div class="card-body"><span class="eyebrow">Gifts For Her</span><h3>Style, wellness, and home favorites</h3><p>Thoughtful gift picks for celebrations, surprises, and seasonal moments.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=gifts+for+women&tag=straightcutgu-20">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section feature-band" id="seasonal">
+      <div class="section-wrap">
+        <div class="section-head"><h2>Back To School • Prime Day • Holiday Deals • Editor's Picks</h2><p>Seasonal campaigns and editorial selections that help shoppers find value quickly.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80" alt="Student shopping supplies for back to school"></figure><div class="card-body"><span class="eyebrow">Back To School</span><h3>Study-ready essentials</h3><p>Organizers, desk tools, electronics and practical supplies for school prep.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/s?k=home+office&tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=80" alt="Online checkout during major deal event"></figure><div class="card-body"><span class="eyebrow">Prime Day</span><h3>Big-event savings strategy</h3><p>Track high-volume promotions and move quickly on categories with steep discounts.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1400&q=80" alt="Holiday gift shopping with decorated packages"></figure><div class="card-body"><span class="eyebrow">Holiday Deals</span><h3>Seasonal gift and home savings</h3><p>Holiday-ready shopping picks for gifting, hosting, and festive upgrades.</p><a class="btn btn-secondary" target="_blank" rel="sponsored nofollow" href="https://www.ebay.ca/">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1400&q=80" alt="Editor selecting products for magazine style shopping guide"></figure><div class="card-body"><span class="eyebrow">Editor's Picks</span><h3>Curated best-of selections</h3><p>High-interest products chosen for value, quality, and everyday usefulness.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://www.amazon.ca/?tag=straightcutgu-20">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="digital-guides">
+      <div class="section-wrap">
+        <div class="section-head"><h2>Digital Guides</h2><p>Original digital products from The Straight Cut Guide for practical, action-oriented learning.</p></div>
+        <div class="cards">
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1400&q=80" alt="Professional reviewing digital guide on tablet"></figure><div class="card-body"><span class="eyebrow">Gumroad</span><h3>Claude for Contractors</h3><p>A practical AI workflow guide built for contractors and trades professionals.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1400&q=80" alt="Kitchen planning notes beside laptop and coffee"></figure><div class="card-body"><span class="eyebrow">Gumroad</span><h3>Kitchen Edition</h3><p>Focused guidance for kitchen planning, decisions, and practical renovation prep.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">Shop Now</a></div></article>
+          <article class="card"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=80" alt="Financial planning documents on desk"></figure><div class="card-body"><span class="eyebrow">Gumroad</span><h3>Bank Said No</h3><p>A practical guide covering smart next-step options and planning after credit rejection.</p><a class="btn btn-primary" target="_blank" rel="sponsored nofollow" href="https://straightcut.gumroad.com">Shop Now</a></div></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-wrap">
+      <div>
+        <strong>The Straight Cut Guide</strong><br>
+        <small>Affiliate Disclosure: Some links on this website are affiliate links. We may earn a commission if you purchase through those links, at no additional cost to you.</small>
+      </div>
+      <nav class="footer-links" aria-label="Legal links">
+        <a href="affiliate-disclosure.html">Affiliate Disclosure</a>
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-of-use.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>
