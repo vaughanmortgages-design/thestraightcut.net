@@ -12,11 +12,11 @@
 <meta property="og:description" content="Expert mortgage advice for Vaughan, York Region and the Greater Toronto Area. Renewals, first-time buyers, refinancing, self-employed and commercial mortgages.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://thestraightcut.net/">
-<meta property="og:image" content="https://thestraightcut.net/assets/headshot.jpg">
+<meta property="og:image" content="https://thestraightcut.net/assets/logo.svg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vaughan Mortgage Group — Mortgage Agent Level 2">
 <meta name="twitter:description" content="Expert mortgage advice for Vaughan, York Region and the Greater Toronto Area.">
-<meta name="twitter:image" content="https://thestraightcut.net/assets/headshot.jpg">
+<meta name="twitter:image" content="https://thestraightcut.net/assets/logo.svg">
 <link rel="canonical" href="https://thestraightcut.net/">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/mortgage.css">
@@ -30,7 +30,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a href="/" class="vmg-logo" aria-label="Vaughan Mortgage Group homepage">
-      <img src="assets/logo.svg" alt="Vaughan Mortgage Group" class="vmg-logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+      <img src="assets/logo.svg" alt="Vaughan Mortgage Group" class="vmg-logo-img" data-logo-fallback>
       <span class="vmg-logo-text" style="display:none">Vaughan <em>Mortgage Group</em></span>
     </a>
     <nav class="nav-links" aria-label="Main navigation">
@@ -349,7 +349,7 @@
     <div class="vmg-footer-grid">
       <div class="footer-brand">
         <a href="/" class="vmg-logo" aria-label="Vaughan Mortgage Group">
-          <img src="assets/logo.svg" alt="Vaughan Mortgage Group" class="vmg-logo-img vmg-logo-sm" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+          <img src="assets/logo.svg" alt="Vaughan Mortgage Group" class="vmg-logo-img vmg-logo-sm" data-logo-fallback>
           <span class="vmg-logo-text" style="display:none">Vaughan <em>Mortgage Group</em></span>
         </a>
         <p style="margin-top:14px">Licensed Mortgage Agent Level 2 serving Vaughan, York Region and the Greater Toronto Area.</p>
@@ -384,5 +384,16 @@
 </footer>
 
 <script src="assets/site.js"></script>
+<script>
+(function(){
+  document.querySelectorAll('[data-logo-fallback]').forEach(function(img){
+    img.addEventListener('error',function(){
+      img.style.display='none';
+      var fallback=img.nextElementSibling;
+      if(fallback)fallback.style.display='inline';
+    });
+  });
+})();
+</script>
 </body>
 </html>

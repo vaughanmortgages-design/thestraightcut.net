@@ -367,3 +367,8 @@ a.vmg-contact-item:hover { border-color:var(--gold); background:rgba(245,182,32,
   .vmg-footer-grid { grid-template-columns: 1fr; }
   .vmg-logo-img { height:36px; }
 }
+
+/* ── Headshot placeholder (shown until actual image is dropped in) ── */
+.vmg-headshot, .vmg-about-frame img {
+  background: linear-gradient(160deg, #1e1e1e 0%, #2a2a2a 50%, #1a1a1a 100%);
+}
