@@ -90,4 +90,22 @@
   document.querySelectorAll('[data-current-year]').forEach(function(node){
     node.textContent=String(new Date().getFullYear());
   });
+
+  // Point the injected "Latest Post" bar (sc-blog-snippet) at the on-site article
+  // instead of the retired external URL. The snippet is injected after this script,
+  // so run once the document has finished parsing.
+  function fixBlogBar(){
+    document.querySelectorAll('.sc-blog-bar a').forEach(function(link){
+      var href=link.getAttribute('href')||'';
+      if(href.indexOf('/kitchen-upgrades-that-get-used.html')!==-1)return;
+      if(href.indexOf('fascinating-kheer')!==-1||/\.netlify\.app/.test(href)){
+        link.setAttribute('href','/kitchen-upgrades-that-get-used.html');
+      }
+    });
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',fixBlogBar);
+  }else{
+    fixBlogBar();
+  }
 })();
