@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore — The Straight Cut</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0d0d0d;
+    --card:#141414;
+    --border:#222;
+    --gold:#C9A84C;
+    --orange:#E87722;
+    --teal:#1A7A8A;
+    --white:#f0f0f0;
+    --dim:#888;
+  }
+  body{background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 40px;border-bottom:1px solid var(--border)}
+  .logo{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none;font-weight:600}
+  .nav-links{display:flex;gap:28px}
+  .nav-links a{color:var(--dim);font-size:13px;text-decoration:none;letter-spacing:1px;text-transform:uppercase;transition:color .2s}
+  .nav-links a:hover,.nav-links a.active{color:var(--white)}
+
+  /* HERO */
+  .hero{text-align:center;padding:72px 40px 56px}
+  .hero-label{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+  .hero h1{font-size:clamp(32px,5vw,54px);font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:16px}
+  .hero p{font-size:15px;color:var(--dim);max-width:500px;margin:0 auto;line-height:1.7}
+
+  /* FILTERS */
+  .filters{display:flex;gap:10px;justify-content:center;padding:0 40px 48px;flex-wrap:wrap}
+  .filter-btn{background:none;border:1px solid var(--border);color:var(--dim);font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border-radius:100px;cursor:pointer;transition:all .2s}
+  .filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+
+  /* GRID */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;padding:0 40px 80px;max-width:1200px;margin:0 auto}
+
+  /* CARD */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:transform .2s,border-color .2s;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-4px);border-color:#333}
+
+  .card-cover{height:200px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .card-cover .hook-number{font-size:64px;font-weight:900;line-height:1;letter-spacing:-2px;color:white;position:relative;z-index:1}
+  .card-cover .hook-word{font-size:28px;font-weight:900;line-height:1;letter-spacing:1px;color:white;position:relative;z-index:1;text-align:center}
+  .card-cover .hook-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:6px;position:relative;z-index:1;text-align:center;max-width:180px}
+  .card-cover .hook-accent{font-size:12px;font-weight:700;margin-top:4px;position:relative;z-index:1;text-align:center}
+  .hook-inner{display:flex;flex-direction:column;align-items:center;padding:24px}
+  .glow{position:absolute;inset:0;opacity:0.15}
+
+  .space-bg{background:#0A0A1A}
+  .space-bg .glow{background:radial-gradient(ellipse at center,#3050ff 0%,transparent 70%)}
+  .space-bg .hook-accent{color:#C9A84C}
+
+  .tornado-bg{background:#0D0D0D}
+  .tornado-bg .glow{background:radial-gradient(ellipse at center,#cc5500 0%,transparent 70%)}
+  .tornado-bg .hook-accent{color:#E87722}
+
+  .glue-bg{background:#0A1A1A}
+  .glue-bg .glow{background:radial-gradient(ellipse at center,#007788 0%,transparent 70%)}
+  .glue-bg .hook-accent{color:#1A7A8A}
+
+  .volcano-bg{background:#1A0500}
+  .volcano-bg .glow{background:radial-gradient(ellipse at center,#cc3300 0%,transparent 70%)}
+  .volcano-bg .hook-accent{color:#FF6633}
+
+  .medical-bg{background:#001020}
+  .medical-bg .glow{background:radial-gradient(ellipse at center,#0055cc 0%,transparent 70%)}
+  .medical-bg .hook-accent{color:#4499FF}
+
+  .phone-bg{background:#041008}
+  .phone-bg .glow{background:radial-gradient(ellipse at center,#00aa44 0%,transparent 70%)}
+  .phone-bg .hook-accent{color:#00CC66}
+
+  .coloring-bg{background:#0d0820}
+  .coloring-bg .glow{background:radial-gradient(ellipse at center,#6633cc 0%,transparent 70%)}
+  .coloring-bg .hook-accent{color:#aa77ff}
+
+  .series-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;position:absolute;top:14px;left:14px;opacity:0.6}
+
+  .card-body{padding:20px 20px 16px;flex:1;display:flex;flex-direction:column}
+  .card-series{font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+  .card-title{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:8px;color:var(--white)}
+  .card-desc{font-size:12px;color:var(--dim);line-height:1.6;flex:1}
+
+  .card-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);margin-top:auto}
+  .price{font-size:16px;font-weight:800;color:var(--white)}
+  .price span{font-size:11px;font-weight:400;color:var(--dim);margin-left:2px}
+  .buy-btn{font-size:11px;letter-spacing:1px;text-transform:uppercase;background:var(--gold);color:#000;font-weight:700;padding:8px 16px;border-radius:4px;text-decoration:none;transition:opacity .2s}
+  .buy-btn:hover{opacity:0.85}
+  .buy-btn.teal{background:var(--teal);color:white}
+  .buy-btn.orange{background:var(--orange);color:white}
+  .buy-btn.purple{background:#7744cc;color:white}
+
+  /* BADGE */
+  .badge{display:inline-block;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:100px;margin-bottom:10px;font-weight:700}
+  .badge-new{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap}
+  footer .f-logo{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--dim)}
+  footer p{font-size:12px;color:#444}
+
+  @media(max-width:600px){
+    nav,footer{padding:16px 20px}
+    .hero{padding:48px 20px 40px}
+    .filters{padding:0 20px 36px}
+    .grid{padding:0 20px 60px;grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">The Straight Cut</a>
+  <div class="nav-links">
+    <a href="/tsc-store.html">Store</a>
+    <a href="/explore.html" class="active">Explore</a>
+    <a href="https://paulvaughan.gumroad.com" target="_blank">Gumroad</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">The Must Know Series</div>
+  <h1>Facts that change<br>how you see things.</h1>
+  <p>Impulse reads backed by real science. Each one under 20 pages. All ages. No fluff.</p>
+</section>
+
+<div class="filters">
+  <button class="filter-btn active">All</button>
+  <button class="filter-btn">What Really Happens</button>
+  <button class="filter-btn">How It's Made</button>
+  <button class="filter-btn">Kids</button>
+  <button class="filter-btn">Deals</button>
+</div>
+
+<div class="grid">
+
+  <!-- SPACE -->
+  <div class="card">
+    <div class="card-cover space-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#C9A84C">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number">15</div>
+        <div class="hook-word" style="color:#C9A84C;font-size:20px;letter-spacing:2px;">SECONDS.</div>
+        <div class="hook-sub">How long you may remain conscious in open space.</div>
+        <div class="hook-accent">Your body would not explode.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#C9A84C">What Really Happens</div>
+      <div class="card-title">In Space</div>
+      <div class="card-desc">Black holes, neutron stars, the Sun's unsolved corona mystery, and what 96% of the universe is made of (hint: we have no idea).</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn">Get it →</a>
+    </div>
+  </div>
+
+  <!-- TORNADO -->
+  <div class="card">
+    <div class="card-cover tornado-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#E87722">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-word" style="font-size:36px;">DE-</div>
+        <div class="hook-word" style="color:#E87722;font-size:36px;">BARKED.</div>
+        <div class="hook-sub">EF5 winds strip bark from standing trees.</div>
+        <div class="hook-accent" style="color:#E87722">EF5 verified. No ceiling on the scale.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#E87722">What Really Happens</div>
+      <div class="card-title">A Tornado</div>
+      <div class="card-desc">Supercell anatomy, EF scale physics, how houses actually fail, fire tornadoes, and what animals do 20 minutes before impact.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn orange">Get it →</a>
+    </div>
+  </div>
+
+  <!-- GLUE & PAINT -->
+  <div class="card">
+    <div class="card-cover glue-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#1A7A8A">How It's Actually Made</span>
+      <div class="hook-inner">
+        <div class="hook-word" style="font-size:36px;">WWII</div>
+        <div class="hook-word" style="color:#1A7A8A;font-size:24px;">ACCIDENT.</div>
+        <div class="hook-sub">Super glue was discovered trying to make rifle sights in 1942.</div>
+        <div class="hook-accent" style="color:#1A7A8A">It stuck to everything. Ruined the test.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#1A7A8A">How It's Actually Made</div>
+      <div class="card-title">Glue & Paint</div>
+      <div class="card-desc">Cyanoacrylate, PVA polymer chains, Prussian blue discovered by accident in 1704, and why paint doesn't "dry" — it polymerizes.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn teal">Get it →</a>
+    </div>
+  </div>
+
+  <!-- VOLCANO -->
+  <div class="card">
+    <div class="card-cover volcano-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#FF6633">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:52px;line-height:1;">1,000°C</div>
+        <div class="hook-word" style="color:#FF6633;font-size:18px;letter-spacing:2px;">LAVA MOVES SLOWLY.</div>
+        <div class="hook-sub">Most people killed by volcanoes aren't burned.</div>
+        <div class="hook-accent" style="color:#FF6633">Pyroclastic flows hit 700 km/h.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#FF6633">What Really Happens</div>
+      <div class="card-title">A Volcano</div>
+      <div class="card-desc">Pyroclastic flows, supervolcanoes, the Toba near-extinction event, and why the ocean floor is almost entirely volcanic.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#FF6633">Get it →</a>
+    </div>
+  </div>
+
+  <!-- MEDICAL IMAGING -->
+  <div class="card">
+    <div class="card-cover medical-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#4499FF">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:36px;line-height:1.1;">50,000×</div>
+        <div class="hook-word" style="color:#4499FF;font-size:16px;letter-spacing:2px;">EARTH'S MAGNETIC FIELD.</div>
+        <div class="hook-sub">The MRI magnet never turns off. Not between patients.</div>
+        <div class="hook-accent" style="color:#4499FF">Metal in the room = projectile.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#4499FF">What Really Happens</div>
+      <div class="card-title">Medical Imaging</div>
+      <div class="card-desc">How MRI, CT, and ultrasound actually work — and why the magnet is always on, the radiation is real, and the gel isn't optional.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#4499FF;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- CELL PHONE -->
+  <div class="card">
+    <div class="card-cover phone-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#00CC66">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:36px;line-height:1.1;">15 BILLION</div>
+        <div class="hook-word" style="color:#00CC66;font-size:18px;letter-spacing:2px;">TRANSISTORS.</div>
+        <div class="hook-sub">Each one smaller than a coronavirus.</div>
+        <div class="hook-accent" style="color:#00CC66">In your pocket right now.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">New</span>
+      <div class="card-series" style="color:#00CC66">What Really Happens</div>
+      <div class="card-title">Inside a Cell Phone</div>
+      <div class="card-desc">The processor, OLED screen, 5G radio, lithium-ion battery, and camera sensor — the real physics and engineering in your pocket.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#00CC66;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- EARTH'S ROTATION -->
+  <div class="card">
+    <div class="card-cover" style="background:#03050C">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#4488FF 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#4488FF">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:38px;line-height:1;">1,670</div>
+        <div class="hook-word" style="color:#4488FF;font-size:18px;letter-spacing:2px;">KM/H.</div>
+        <div class="hook-sub">You're moving right now. You feel nothing.</div>
+        <div class="hook-accent" style="color:#4488FF">If it stopped — everything launches east.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#4488FF">What Really Happens</div>
+      <div class="card-title">Earth's Rotation</div>
+      <div class="card-desc">Why Earth spins, what rotation controls, tidal drag slowing us down, and the physics of what happens if it stopped.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#4488FF;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- DEEP OCEAN -->
+  <div class="card">
+    <div class="card-cover" style="background:#000508">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#00B4DC 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#00B4DC">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:52px;line-height:1;">11 KM</div>
+        <div class="hook-word" style="color:#00B4DC;font-size:16px;letter-spacing:2px;">DOWN. UNMAPPED.</div>
+        <div class="hook-sub">Better maps of the Moon than the ocean floor.</div>
+        <div class="hook-accent" style="color:#00B4DC">Plastic bags at the bottom of the Trench.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#00B4DC">What Really Happens</div>
+      <div class="card-title">The Deep Ocean</div>
+      <div class="card-desc">Hydrothermal vents, bioluminescence, 1,100 atm pressure, and what 3 crewed descents to the bottom actually found.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#00B4DC;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- LIGHTNING -->
+  <div class="card">
+    <div class="card-cover" style="background:#080600">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#FFCC22 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#FFCC22">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:38px;line-height:1;">30,000°C</div>
+        <div class="hook-word" style="color:#FFCC22;font-size:15px;letter-spacing:2px;">5× THE SUN'S SURFACE.</div>
+        <div class="hook-sub">Strikes Earth 100 times every second.</div>
+        <div class="hook-accent" style="color:#FFCC22">90% of people struck survive.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#FFCC22">What Really Happens</div>
+      <div class="card-title">Lightning</div>
+      <div class="card-desc">How it forms in 0.2 seconds, why rubber shoes offer zero protection, and what Lichtenberg figures actually are.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#FFCC22;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- TOOTHPASTE -->
+  <div class="card">
+    <div class="card-cover" style="background:#041410">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#00C4A0 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#00C4A0">How It's Actually Made</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:52px;line-height:1;">1873.</div>
+        <div class="hook-word" style="color:#00C4A0;font-size:18px;letter-spacing:2px;">JAR. SHARED.</div>
+        <div class="hook-sub">You dipped your brush in. So did everyone else.</div>
+        <div class="hook-accent" style="color:#00C4A0">The tube wasn't invented until 1892.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#00C4A0">How It's Actually Made</div>
+      <div class="card-title">Toothpaste</div>
+      <div class="card-desc">Abrasives, fluoride, SLS foam, and how striped toothpaste is physically made using two concentric nozzles.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#00C4A0;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- DNA -->
+  <div class="card">
+    <div class="card-cover" style="background:#060310">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#7B52AB 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#7B52AB">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:32px;line-height:1;">3 BILLION</div>
+        <div class="hook-word" style="color:#7B52AB;font-size:16px;letter-spacing:2px;">BASE PAIRS. EVERY CELL.</div>
+        <div class="hook-sub">Uncoiled: 2 metres. You have 37 trillion cells.</div>
+        <div class="hook-accent" style="color:#7B52AB">Reach the Sun and back — 300 times.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#7B52AB">What Really Happens</div>
+      <div class="card-title">Inside DNA</div>
+      <div class="card-desc">The double helix, how genes are read, CRISPR's first cure, ancient mammoth DNA 1.2M years old, and forensic touch DNA.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#7B52AB">Get it →</a>
+    </div>
+  </div>
+
+  <!-- ANTIBIOTICS -->
+  <div class="card">
+    <div class="card-cover" style="background:#0C0400">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#D44B00 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#D44B00">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:52px;line-height:1;">1928.</div>
+        <div class="hook-word" style="color:#D44B00;font-size:18px;letter-spacing:2px;">MOULD. ACCIDENT.</div>
+        <div class="hook-sub">Fleming nearly threw the petri dish out.</div>
+        <div class="hook-accent" style="color:#D44B00">10M deaths/yr projected by 2050.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#D44B00">What Really Happens</div>
+      <div class="card-title">Antibiotics</div>
+      <div class="card-desc">How they kill bacteria, why resistance is winning, the empty drug pipeline, and the first AI-discovered antibiotic in clinical trials.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#D44B00">Get it →</a>
+    </div>
+  </div>
+
+  <!-- NUCLEAR -->
+  <div class="card">
+    <div class="card-cover" style="background:#010A05">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#00AA66 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#00AA66">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:32px;line-height:1;">1 KG</div>
+        <div class="hook-word" style="color:#00AA66;font-size:16px;letter-spacing:2px;">= 3,000T COAL.</div>
+        <div class="hook-sub">Nuclear deaths per TWh: 0.03. Coal: 24.6.</div>
+        <div class="hook-accent" style="color:#00AA66">It can't explode. Fuel too dilute.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#00AA66">What Really Happens</div>
+      <div class="card-title">Nuclear Reactor</div>
+      <div class="card-desc">Fission, chain reactions, control rods, what actually went wrong at Chernobyl and Fukushima, and the real death statistics.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#00AA66;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- VACCINES -->
+  <div class="card">
+    <div class="card-cover" style="background:#000811">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#0077CC 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#0077CC">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:36px;line-height:1;">300M</div>
+        <div class="hook-word" style="color:#0077CC;font-size:16px;letter-spacing:2px;">KILLED. THEN ZERO.</div>
+        <div class="hook-sub">Smallpox: the only disease humans have ever eradicated.</div>
+        <div class="hook-accent" style="color:#0077CC">A vaccine did that.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#0077CC">What Really Happens</div>
+      <div class="card-title">Vaccines</div>
+      <div class="card-desc">Memory cells, herd immunity thresholds, live vs mRNA vaccines, and how smallpox was erased from Earth forever.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#0077CC">Get it →</a>
+    </div>
+  </div>
+
+  <!-- SLEEP -->
+  <div class="card">
+    <div class="card-cover" style="background:#03010A">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#7755CC 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#7755CC">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:38px;line-height:1;">17 HRS</div>
+        <div class="hook-word" style="color:#7755CC;font-size:16px;letter-spacing:2px;">AWAKE = LEGALLY DRUNK.</div>
+        <div class="hook-sub">Matches 0.05% blood alcohol. You don't notice.</div>
+        <div class="hook-accent" style="color:#7755CC">That's the problem.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#7755CC">What Really Happens</div>
+      <div class="card-title">When You Sleep</div>
+      <div class="card-desc">Sleep stages, adenosine, why caffeine crashes, the NASA nappuccino, and the disease where you lose the ability to sleep and die.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#7755CC">Get it →</a>
+    </div>
+  </div>
+
+  <!-- PLANES -->
+  <div class="card">
+    <div class="card-cover" style="background:#000508">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#4488EE 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#4488EE">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:38px;line-height:1;">400T</div>
+        <div class="hook-word" style="color:#4488EE;font-size:16px;letter-spacing:2px;">HELD UP BY PRESSURE.</div>
+        <div class="hook-sub">The textbook explanation is wrong.</div>
+        <div class="hook-accent" style="color:#4488EE">Flying is 70× safer than driving.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#4488EE">What Really Happens</div>
+      <div class="card-title">How Planes Fly</div>
+      <div class="card-desc">Real lift physics, jet engines that run above their melting point, what turbulence actually is, and the fly-by-wire revolution.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#4488EE;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- BLACK HOLES -->
+  <div class="card">
+    <div class="card-cover" style="background:#000000">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#FF7820 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#FF7820">What Really Happens</span>
+      <div class="hook-inner">
+        <div class="hook-word" style="font-size:44px;letter-spacing:-1px;">NOTHING.</div>
+        <div class="hook-word" style="color:#FF7820;font-size:16px;letter-spacing:2px;margin-top:4px;">NOT EVEN LIGHT.</div>
+        <div class="hook-sub">4M solar masses at the Milky Way's centre.</div>
+        <div class="hook-accent" style="color:#FF7820">First photographed in 2019.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#FF7820">What Really Happens</div>
+      <div class="card-title">Black Holes</div>
+      <div class="card-desc">Event horizons, Hawking radiation, gravitational waves, and the information paradox that breaks both physics theories.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#FF7820;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- NAILS & HAIR -->
+  <div class="card">
+    <div class="card-cover" style="background:#0A0006">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#DC64B4 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#DC64B4">Must Know</span>
+      <div class="hook-inner">
+        <div class="hook-word" style="font-size:32px;letter-spacing:-1px;">NO NERVES.</div>
+        <div class="hook-word" style="color:#DC64B4;font-size:18px;letter-spacing:2px;margin-top:4px;">DEAD CELLS.</div>
+        <div class="hook-sub">Same protein as a rhinoceros horn.</div>
+        <div class="hook-accent" style="color:#DC64B4">The pain? That's the skin.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#DC64B4">Must Know</div>
+      <div class="card-title">Why Nails & Hair Don't Hurt</div>
+      <div class="card-desc">Keratin, nail matrix, perifollicular nerves, phantom limb pain, and why the myth that nails grow after death is just skin shrinking.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$9 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#DC64B4;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- COLORING BOOK - SPACE -->
+  <div class="card">
+    <div class="card-cover coloring-bg">
+      <div class="glow"></div>
+      <span class="series-tag" style="color:#aa77ff">Kids</span>
+      <div class="hook-inner">
+        <div style="font-size:48px;line-height:1;">🚀</div>
+        <div class="hook-word" style="color:#aa77ff;font-size:16px;letter-spacing:2px;margin-top:8px;">SPACE EXPLORER</div>
+        <div class="hook-sub">12 coloring pages. Ages 5–12.</div>
+        <div class="hook-accent" style="color:#aa77ff">Planets, black holes, Mars rovers & more.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#aa77ff">Kids Series</div>
+      <div class="card-title">Space Explorer Coloring Book</div>
+      <div class="card-desc">12 pages: solar system, Saturn's rings, astronaut in space, constellation map, alien planet. Includes Explorer Certificate.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$5 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn purple">Get it →</a>
+    </div>
+  </div>
+
+  <!-- COLORING BOOK - VOLCANO -->
+  <div class="card">
+    <div class="card-cover" style="background:#1A0500">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#cc3300 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#FF6633">Kids</span>
+      <div class="hook-inner">
+        <div style="font-size:48px;line-height:1;">🌋</div>
+        <div class="hook-word" style="color:#FF6633;font-size:16px;letter-spacing:2px;margin-top:8px;">VOLCANO EXPLORER</div>
+        <div class="hook-sub">10 coloring pages. Ages 5–12.</div>
+        <div class="hook-accent" style="color:#FF6633">Color the lava. Draw the ash.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#FF6633">Kids Series</div>
+      <div class="card-title">Volcano Explorer Coloring Book</div>
+      <div class="card-desc">Earth's layers, three volcano types, Pompeii street scene, tectonic plates, hydrothermal vents. Includes Explorer Certificate.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$5 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#FF6633">Get it →</a>
+    </div>
+  </div>
+
+  <!-- COLORING BOOK - CELL PHONE -->
+  <div class="card">
+    <div class="card-cover" style="background:#041008">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#00aa44 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#00CC66">Kids</span>
+      <div class="hook-inner">
+        <div style="font-size:48px;line-height:1;">📱</div>
+        <div class="hook-word" style="color:#00CC66;font-size:14px;letter-spacing:2px;margin-top:8px;">TECH EXPLORER</div>
+        <div class="hook-sub">5 coloring pages. Ages 5–12.</div>
+        <div class="hook-accent" style="color:#00CC66">Circuits, cameras, batteries & 5G.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-series" style="color:#00CC66">Kids Series</div>
+      <div class="card-title">Tech Explorer: Cell Phone Coloring Book</div>
+      <div class="card-desc">Smartphone parts, circuit board, camera sensor with pixel grid, battery cells, 5G tower. Includes Explorer Certificate.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$5 <span>USD</span></div>
+      <a href="https://paulvaughan.gumroad.com" target="_blank" class="buy-btn" style="background:#00CC66;color:#000">Get it →</a>
+    </div>
+  </div>
+
+  <!-- NORDVPN DEAL -->
+  <div class="card">
+    <div class="card-cover" style="background:#010810">
+      <div class="glow" style="background:radial-gradient(ellipse at center,#0055CC 0%,transparent 70%)"></div>
+      <span class="series-tag" style="color:#4488FF">Deal</span>
+      <div class="hook-inner">
+        <div class="hook-number" style="font-size:48px;line-height:1;">58%</div>
+        <div class="hook-word" style="color:#4488FF;font-size:20px;letter-spacing:2px;">OFF.</div>
+        <div class="hook-sub">1-year NordVPN plan. $5.00/mo.</div>
+        <div class="hook-accent" style="color:#4488FF">Private. Encrypted. Everywhere.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <span class="badge badge-new">Deal</span>
+      <div class="card-series" style="color:#4488FF">Tools</div>
+      <div class="card-title">NordVPN — 1 Year Deal</div>
+      <div class="card-desc">Secure your connection and protect your privacy. World's leading VPN — 58% off, just $5.00/mo on the 1-year plan.</div>
+    </div>
+    <div class="card-footer">
+      <div class="price">$5 <span>/mo</span></div>
+      <a href="https://www.tkqlhce.com/click-101746656-13756265" target="_blank" rel="noopener sponsored" class="buy-btn" style="background:#4488FF;color:#000">Get Deal →</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="f-logo">The Straight Cut</div>
+  <p>© 2026 thestraightcut.net · <a href="https://paulvaughan.gumroad.com" style="color:#555;text-decoration:none">paulvaughan.gumroad.com</a></p>
+</footer>
+
+</body>
+</html>
