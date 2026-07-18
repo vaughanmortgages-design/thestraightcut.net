@@ -12,8 +12,9 @@
       <guid isPermaLink="false">tsc-pinterest-test-20260718-1042</guid>
       <pubDate>Sat, 18 Jul 2026 10:42:00 -0400</pubDate>
       <description>Practical kitchen upgrades worth considering, with curated shopping links and a clear affiliate disclosure.</description>
-      <media:content url="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" medium="image" type="image/jpeg" />
-      <enclosure url="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" type="image/jpeg" />
+      <media:content url="https://thestraightcut.net/assets/kitchen-upgrades-featured.jpg" medium="image" type="image/jpeg" />
+      <media:thumbnail url="https://thestraightcut.net/assets/kitchen-upgrades-featured.jpg" />
+      <enclosure url="https://thestraightcut.net/assets/kitchen-upgrades-featured.jpg" type="image/jpeg" />
     </item>
   </channel>
 </rss>
