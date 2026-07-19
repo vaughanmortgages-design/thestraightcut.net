@@ -659,5 +659,38 @@
   <p>© 2026 thestraightcut.net · <a href="https://paulvaughan.gumroad.com" style="color:#555;text-decoration:none">paulvaughan.gumroad.com</a></p>
 </footer>
 
+<script>
+  // Wire the category filter buttons: show cards whose series-tag matches the
+  // selected filter. Matching is done on the normalized last word so labels
+  // like "How It's Made" match cards tagged "How It's Actually Made" and
+  // "Deals" matches "Deal".
+  (function () {
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('.filter-btn'));
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.grid .card'));
+    if (!buttons.length || !cards.length) return;
+    var key = function (text) {
+      var words = String(text || '').toLowerCase().replace(/[^a-z\s]/g, '').trim().split(/\s+/);
+      var last = words[words.length - 1] || '';
+      return last.replace(/s$/, '');
+    };
+    var cardKey = function (card) {
+      var tag = card.querySelector('.series-tag') || card.querySelector('.card-series');
+      return key(tag && tag.textContent);
+    };
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        buttons.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var label = btn.textContent.trim().toLowerCase();
+        var want = key(label);
+        cards.forEach(function (card) {
+          var show = label === 'all' || cardKey(card) === want;
+          card.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>
+
 </body>
 </html>
