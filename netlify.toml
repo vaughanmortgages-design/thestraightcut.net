@@ -1,0 +1,3 @@
+[build]
+  command = "node scripts/build-departments.mjs && node scripts/build-latest-deals.mjs && node scripts/generate-sitemap.mjs"
+  publish = "."
