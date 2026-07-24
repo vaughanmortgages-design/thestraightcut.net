@@ -23,8 +23,8 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const img = (id, w = 1200) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
-const amazon = (q) => `amazon.html#sitestripe-links-needed
-const ebay = (q) => `ebay.html#epn-links-needed
+const amazon = (q) => `amazon.html#sitestripe-links-needed`;
+const ebay = (q) => `ebay.html#epn-links-needed`;
 const shopUrl = (item) => (item.market === 'ebay' ? ebay(item.q) : amazon(item.q));
 const shopLabel = (item) => (item.market === 'ebay' ? 'Shop on eBay →' : 'Shop on Amazon →');
 const EXT = ' target="_blank" rel="sponsored nofollow"';
