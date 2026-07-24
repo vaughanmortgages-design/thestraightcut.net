@@ -53,10 +53,17 @@ for (const file of files) {
     const isGuide = text.includes('read the guide');
     const isCollection = text.includes('browse the collection');
     const isNotes = text.includes('read the buying notes');
-    if (!isStart && !isGuide && !isCollection && !isNotes) return anchor;
+    const isKeepBrowsing = text.includes('keep browsing');
+    if (!isStart && !isGuide && !isCollection && !isNotes && !isKeepBrowsing) return anchor;
 
     editorialFound += 1;
-    let destination = isStart ? '/departments.html' : isGuide ? '/buying-guides.html' : href;
+    let destination = isStart
+      ? '/departments.html'
+      : isGuide
+        ? '/buying-guides.html'
+        : isKeepBrowsing && (!href || href === '#')
+          ? '/departments.html'
+          : href;
     const page = destination.replace(/^\//, '').split(/[?#]/)[0];
     if (!existingPages.has(page)) destination = `/${fallback}`;
     else destination = `/${destination.replace(/^\//, '')}`;
