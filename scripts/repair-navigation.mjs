@@ -106,6 +106,26 @@ for (const file of files) {
     return anchor.replace(/\bhref=(["']).*?\1/i, `href="${destination}"`);
   });
   const withoutUntrackedPurchases = routedEditorial.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>[\s\S]*?<\/a>/gi, (anchor, quote, href) => {
+    const text = anchor.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const marketplaceIntent = /\b(shop(?: on)?|buy(?: on)?|view|see|check|browse|explore)\b[\s\S]{0,55}\b(amazon|ebay)\b|\b(amazon|ebay)\b[\s\S]{0,55}\b(listing|finds|picks|deal)\b/i.test(text);
+    const approvedAmazon = /^https:\/\/(?:www\.)?(?:amazon\.|amzn\.to|a\.co)/i.test(href) &&
+      /[?&]tag=straightcutgu-20(?:&|$)/i.test(href);
+    const approvedEbay = /^https:\/\/(?:www\.)?ebay\./i.test(href) &&
+      /[?&](?:campid|campaignid)=5339155090(?:&|$)/i.test(href);
+    if (marketplaceIntent && !approvedAmazon && !approvedEbay) {
+      repaired += 1;
+      const opening = anchor.match(/^<a\b[^>]*>/i)?.[0] || '<a>';
+      const replacement = /\b(btn|button|card-action|nav-cta|m-cta)\b/i.test(opening)
+        ? 'Coming Soon'
+        : 'Marketplace listing coming soon';
+      return opening
+        .replace(/^<a\b/i, '<span')
+        .replace(/\s+href=(["']).*?\1/i, '')
+        .replace(/\s+target=(["']).*?\1/gi, '')
+        .replace(/\s+rel=(["']).*?\1/gi, '')
+        .replace(/\s+aria-label=(["']).*?\1/gi, '')
+        .replace(/>$/, `>${replacement}</span>`);
+    }
     const untrackedAmazon = /^https:\/\/(?:www\.)?(?:amazon\.|amzn\.to|a\.co)/i.test(href) &&
       !/[?&]tag=straightcutgu-20(?:&|$)/i.test(href);
     const untrackedEbay = /^https:\/\/(?:www\.)?ebay\./i.test(href) &&
