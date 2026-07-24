@@ -14,7 +14,7 @@ const MAX_DEALS = 40;
 
 const esc = (s) =>
   String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const amazon = (q) => `https://www.amazon.ca/s?k=${encodeURIComponent(q)}&tag=${AMAZON_TAG}`;
+const amazon = (q) => `amazon.html#sitestripe-links-needed`;
 
 function parseCsvLine(line) {
   const out = [];

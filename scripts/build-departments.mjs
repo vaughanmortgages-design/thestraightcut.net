@@ -23,8 +23,8 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const img = (id, w = 1200) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
-const amazon = (q) => `https://www.amazon.ca/s?k=${encodeURIComponent(q)}&tag=${AMAZON_TAG}`;
-const ebay = (q) => `https://www.ebay.ca/sch/i.html?_nkw=${encodeURIComponent(q)}`;
+const amazon = (q) => `amazon.html#sitestripe-links-needed`;
+const ebay = (q) => `ebay.html#epn-links-needed`;
 const shopUrl = (item) => (item.market === 'ebay' ? ebay(item.q) : amazon(item.q));
 const shopLabel = (item) => (item.market === 'ebay' ? 'Shop on eBay →' : 'Shop on Amazon →');
 const EXT = ' target="_blank" rel="sponsored nofollow"';
@@ -58,7 +58,7 @@ const NAV_ITEMS = [
 
 function header() {
   const links = NAV_ITEMS.map((n) => `<a href="${n.href}">${esc(n.label)}</a>`).join('');
-  const shopCta = `href="https://www.amazon.ca/?tag=${AMAZON_TAG}"${EXT}`;
+  const shopCta = `href="amazon.html#sitestripe-links-needed"${EXT}`;
   return `<header class="site-header"><div class="header-inner"><a href="/" class="logo" aria-label="The Straight Cut homepage">The Straight <em>Cut</em></a><nav class="nav-links" aria-label="Main navigation">${links}<a class="nav-cta" ${shopCta}>Shop Now →</a></nav><button class="menu-btn" data-menu-btn aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileNav">☰</button></div><nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">${links}<a class="m-cta" ${shopCta}>Shop Amazon →</a></nav></header>`;
 }
 
@@ -80,7 +80,7 @@ function footer() {
     .slice(0, 10)
     .map((d) => `<a href="${d.slug}.html">${esc(d.name)}</a>`)
     .join('');
-  return `<footer class="footer"><div class="footer-inner"><div class="footer-grid"><div class="footer-brand"><a href="/" class="logo footer-logo">The Straight <em>Cut</em></a><p>The Straight Cut publishes static shopping pages, travel ideas, gift guides and digital resources designed to make browsing fast and decisions easier.</p><div class="social-row"><a href="mailto:hello@thestraightcut.net" aria-label="Email The Straight Cut">✉</a><a href="/#newsletter" aria-label="Join the newsletter">✦</a><a href="https://straightcut.gumroad.com" target="_blank" rel="sponsored nofollow" aria-label="Shop digital downloads on Gumroad">⌘</a><a href="https://www.amazon.ca/?tag=${AMAZON_TAG}" target="_blank" rel="sponsored nofollow" aria-label="Shop Amazon Canada">A</a></div></div><div class="footer-col"><h3>Explore</h3><a href="departments.html">All Departments</a><a href="/#about-site">About</a><a href="mailto:hello@thestraightcut.net">Contact</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="/#newsletter">Newsletter</a></div><div class="footer-col"><h3>Departments</h3>${deptLinks}</div><div class="footer-col"><h3>Policies</h3><a href="privacy-policy.html">Privacy Policy</a><a href="terms-of-use.html">Terms of Use</a><a href="latest-deals.html">Latest Deals</a><a href="travel.html">Travel</a></div></div><div class="footer-bottom"><p class="footer-legal"><strong>Affiliate Disclosure:</strong> The Straight Cut participates in affiliate advertising programs including Amazon Associates, eBay Partner Network and others. We may earn commissions from qualifying purchases at no additional cost to you. Prices and availability can change, so always confirm details on the final merchant page.</p><div class="footer-links"><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="privacy-policy.html">Privacy</a><a href="terms-of-use.html">Terms</a><a href="latest-deals.html">Latest Deals</a></div></div></div></footer>`;
+  return `<footer class="footer"><div class="footer-inner"><div class="footer-grid"><div class="footer-brand"><a href="/" class="logo footer-logo">The Straight <em>Cut</em></a><p>The Straight Cut publishes static shopping pages, travel ideas, gift guides and digital resources designed to make browsing fast and decisions easier.</p><div class="social-row"><a href="mailto:hello@thestraightcut.net" aria-label="Email The Straight Cut">✉</a><a href="/#newsletter" aria-label="Join the newsletter">✦</a><a href="https://straightcut.gumroad.com" target="_blank" rel="sponsored nofollow" aria-label="Shop digital downloads on Gumroad">⌘</a><a href="amazon.html#sitestripe-links-needed" target="_blank" rel="sponsored nofollow" aria-label="Shop Amazon Canada">A</a></div></div><div class="footer-col"><h3>Explore</h3><a href="departments.html">All Departments</a><a href="/#about-site">About</a><a href="mailto:hello@thestraightcut.net">Contact</a><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="/#newsletter">Newsletter</a></div><div class="footer-col"><h3>Departments</h3>${deptLinks}</div><div class="footer-col"><h3>Policies</h3><a href="privacy-policy.html">Privacy Policy</a><a href="terms-of-use.html">Terms of Use</a><a href="latest-deals.html">Latest Deals</a><a href="travel.html">Travel</a></div></div><div class="footer-bottom"><p class="footer-legal"><strong>Affiliate Disclosure:</strong> The Straight Cut participates in affiliate advertising programs including Amazon Associates, eBay Partner Network and others. We may earn commissions from qualifying purchases at no additional cost to you. Prices and availability can change, so always confirm details on the final merchant page.</p><div class="footer-links"><a href="affiliate-disclosure.html">Affiliate Disclosure</a><a href="privacy-policy.html">Privacy</a><a href="terms-of-use.html">Terms</a><a href="latest-deals.html">Latest Deals</a></div></div></div></footer>`;
 }
 
 function scripts() {

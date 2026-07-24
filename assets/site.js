@@ -83,7 +83,7 @@
         return;
       }
       var q=encodeURIComponent(searchInput.value.trim()||'deals');
-      window.open('https://www.amazon.ca/s?k='+q+'&tag=straightcutgu-20','_blank','noopener');
+      window.open('amazon.html#sitestripe-links-needed'+q+'&tag=straightcutgu-20','_blank','noopener');
     });
   }
 

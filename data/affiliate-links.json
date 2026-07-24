@@ -1,0 +1,22 @@
+{
+  "source": "Affiliate Link Vault Google Sheet",
+  "refreshed": "2026-07-24",
+  "brand": "TSC",
+  "amazon": {
+    "tag": "straightcutgu-20",
+    "rule": "Generate direct ASIN links with Amazon SiteStripe; do not use search URLs."
+  },
+  "ebay": {
+    "campaign": "5339155090",
+    "rule": "Generate links with eBay Partner Network Link Generator."
+  },
+  "hotels": "https://www.dpbolvw.net/click-101746656-11131426",
+  "vrbo": "https://www.anrdoezrs.net/click-101746656-13880505",
+  "wrapItStorage": "https://www.anrdoezrs.net/click-101746656-17279920",
+  "rexing": "https://www.tkqlhce.com/click-101746656-15019509",
+  "bathorium": "https://www.awin1.com/cread.php?awinmid=120413&awinaffid=2902393",
+  "skylark": "https://www.awin1.com/cread.php?awinmid=106305&awinaffid=2902393",
+  "roamable": "https://www.awin1.com/awclick.php?gid=581576&mid=118127&awinaffid=2936205&linkid=4514497&clickref=",
+  "activeAwinOffer": "https://www.awin1.com/cread.php?awinmid=105497&awinaffid=2902393",
+  "gumroad": "https://straightcut.gumroad.com"
+}
