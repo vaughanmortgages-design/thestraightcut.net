@@ -39,8 +39,17 @@ const clean = (value = '') => value
 
 const amazonUrl = (query) => `https://www.amazon.ca/s?k=${encodeURIComponent(query)}&tag=${AMAZON_TAG}`;
 const ebayUrl = (query) => {
-  const destination = `https://www.ebay.ca/sch/i.html?_nkw=${encodeURIComponent(query)}`;
-  return `https://rover.ebay.com/rover/1/706-53473-19255-0/1?campid=${EBAY_CAMPAIGN}&toolid=10001&customid=tsc&mpre=${encodeURIComponent(destination)}`;
+  const params = new URLSearchParams({
+    _nkw: query,
+    mkcid: '1',
+    mkrid: '706-53473-19255-0',
+    siteid: '2',
+    campid: EBAY_CAMPAIGN,
+    customid: '',
+    toolid: '10001',
+    mkevt: '1',
+  });
+  return `https://www.ebay.ca/sch/i.html?${params.toString()}`;
 };
 
 const marketplaceUrl = (file, query) => ebayPages.has(file) ? ebayUrl(query) : amazonUrl(query);
