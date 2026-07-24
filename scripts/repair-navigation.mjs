@@ -37,6 +37,28 @@ const ROOT_ANCHORS = {
   '/#brands': 'affiliate-partners.html',
 };
 
+const MERCHANT_REPLACEMENTS = new Map([
+  ['https://www.hotels.com/', 'https://www.dpbolvw.net/click-101746656-11131426'],
+  ['https://www.vrbo.com/', 'https://www.anrdoezrs.net/click-101746656-13880505'],
+  ['https://www.rexingusa.com/', 'https://www.tkqlhce.com/click-101746656-15019509'],
+  ['https://wrapitstorage.com/', 'https://www.anrdoezrs.net/click-101746656-17279920'],
+  ['https://www.amazon.ca/?tag=straightcutgu-20', 'amazon.html'],
+  ['https://www.ebay.ca/', 'ebay.html'],
+]);
+
+const UNAPPROVED_PURCHASE_URLS = new Set([
+  'https://www.tkqlhce.com/click-101746656-13756265',
+  'https://straightcut.gumroad.com/l/mldboi',
+]);
+
+const CONTENT_REPLACEMENTS = new Map([
+  ['1-year NordVPN plan. $5.00/mo.', 'NordVPN partner offer pending approval.'],
+  ['Private. Encrypted. Everywhere.', 'Approved destination required.'],
+  ['<span class="badge badge-new">Deal</span>', '<span class="badge badge-new">Coming Soon</span>'],
+  ["Secure your connection and protect your privacy. World's leading VPN — 58% off, just $5.00/mo on the 1-year plan.", 'An approved NordVPN affiliate destination is not currently available in the Affiliate Link Vault.'],
+  ['<div class="price">$5 <span>/mo</span></div>', '<div class="price">Coming Soon</div>'],
+]);
+
 const files = (await readdir(ROOT)).filter((file) => file.endsWith('.html'));
 const existingPages = new Set(files);
 let repaired = 0;
@@ -45,7 +67,17 @@ let editorialRepaired = 0;
 
 for (const file of files) {
   const path = join(ROOT, file);
-  const source = await readFile(path, 'utf8');
+  const original = await readFile(path, 'utf8');
+  let source = original;
+  for (const [direct, approved] of MERCHANT_REPLACEMENTS) {
+    const occurrences = source.split(direct).length - 1;
+    if (!occurrences) continue;
+    source = source.replaceAll(direct, approved);
+    repaired += occurrences;
+  }
+  for (const [current, replacement] of CONTENT_REPLACEMENTS) {
+    source = source.replaceAll(current, replacement);
+  }
   const fallback = ROUTES[file] || 'departments.html';
   const routedEditorial = source.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>[\s\S]*?<\/a>/gi, (anchor, quote, href) => {
     const text = anchor.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -57,9 +89,9 @@ for (const file of files) {
     if (!isStart && !isGuide && !isCollection && !isNotes && !isKeepBrowsing) return anchor;
 
     editorialFound += 1;
-    let destination = isStart
+    let destination = isStart && (!href || href === '#')
       ? '/departments.html'
-      : isGuide
+      : isGuide && (!href || href === '#')
         ? '/buying-guides.html'
         : isKeepBrowsing && (!href || href === '#')
           ? '/departments.html'
@@ -73,7 +105,38 @@ for (const file of files) {
     repaired += 1;
     return anchor.replace(/\bhref=(["']).*?\1/i, `href="${destination}"`);
   });
-  const output = routedEditorial.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>/gi, (tag, quote, href) => {
+  const withoutUntrackedPurchases = routedEditorial.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>[\s\S]*?<\/a>/gi, (anchor, quote, href) => {
+    const untrackedAmazon = /^https:\/\/(?:www\.)?(?:amazon\.|amzn\.to|a\.co)/i.test(href) &&
+      !/[?&]tag=straightcutgu-20(?:&|$)/i.test(href);
+    const untrackedEbay = /^https:\/\/(?:www\.)?ebay\./i.test(href) &&
+      !/[?&](?:campid|campaignid)=5339155090(?:&|$)/i.test(href);
+    const unapprovedPurchase = UNAPPROVED_PURCHASE_URLS.has(href);
+    if (!untrackedAmazon && !untrackedEbay && !unapprovedPurchase) return anchor;
+
+    repaired += 1;
+    if (unapprovedPurchase) {
+      const opening = anchor.match(/^<a\b[^>]*>/i)?.[0] || '<a>';
+      return opening
+        .replace(/^<a\b/i, '<span')
+        .replace(/\s+href=(["']).*?\1/i, '')
+        .replace(/\s+target=(["']).*?\1/gi, '')
+        .replace(/\s+rel=(["']).*?\1/gi, '')
+        .replace(/\s+aria-label=(["']).*?\1/gi, '')
+        .replace(/>$/, '>Coming Soon</span>');
+    }
+    const card = anchor
+      .replace(/^<a\b/i, '<article')
+      .replace(/\s+href=(["']).*?\1/i, '')
+      .replace(/\s+target=(["']).*?\1/gi, '')
+      .replace(/\s+rel=(["']).*?\1/gi, '')
+      .replace(/\s+aria-label=(["']).*?\1/gi, '')
+      .replace(/<\/a>$/i, '</article>');
+    if (/class=(["'])[^"']*\bcard-action\b/i.test(card)) {
+      return card.replace(/<span class=(["'])card-action\1>[\s\S]*?<\/span>/i, '<span class="card-action coming-soon">Coming Soon</span>');
+    }
+    return card.replace(/<\/article>$/i, '<span class="coming-soon">Coming Soon</span></article>');
+  });
+  const output = withoutUntrackedPurchases.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>/gi, (tag, quote, href) => {
     if (ROOT_ANCHORS[href]) {
       repaired += 1;
       return tag.replace(/\bhref=(["']).*?\1/i, `href="${ROOT_ANCHORS[href]}"`);
@@ -83,15 +146,14 @@ for (const file of files) {
       href.trim() === '#' ||
       /^javascript:/i.test(href) ||
       /sitestripe|epn-links-needed|approved-product|placeholder|link-required/i.test(href);
-    const marketplace = /^https:\/\/www\.(?:amazon|ebay)\./i.test(href);
-    if (!dead && !marketplace) return tag;
+    if (!dead) return tag;
     repaired += 1;
     return tag
       .replace(/\s+target=(["']).*?\1/gi, '')
       .replace(/\s+rel=(["']).*?\1/gi, '')
       .replace(/\bhref=(["']).*?\1/i, `href="${fallback}"`);
   });
-  if (output !== source) await writeFile(path, output, 'utf8');
+  if (output !== original) await writeFile(path, output, 'utf8');
 }
 
 console.log(`Repaired ${repaired} dead, placeholder or unapproved marketplace links.`);

@@ -238,6 +238,9 @@ const SECONDARY_PAGES = {
   },
 };
 
+const ALL_PAGES = { ...PAGES, ...SECONDARY_PAGES };
+const STOREFRONT_ORDER = [...PAGE_ORDER, ...Object.keys(SECONDARY_PAGES)];
+
 const HOME_FEATURES = [
   ['Today’s Best Deals', 'A disciplined shortlist of value-minded opportunities—no manufactured urgency.', 'deals.html', 'photo-1607082349566-187342175e2f'],
   ['Staff Picks', 'The practical upgrades and smart ideas our editorial desk would look at first.', 'hot-finds.html', 'photo-1523275335684-37898b6baf30'],
@@ -257,6 +260,18 @@ const esc = (value = '') =>
   String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const imageUrl = (id, width = 1200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=78`;
 const pageUrl = (slug) => `${slug}.html`;
+const slugify = (value) => String(value).toLowerCase()
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/&/g, ' and ')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '');
+const collectionUrl = (slug, name) => `/${slug}-collections.html#${slugify(name)}`;
+const guideUrl = (slug, index) => `/${slug}-buying-guide.html#check-${index + 1}`;
+const nextDepartment = (slug, offset = 1) => {
+  const index = STOREFRONT_ORDER.indexOf(slug);
+  return STOREFRONT_ORDER[(index + offset + STOREFRONT_ORDER.length) % STOREFRONT_ORDER.length];
+};
 
 function head({ title, description, canonical, image, breadcrumb }) {
   const json = breadcrumb ? `<script type="application/ld+json">${JSON.stringify({
@@ -282,8 +297,9 @@ function disclosure() {
   return `<aside class="affiliate-note"><strong>Affiliate disclosure:</strong> The Straight Cut may earn a commission when you book or purchase through links on this page, at no additional cost to you. <a href="affiliate-disclosure.html">Read the full disclosure.</a></aside>`;
 }
 
-function editorialCard(title, body, href, label = 'Explore the edit') {
-  return `<a class="editorial-card" href="${href}" aria-label="${esc(`${label}: ${title}`)}"><span class="card-kicker">The Straight Cut Edit</span><h3>${esc(title)}</h3><p>${esc(body)}</p><span class="card-action">${esc(label)} <span aria-hidden="true">→</span></span></a>`;
+function editorialCard(title, body, href, label = 'Explore the edit', image = '') {
+  const visual = image ? `<img loading="lazy" src="${image}" alt="">` : '';
+  return `<a class="editorial-card${image ? ' editorial-card-image' : ''}" href="${href}" aria-label="${esc(`${label}: ${title}`)}">${visual}<span class="editorial-card-copy"><span class="card-kicker">The Straight Cut Edit</span><h3>${esc(title)}</h3><p>${esc(body)}</p><span class="card-action">${esc(label)} <span aria-hidden="true">→</span></span></span></a>`;
 }
 
 function partnerCard(key, title, body, label) {
@@ -299,23 +315,42 @@ function departmentPage(slug, page) {
   const description = `${page.name} at The Straight Cut. ${page.intro}`;
   const canonical = `${SITE}/${slug}.html`;
   const image = imageUrl(page.hero);
-  const collectionDestination = `/${pageUrl(slug)}#curated`;
-  const buyingNotesDestination = `/${pageUrl(slug)}#guide`;
   const collectionCards = page.collections.map((name) =>
-    editorialCard(name, `A focused ${name.toLowerCase()} collection designed to help you compare what matters before the next click.`, collectionDestination, 'Browse the collection')
+    editorialCard(name, `A focused ${name.toLowerCase()} collection designed to help you compare what matters before the next click.`, collectionUrl(slug, name), 'Browse the collection', imageUrl(page.hero, 760))
   ).join('');
   const partnerCards = (page.partners || []).map((partner) => partnerCard(...partner)).join('');
-  const curated = partnerCards || page.collections.slice(0, 3).map((name) =>
-    editorialCard(name, `Explore our editorial approach to ${name.toLowerCase()}, with practical context and no unverified product claims.`, buyingNotesDestination, 'Read the buying notes')
+  const curated = partnerCards || page.collections.slice(0, 3).map((name, index) =>
+    editorialCard(name, `Explore our editorial approach to ${name.toLowerCase()}, with practical context and no unverified product claims.`, guideUrl(slug, index), 'Read the buying notes')
   ).join('');
   const guideCards = page.guide.map((tip, i) =>
     `<article class="guide-card"><span>0${i + 1}</span><h3>${esc(tip)}</h3><p>Use this as a quick checkpoint before deciding what belongs in your cart.</p></article>`
   ).join('');
-  const related = page.related.map((item) => {
-    const relatedPage = PAGES[item];
+  const related = [1, 2, 3].map((offset) => {
+    const item = nextDepartment(slug, offset);
+    const relatedPage = ALL_PAGES[item];
     return `<a class="related-card" href="${pageUrl(item)}"><span>${esc(relatedPage.eyebrow)}</span><strong>${esc(relatedPage.name)}</strong><p>${esc(relatedPage.headline)}</p></a>`;
   }).join('');
-  return `${head({ title: `${page.name} | The Straight Cut`, description, canonical, image, breadcrumb: page.name })}<body>${header()}<main id="main"><section class="department-hero" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="departments.html">Departments</a><span>/</span><span>${esc(page.name)}</span></nav><span class="eyebrow">${esc(page.eyebrow)}</span><h1>${esc(page.headline)}</h1><p>${esc(page.intro)}</p><div class="hero-actions"><a class="button gold" href="/departments.html">Start browsing</a><a class="button glass" href="/buying-guides.html">Read the guide</a></div></div><a class="scroll-cue" href="#collections">Keep scrolling <span>↓</span></a></section><div class="anchor-strip"><a href="#collections">Featured collection</a><a href="#curated">Curated shopping</a><a href="#guide">Buying guide</a><a href="#related">Keep browsing</a></div><section id="collections" class="section light"><div class="section-heading"><span class="section-kicker">Featured Collection</span><h2>A better place to begin.</h2><p>Editorially organized so you can browse the idea before chasing the product.</p></div><div class="editorial-grid">${collectionCards}</div></section><section id="curated" class="section ink"><div class="section-heading"><span class="section-kicker">Curated Shopping</span><h2>${partnerCards ? 'Approved destinations, placed with purpose.' : 'Shop the idea. Choose the product later.'}</h2><p>${partnerCards ? 'These approved partners fit this department naturally. Final prices, availability and terms appear on the partner site.' : 'Explore useful themes, compare the qualities that matter and turn a broad shopping idea into a confident shortlist.'}</p></div>${partnerCards ? disclosure() : ''}<div class="partner-grid">${curated}</div></section><section id="guide" class="section warm"><div class="section-heading"><span class="section-kicker">The Buying Guide</span><h2>Four checks before checkout.</h2><p>Useful questions beat impulse regret. Keep the excitement—lose the guesswork.</p></div><div class="guide-grid">${guideCards}</div></section><section id="related" class="section light"><div class="section-heading"><span class="section-kicker">Related Departments</span><h2>There is always another aisle.</h2></div><div class="related-grid">${related}</div></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
+  return `${head({ title: `${page.name} | The Straight Cut`, description, canonical, image, breadcrumb: page.name })}<body>${header()}<main id="main"><section class="department-hero" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="departments.html">Departments</a><span>/</span><span>${esc(page.name)}</span></nav><span class="eyebrow">${esc(page.eyebrow)}</span><h1>${esc(page.headline)}</h1><p>${esc(page.intro)}</p><div class="hero-actions"><a class="button gold" href="/${slug}-collections.html">Start browsing</a><a class="button glass" href="/${slug}-buying-guide.html">Read the guide</a></div></div><a class="scroll-cue" href="#collections">Keep scrolling <span>↓</span></a></section><div class="anchor-strip"><a href="#collections">Featured collection</a><a href="#curated">Curated shopping</a><a href="/${slug}-buying-guide.html">Buying guide</a><a href="/${pageUrl(nextDepartment(slug))}">Keep browsing</a></div><section id="collections" class="section light"><div class="section-heading"><span class="section-kicker">Featured Collection</span><h2>A better place to begin.</h2><p>Editorially organized so you can browse the idea before chasing the product.</p></div><div class="editorial-grid">${collectionCards}</div></section><section id="curated" class="section ink"><div class="section-heading"><span class="section-kicker">Curated Shopping</span><h2>${partnerCards ? 'Approved destinations, placed with purpose.' : 'Shop the idea. Choose the product later.'}</h2><p>${partnerCards ? 'These approved partners fit this department naturally. Final prices, availability and terms appear on the partner site.' : 'Explore useful themes, compare the qualities that matter and turn a broad shopping idea into a confident shortlist.'}</p></div>${partnerCards ? disclosure() : ''}<div class="partner-grid">${curated}</div></section><section id="guide" class="section warm"><div class="section-heading split"><div><span class="section-kicker">The Buying Guide</span><h2>Four checks before checkout.</h2><p>Useful questions beat impulse regret. Keep the excitement—lose the guesswork.</p></div><a class="text-link" href="/${slug}-buying-guide.html">Read the complete guide →</a></div><div class="guide-grid">${guideCards}</div></section><section id="related" class="section light"><div class="section-heading"><span class="section-kicker">Related Departments</span><h2>There is always another aisle.</h2></div><div class="related-grid">${related}</div></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
+}
+
+function collectionPage(slug, page) {
+  const image = imageUrl(page.hero, 1800);
+  const sections = page.collections.map((name, index) => {
+    const destination = guideUrl(slug, index);
+    return `<section id="${slugify(name)}" class="section ${index % 2 ? 'warm' : 'light'}"><div class="collection-feature"><a class="collection-feature-image" href="${destination}" aria-label="Read the buying guide for ${esc(name)}"><img loading="lazy" src="${imageUrl(page.hero, 1000)}" alt=""></a><div><span class="section-kicker">Collection ${String(index + 1).padStart(2, '0')}</span><h2>${esc(name)}</h2><p>This editorial collection helps narrow the choices before shopping. Compare fit, usefulness, care and total cost without relying on invented products, prices or ratings.</p><a class="button dark" href="${destination}">Read Buying Notes</a></div></div></section>`;
+  }).join('');
+  return `${head({ title: `${page.name} Collections | The Straight Cut`, description: `Explore editorial ${page.name.toLowerCase()} collections and practical next-step buying guidance.`, canonical: `${SITE}/${slug}-collections.html`, image, breadcrumb: `${page.name} Collections` })}<body>${header()}<main id="main"><section class="department-hero compact" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/${pageUrl(slug)}">${esc(page.name)}</a><span>/</span><span>Collections</span></nav><span class="eyebrow">${esc(page.eyebrow)}</span><h1>${esc(page.name)} collections.</h1><p>Focused editorial paths that turn a broad idea into a useful shortlist.</p></div></section>${sections}<section class="section ink"><div class="section-heading"><span class="section-kicker">Continue Browsing</span><h2>Take the next useful step.</h2></div><a class="button gold" href="/${slug}-buying-guide.html">Open the ${esc(page.name)} Buying Guide</a></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
+}
+
+function buyingGuidePage(slug, page) {
+  const image = imageUrl(page.hero, 1800);
+  const checks = page.guide.map((tip, index) => `<section id="check-${index + 1}" class="section ${index % 2 ? 'warm' : 'light'}"><div class="guide-detail"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span><div><span class="section-kicker">${esc(page.name)} Buying Notes</span><h2>${esc(tip)}</h2><p>Use this checkpoint to compare options consistently. Confirm the details on the final retailer or partner page, and avoid paying for features that do not improve the way you will actually use the purchase.</p></div></div></section>`).join('');
+  const onward = [1, 2, 3].map((offset) => {
+    const next = nextDepartment(slug, offset);
+    const nextPage = ALL_PAGES[next];
+    return `<a class="related-card" href="/${pageUrl(next)}"><span>${esc(nextPage.eyebrow)}</span><strong>${esc(nextPage.name)}</strong><p>${esc(nextPage.headline)}</p></a>`;
+  }).join('');
+  return `${head({ title: `${page.name} Buying Guide | The Straight Cut`, description: `Practical ${page.name.toLowerCase()} buying guidance from The Straight Cut.`, canonical: `${SITE}/${slug}-buying-guide.html`, image, breadcrumb: `${page.name} Buying Guide` })}<body>${header()}<main id="main"><section class="department-hero compact" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/buying-guides.html">Buying Guides</a><span>/</span><span>${esc(page.name)}</span></nav><span class="eyebrow">The Buying Guide</span><h1>${esc(page.name)}, considered.</h1><p>Four practical checks that move the decision forward without fake urgency or unsupported claims.</p></div></section>${checks}<section class="section ink"><div class="section-heading"><span class="section-kicker">Keep Browsing</span><h2>Continue into a related department.</h2></div><div class="related-grid">${onward}</div></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
 }
 
 function homepage() {
@@ -349,4 +384,8 @@ for (const slug of PAGE_ORDER) await writeFile(join(ROOT, pageUrl(slug)), depart
 for (const [slug, page] of Object.entries(SECONDARY_PAGES)) {
   await writeFile(join(ROOT, pageUrl(slug)), departmentPage(slug, page), 'utf8');
 }
-console.log(`Built homepage, departments hub and ${PAGE_ORDER.length + Object.keys(SECONDARY_PAGES).length} storefront destinations.`);
+for (const [slug, page] of Object.entries(ALL_PAGES)) {
+  await writeFile(join(ROOT, `${slug}-collections.html`), collectionPage(slug, page), 'utf8');
+  await writeFile(join(ROOT, `${slug}-buying-guide.html`), buyingGuidePage(slug, page), 'utf8');
+}
+console.log(`Built homepage, departments hub, ${STOREFRONT_ORDER.length} departments, ${STOREFRONT_ORDER.length} collection pages and ${STOREFRONT_ORDER.length} buying guides.`);
