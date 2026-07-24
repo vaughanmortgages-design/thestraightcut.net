@@ -7,8 +7,10 @@ const files = (await readdir(ROOT)).filter((file) => file.endsWith('.html')).sor
 const pages = new Set(files);
 const ids = new Map();
 const failures = [];
+const ctaEdges = new Map();
 let links = 0;
 let ctas = 0;
+let slickdeals = 0;
 
 for (const file of files) {
   const source = await readFile(join(ROOT, file), 'utf8');
@@ -17,6 +19,8 @@ for (const file of files) {
 
 for (const file of files) {
   const source = await readFile(join(ROOT, file), 'utf8');
+  if (/slickdeals/i.test(source)) slickdeals += 1;
+  const edges = [];
   for (const match of source.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
     links += 1;
     const attrs = match[1];
@@ -54,14 +58,28 @@ for (const file of files) {
     if (isCta && target === file && !fragment) {
       failures.push(`${file}: self-routing CTA "${text}" -> "${href}"`);
     }
+    if (isCta && target !== file) edges.push({ target, text });
     if (isCta && /read (the )?buying notes/i.test(text) && fragment) {
       failures.push(`${file}: buying-notes CTA still uses an anchor "${text}" -> "${href}"`);
     }
   }
+  ctaEdges.set(file, edges);
 }
 
-console.log(JSON.stringify({ pages: files.length, links, ctas, failures: failures.length }, null, 2));
-if (failures.length) {
-  console.error(failures.join('\n'));
+const reciprocal = [];
+const seen = new Set();
+for (const [file, edges] of ctaEdges) {
+  for (const edge of edges) {
+    const reverse = (ctaEdges.get(edge.target) ?? []).find((candidate) => candidate.target === file);
+    const key = [file, edge.target].sort().join('|');
+    if (!reverse || seen.has(key)) continue;
+    seen.add(key);
+    reciprocal.push(`${file} "${edge.text}" <-> ${edge.target} "${reverse.text}"`);
+  }
+}
+
+console.log(JSON.stringify({ pages: files.length, links, ctas, slickdeals, reciprocal: reciprocal.length, failures: failures.length }, null, 2));
+if (failures.length || reciprocal.length || slickdeals) {
+  console.error([...failures, ...reciprocal.map((loop) => `two-page CTA loop: ${loop}`)].join('\n'));
   process.exitCode = 1;
 }

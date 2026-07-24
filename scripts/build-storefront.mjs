@@ -330,12 +330,8 @@ function departmentPage(slug, page) {
     const relatedPage = ALL_PAGES[item];
     return `<a class="related-card" href="${pageUrl(item)}"><span>${esc(relatedPage.eyebrow)}</span><strong>${esc(relatedPage.name)}</strong><p>${esc(relatedPage.headline)}</p></a>`;
   }).join('');
-  const secondaryHero = slug === 'refurbished-beauties'
-    ? `<a class="button glass" href="/refurbished-beauties-collections.html">View Finds</a>`
-    : `<a class="button glass" href="/${slug}-buying-guide.html">Read the guide</a>`;
-  const primaryHero = slug === 'deals'
-    ? `<a class="button gold" href="/deals-collections.html">Browse the Collection</a>`
-    : `<a class="button gold" href="/deals.html">Start browsing</a>`;
+  const secondaryHero = `<a class="button glass" href="/${slug}-buying-guide.html">Read the guide</a>`;
+  const primaryHero = `<a class="button gold" href="/${slug}-collections.html">Browse the Collection</a>`;
   return `${head({ title: `${page.name} | The Straight Cut`, description, canonical, image, breadcrumb: page.name })}<body>${header()}<main id="main"><section class="department-hero" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="departments.html">Departments</a><span>/</span><span>${esc(page.name)}</span></nav><span class="eyebrow">${esc(page.eyebrow)}</span><h1>${esc(page.headline)}</h1><p>${esc(page.intro)}</p><div class="hero-actions">${primaryHero}${secondaryHero}</div></div><a class="scroll-cue" href="#collections">Keep scrolling <span>↓</span></a></section><div class="anchor-strip"><a href="#collections">Featured collection</a><a href="#curated">Curated shopping</a><a href="/${slug}-buying-guide.html">Buying guide</a><a href="/${pageUrl(nextDepartment(slug))}">Keep browsing</a></div><section id="collections" class="section light"><div class="section-heading"><span class="section-kicker">Featured Collection</span><h2>A better place to begin.</h2><p>Editorially organized so you can browse the idea before chasing the product.</p></div><div class="editorial-grid">${collectionCards}</div></section><section id="curated" class="section ink"><div class="section-heading"><span class="section-kicker">Curated Shopping</span><h2>${partnerCards ? 'Approved destinations, placed with purpose.' : 'Shop the idea. Choose the product later.'}</h2><p>${partnerCards ? 'These approved partners fit this department naturally. Final prices, availability and terms appear on the partner site.' : 'Explore useful themes, compare the qualities that matter and turn a broad shopping idea into a confident shortlist.'}</p></div>${partnerCards ? disclosure() : ''}<div class="partner-grid">${curated}</div></section><section id="guide" class="section warm"><div class="section-heading split"><div><span class="section-kicker">The Buying Guide</span><h2>Four checks before checkout.</h2><p>Useful questions beat impulse regret. Keep the excitement—lose the guesswork.</p></div><a class="text-link" href="/${slug}-buying-guide.html">Read the complete guide →</a></div><div class="guide-grid">${guideCards}</div></section><section id="related" class="section light"><div class="section-heading"><span class="section-kicker">Related Departments</span><h2>There is always another aisle.</h2></div><div class="related-grid">${related}</div></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
 }
 
@@ -349,10 +345,10 @@ function collectionPage(slug, page) {
 }
 
 function shoppingExit(slug) {
-  if (slug === 'clearance') return { label: 'Browse Clearance', href: '/clearance.html' };
-  if (slug === 'refurbished-beauties') return { label: 'See Refurbished Finds', href: '/refurbished-beauties.html' };
-  if (slug === 'hot-finds') return { label: 'Explore Hot Finds', href: '/hot-finds.html' };
-  if (slug === 'deals') return { label: 'View Deals', href: '/deals.html' };
+  if (slug === 'clearance') return { label: 'View Deals', href: '/deals.html' };
+  if (slug === 'deals') return { label: 'Explore Hot Finds', href: '/hot-finds.html' };
+  if (slug === 'hot-finds') return { label: 'Browse Departments', href: '/departments.html' };
+  if (slug === 'refurbished-beauties') return { label: 'Browse Departments', href: '/departments.html' };
   return { label: 'View Deals', href: '/deals.html' };
 }
 
@@ -360,9 +356,9 @@ function buyingGuidePage(slug, page) {
   const image = imageUrl(page.hero, 1800);
   const checks = page.guide.map((tip, index) => `<section id="check-${index + 1}" class="section ${index % 2 ? 'warm' : 'light'}"><div class="guide-detail"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span><div><span class="section-kicker">${esc(page.name)} Buying Notes</span><h2>${esc(tip)}</h2><p>Use this checkpoint to compare options consistently. Confirm the details on the final retailer or partner page, and avoid paying for features that do not improve the way you will actually use the purchase.</p></div></div></section>`).join('');
   const exit = shoppingExit(slug);
-  const secondaryExit = exit.href === '/deals.html'
-    ? { label: 'Browse Departments', href: '/departments.html' }
-    : { label: 'View Deals', href: '/deals.html' };
+  const secondaryExit = exit.href === '/departments.html'
+    ? { label: 'View Deals', href: '/deals.html' }
+    : { label: 'Browse Departments', href: '/departments.html' };
   const onward = [1, 2, 3].map((offset) => {
     const next = nextDepartment(slug, offset);
     const nextPage = ALL_PAGES[next];
@@ -380,9 +376,9 @@ function collectionGuidePage(slug, page, collection, index) {
     [page.guide[(index + 2) % page.guide.length], `Confirm final price, availability, delivery, returns and compatibility at the approved retailer before committing.`],
   ].map(([title, body], itemIndex) => `<section class="section ${itemIndex % 2 ? 'warm' : 'light'}"><div class="guide-detail"><span class="guide-number">${String(itemIndex + 1).padStart(2, '0')}</span><div><span class="section-kicker">${esc(collection)} Buying Notes</span><h2>${esc(title)}</h2><p>${esc(body)}</p></div></div></section>`).join('');
   const exit = shoppingExit(slug);
-  const secondaryExit = exit.href === '/deals.html'
-    ? { label: 'Browse Departments', href: '/departments.html' }
-    : { label: 'View Deals', href: '/deals.html' };
+  const secondaryExit = exit.href === '/departments.html'
+    ? { label: 'View Deals', href: '/deals.html' }
+    : { label: 'Browse Departments', href: '/departments.html' };
   return `${head({ title: `${collection} Buying Guide | The Straight Cut`, description: `Useful buying notes for the ${collection} collection in ${page.name}.`, canonical: `${SITE}/${slug}-${slugify(collection)}-guide.html`, image, breadcrumb: `${collection} Buying Guide` })}<body>${header()}<main id="main"><section class="department-hero compact" style="--hero:url('${image}')"><div class="hero-shade"></div><div class="hero-content"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/${pageUrl(slug)}">${esc(page.name)}</a><span>/</span><span>${esc(collection)}</span></nav><span class="eyebrow">Collection Buying Guide</span><h1>${esc(collection)}, without the guesswork.</h1><p>Three useful checks written for this collection—not a generic anchor or another editorial loop.</p><div class="hero-actions"><a class="button gold" href="${exit.href}">Shop the Collection</a><a class="button glass" href="${secondaryExit.href}">${esc(secondaryExit.label)}</a></div></div></section>${checks}<section class="section ink"><div class="section-heading"><span class="section-kicker">Next Step</span><h2>Move from research into a real shopping destination.</h2><p>No product-level purchase button appears unless an approved tracked affiliate URL exists.</p></div><div class="hero-actions"><a class="button gold" href="${exit.href}">${esc(exit.label)}</a><a class="button glass" href="/departments.html">Browse Departments</a></div></section>${newsletter()}</main>${footer()}<script src="assets/store.js"></script></body></html>`;
 }
 

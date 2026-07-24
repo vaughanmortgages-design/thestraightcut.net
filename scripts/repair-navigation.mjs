@@ -52,6 +52,7 @@ const UNAPPROVED_PURCHASE_URLS = new Set([
 ]);
 
 const CONTENT_REPLACEMENTS = new Map([
+  ['<a class="btn btn-outline" href="index.html#newsletter">Join newsletter →</a>', '<a class="btn btn-outline" href="deals.html">Browse deals →</a>'],
   ['1-year NordVPN plan. $5.00/mo.', 'NordVPN partner offer pending approval.'],
   ['Private. Encrypted. Everywhere.', 'Approved destination required.'],
   ['<span class="badge badge-new">Deal</span>', '<span class="badge badge-new">Coming Soon</span>'],
