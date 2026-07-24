@@ -1,3 +1,3 @@
 [build]
-  command = "node scripts/build-storefront.mjs && node scripts/repair-navigation.mjs && node scripts/generate-sitemap.mjs"
+  command = "node scripts/build-storefront.mjs && node scripts/generate-sitemap.mjs"
   publish = "."
