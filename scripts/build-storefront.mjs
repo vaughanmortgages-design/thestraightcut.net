@@ -283,28 +283,28 @@ function disclosure() {
 }
 
 function editorialCard(title, body, href, label = 'Explore the edit') {
-  return `<article class="editorial-card"><span class="card-kicker">The Straight Cut Edit</span><h3>${esc(title)}</h3><p>${esc(body)}</p><a href="${href}">${esc(label)} <span aria-hidden="true">→</span></a></article>`;
+  return `<a class="editorial-card" href="${href}" aria-label="${esc(`${label}: ${title}`)}"><span class="card-kicker">The Straight Cut Edit</span><h3>${esc(title)}</h3><p>${esc(body)}</p><span class="card-action">${esc(label)} <span aria-hidden="true">→</span></span></a>`;
 }
 
 function partnerCard(key, title, body, label) {
   const partner = PARTNERS[key];
-  return `<article class="partner-card"><span class="card-kicker">Featured partner · ${esc(partner.name)}</span><h3>${esc(title)}</h3><p>${esc(body)}</p><a href="${esc(partner.url)}" target="_blank" rel="sponsored nofollow">${esc(label)} <span aria-hidden="true">↗</span></a></article>`;
+  return `<a class="partner-card" href="${esc(partner.url)}" target="_blank" rel="sponsored nofollow" aria-label="${esc(`${label}: ${title}`)}"><span class="card-kicker">Featured partner · ${esc(partner.name)}</span><h3>${esc(title)}</h3><p>${esc(body)}</p><span class="card-action">${esc(label)} <span aria-hidden="true">↗</span></span></a>`;
 }
 
 function newsletter() {
-  return `<section class="newsletter"><div><span class="section-kicker">The Saturday Cut</span><h2>One smart browse. Zero clutter.</h2><p>New edits, seasonal ideas and partner finds—delivered with the same no-noise approach as the store.</p></div><form data-newsletter-form><label for="newsletter-email">Email address</label><div><input id="newsletter-email" type="email" required placeholder="you@example.com"><button type="submit">Join the list</button></div><p data-form-message aria-live="polite"></p></form></section>`;
+  return `<section id="newsletter" class="newsletter"><div><span class="section-kicker">The Saturday Cut</span><h2>One smart browse. Zero clutter.</h2><p>New edits, seasonal ideas and partner finds—delivered with the same no-noise approach as the store.</p></div><form data-newsletter-form><label for="newsletter-email">Email address</label><div><input id="newsletter-email" type="email" required placeholder="you@example.com"><button type="submit">Join the list</button></div><p data-form-message aria-live="polite"></p></form></section>`;
 }
 
 function departmentPage(slug, page) {
   const description = `${page.name} at The Straight Cut. ${page.intro}`;
   const canonical = `${SITE}/${slug}.html`;
   const image = imageUrl(page.hero);
-  const collectionCards = page.collections.map((name) =>
-    editorialCard(name, `A focused ${name.toLowerCase()} collection designed to help you compare what matters before the next click.`, '#guide', 'Browse the collection')
+  const collectionCards = page.collections.map((name, index) =>
+    editorialCard(name, `A focused ${name.toLowerCase()} collection designed to help you compare what matters before the next click.`, pageUrl(page.related[index % page.related.length]), 'Browse the collection')
   ).join('');
   const partnerCards = (page.partners || []).map((partner) => partnerCard(...partner)).join('');
-  const curated = partnerCards || page.collections.slice(0, 3).map((name) =>
-    editorialCard(name, `Explore our editorial approach to ${name.toLowerCase()}, with practical context and no unverified product claims.`, '#guide', 'Read the buying notes')
+  const curated = partnerCards || page.collections.slice(0, 3).map((name, index) =>
+    editorialCard(name, `Explore our editorial approach to ${name.toLowerCase()}, with practical context and no unverified product claims.`, pageUrl(page.related[index % page.related.length]), 'Read the buying notes')
   ).join('');
   const guideCards = page.guide.map((tip, i) =>
     `<article class="guide-card"><span>0${i + 1}</span><h3>${esc(tip)}</h3><p>Use this as a quick checkpoint before deciding what belongs in your cart.</p></article>`
