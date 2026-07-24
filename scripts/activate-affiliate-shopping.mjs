@@ -37,6 +37,8 @@ const clean = (value = '') => value
   .replace(/\s+/g, ' ')
   .trim();
 
+const GENERIC_CTA = /^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection|shop on ebay|shop on amazon)$/i;
+
 const amazonUrl = (query) => `https://www.amazon.ca/s?k=${encodeURIComponent(query)}&tag=${AMAZON_TAG}`;
 const ebayUrl = (query) => {
   const params = new URLSearchParams({
@@ -70,9 +72,14 @@ for (const file of files) {
     const isEditorialCta = /(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection)/i.test(signal);
     if (!isEditorialCta) return anchor;
 
-    const title = aria.replace(/^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection)\s*:\s*/i, '') || visible || pageTitle;
+    const heading = clean((inner.match(/<h[2-4][^>]*>([\s\S]*?)<\/h[2-4]>/i) || [,''])[1]);
+    const ariaTitle = aria.replace(/^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection)\s*:\s*/i, '').trim();
+    const visibleTitle = visible.replace(/\b(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|shop on ebay|shop on amazon)\b/ig, '').trim();
+    const title = [heading, ariaTitle, visibleTitle, pageTitle]
+      .find((candidate) => candidate && !GENERIC_CTA.test(candidate)) || pageTitle;
+
     const partner = partnerByFile.get(file);
-    const url = partner || marketplaceUrl(file, title || pageTitle);
+    const url = partner || marketplaceUrl(file, title);
     const label = partner ? 'Visit Partner →' : `Shop ${ebayPages.has(file) ? 'on eBay' : 'on Amazon'} →`;
 
     let newAttrs = attrs
