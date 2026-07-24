@@ -17,6 +17,16 @@ const ebayPages = new Set([
   'ebay.html',
 ]);
 
+const ebaySearchByFile = new Map([
+  ['auctions-collectibles.html', 'vintage collectibles'],
+  ['auctions-collectibles-collections.html', 'vintage collectibles'],
+  ['refurbished-beauties.html', 'refurbished laptops'],
+  ['refurbished-beauties-collections.html', 'refurbished electronics'],
+  ['books-media.html', 'vintage books'],
+  ['books-media-collections.html', 'collectible books'],
+  ['ebay.html', 'ebay deals'],
+]);
+
 const partnerByFile = new Map([
   ['travel.html', vault.hotels],
   ['electronics.html', vault.rexing],
@@ -36,8 +46,6 @@ const clean = (value = '') => value
   .replace(/<[^>]+>/g, ' ')
   .replace(/\s+/g, ' ')
   .trim();
-
-const GENERIC_CTA = /^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection|shop on ebay|shop on amazon)$/i;
 
 const amazonUrl = (query) => `https://www.amazon.ca/s?k=${encodeURIComponent(query)}&tag=${AMAZON_TAG}`;
 const ebayUrl = (query) => {
@@ -63,7 +71,7 @@ for (const file of files) {
   const path = join(ROOT, file);
   const original = await readFile(path, 'utf8');
   let html = original;
-  const pageTitle = clean((html.match(/<h1>([\s\S]*?)<\/h1>/i) || html.match(/<title>([\s\S]*?)\|/i) || [,'The Straight Cut'])[1]);
+  const pageTitle = clean((html.match(/<title>([\s\S]*?)\|/i) || [,'The Straight Cut'])[1]);
 
   html = html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attrs, inner) => {
     const visible = clean(inner);
@@ -72,12 +80,10 @@ for (const file of files) {
     const isEditorialCta = /(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection)/i.test(signal);
     if (!isEditorialCta) return anchor;
 
-    const heading = clean((inner.match(/<h[2-4][^>]*>([\s\S]*?)<\/h[2-4]>/i) || [,''])[1]);
     const ariaTitle = aria.replace(/^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection)\s*:\s*/i, '').trim();
-    const visibleTitle = visible.replace(/\b(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|shop on ebay|shop on amazon)\b/ig, '').trim();
-    const title = [heading, ariaTitle, visibleTitle, pageTitle]
-      .find((candidate) => candidate && !GENERIC_CTA.test(candidate)) || pageTitle;
-
+    const genericVisible = /^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection)(\s*→)?$/i.test(visible);
+    const fallbackTitle = ebaySearchByFile.get(file) || pageTitle;
+    const title = ariaTitle || (!genericVisible ? visible : '') || fallbackTitle;
     const partner = partnerByFile.get(file);
     const url = partner || marketplaceUrl(file, title);
     const label = partner ? 'Visit Partner →' : `Shop ${ebayPages.has(file) ? 'on eBay' : 'on Amazon'} →`;
