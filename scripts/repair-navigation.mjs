@@ -38,13 +38,35 @@ const ROOT_ANCHORS = {
 };
 
 const files = (await readdir(ROOT)).filter((file) => file.endsWith('.html'));
+const existingPages = new Set(files);
 let repaired = 0;
+let editorialFound = 0;
+let editorialRepaired = 0;
 
 for (const file of files) {
   const path = join(ROOT, file);
   const source = await readFile(path, 'utf8');
   const fallback = ROUTES[file] || 'departments.html';
-  const output = source.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>/gi, (tag, quote, href) => {
+  const routedEditorial = source.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>[\s\S]*?<\/a>/gi, (anchor, quote, href) => {
+    const text = anchor.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    const isStart = text.includes('start browsing');
+    const isGuide = text.includes('read the guide');
+    const isCollection = text.includes('browse the collection');
+    const isNotes = text.includes('read the buying notes');
+    if (!isStart && !isGuide && !isCollection && !isNotes) return anchor;
+
+    editorialFound += 1;
+    let destination = isStart ? '/departments.html' : isGuide ? '/buying-guides.html' : href;
+    const page = destination.replace(/^\//, '').split(/[?#]/)[0];
+    if (!existingPages.has(page)) destination = `/${fallback}`;
+    else destination = `/${destination.replace(/^\//, '')}`;
+
+    if (destination === href) return anchor;
+    editorialRepaired += 1;
+    repaired += 1;
+    return anchor.replace(/\bhref=(["']).*?\1/i, `href="${destination}"`);
+  });
+  const output = routedEditorial.replace(/<a\b[^>]*\bhref=(["'])(.*?)\1[^>]*>/gi, (tag, quote, href) => {
     if (ROOT_ANCHORS[href]) {
       repaired += 1;
       return tag.replace(/\bhref=(["']).*?\1/i, `href="${ROOT_ANCHORS[href]}"`);
@@ -66,3 +88,4 @@ for (const file of files) {
 }
 
 console.log(`Repaired ${repaired} dead, placeholder or unapproved marketplace links.`);
+console.log(`Verified ${editorialFound} editorial CTAs and repaired ${editorialRepaired} routes.`);
