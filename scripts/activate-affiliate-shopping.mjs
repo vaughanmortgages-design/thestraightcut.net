@@ -17,6 +17,18 @@ const ebayPages = new Set([
   'ebay.html',
 ]);
 
+const partnerByFile = new Map([
+  ['travel.html', vault.hotels],
+  ['electronics.html', vault.rexing],
+  ['auto.html', vault.rexing],
+  ['health-beauty.html', vault.bathorium],
+  ['books-media.html', vault.gumroad],
+  ['tools.html', vault.wrapItStorage],
+  ['garden.html', vault.wrapItStorage],
+  ['home.html', vault.wrapItStorage],
+  ['his-hers.html', vault.activeAwinOffer],
+]);
+
 const clean = (value = '') => value
   .replace(/&amp;/g, '&')
   .replace(/&#39;|&apos;/g, "'")
@@ -40,32 +52,28 @@ for (const file of files) {
   const path = join(ROOT, file);
   const original = await readFile(path, 'utf8');
   let html = original;
+  const pageTitle = clean((html.match(/<h1>([\s\S]*?)<\/h1>/i) || html.match(/<title>([\s\S]*?)\|/i) || [,'The Straight Cut'])[1]);
 
-  html = html.replace(/<a\b([^>]*?)href=(['"])(.*?)\2([^>]*?)aria-label=(['"])(Browse the collection|Read the buying notes|Start browsing|Shop the collection):\s*([^'"]+)\5([^>]*)>/gi,
-    (match, before, quote, href, middle, labelQuote, action, rawTitle, after) => {
-      const title = clean(rawTitle);
-      const url = marketplaceUrl(file, title);
-      activatedLinks += 1;
-      return `<a${before}href="${url}"${middle}aria-label=${labelQuote}${action}: ${rawTitle}${labelQuote}${after} target="_blank" rel="sponsored nofollow noopener">`;
-    });
+  html = html.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attrs, inner) => {
+    const visible = clean(inner);
+    const aria = clean((attrs.match(/aria-label=(['"])(.*?)\1/i) || [,'',''])[2]);
+    const signal = `${visible} ${aria}`.toLowerCase();
+    const isEditorialCta = /(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection|browse collection)/i.test(signal);
+    if (!isEditorialCta) return anchor;
 
-  html = html.replace(/<a\b([^>]*?)class=(['"])(button gold)\2([^>]*?)href=(['"])(\/[^'"]+-collections\.html)\5([^>]*)>(Browse the Collection|Shop the Collection|Start Browsing)<\/a>/gi,
-    (match, before, classQuote, className, middle, hrefQuote, href, after) => {
-      const pageTitle = clean((html.match(/<title>(.*?)\|/i) || [,'The Straight Cut'])[1]);
-      const useEbay = ebayPages.has(file);
-      const url = marketplaceUrl(file, pageTitle);
-      activatedLinks += 1;
-      return `<a${before}class=${classQuote}${className}${classQuote}${middle}href="${url}"${after} target="_blank" rel="sponsored nofollow noopener">Shop ${useEbay ? 'on eBay' : 'on Amazon'} →</a>`;
-    });
+    const title = aria.replace(/^(browse the collection|read buying notes|read the buying notes|start browsing|shop the collection)\s*:\s*/i, '') || visible || pageTitle;
+    const partner = partnerByFile.get(file);
+    const url = partner || marketplaceUrl(file, title || pageTitle);
+    const label = partner ? 'Visit Partner →' : `Shop ${ebayPages.has(file) ? 'on eBay' : 'on Amazon'} →`;
 
-  html = html.replace(/<a\b([^>]*?)href=(['"])([^'"]*)\2([^>]*)>(Browse the Collection|Read Buying Notes|Start Browsing|Shop the Collection)<\/a>/gi,
-    (match, before, quote, href, after, label) => {
-      const nearby = clean((html.match(/<h1>(.*?)<\/h1>/i) || html.match(/<title>(.*?)\|/i) || [,'The Straight Cut'])[1]);
-      const useEbay = ebayPages.has(file);
-      const url = marketplaceUrl(file, nearby || label);
-      activatedLinks += 1;
-      return `<a${before}href="${url}"${after} target="_blank" rel="sponsored nofollow noopener">Shop ${useEbay ? 'on eBay' : 'on Amazon'} →</a>`;
-    });
+    let newAttrs = attrs
+      .replace(/\s+href=(['"])[\s\S]*?\1/i, '')
+      .replace(/\s+target=(['"])[\s\S]*?\1/gi, '')
+      .replace(/\s+rel=(['"])[\s\S]*?\1/gi, '');
+    newAttrs += ` href="${url}" target="_blank" rel="sponsored nofollow noopener"`;
+    activatedLinks += 1;
+    return `<a${newAttrs}>${label}</a>`;
+  });
 
   if (file === 'his-hers.html' && vault.activeAwinOffer && !html.includes(vault.activeAwinOffer)) {
     const card = `<a class="partner-card" href="${vault.activeAwinOffer}" target="_blank" rel="sponsored nofollow noopener" aria-label="Explore 1st Class Cigar Humidors"><span class="card-kicker">Featured partner · 1st Class Cigar Humidors</span><h3>Premium cigar storage</h3><p>Explore approved humidors and cigar storage through 1st Class Cigar Humidors.</p><span class="card-action">Explore Humidors <span aria-hidden="true">↗</span></span></a>`;
