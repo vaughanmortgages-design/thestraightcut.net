@@ -169,6 +169,75 @@ const PAGES = {
   },
 };
 
+const SECONDARY_PAGES = {
+  appliances: {
+    name: 'Appliances', eyebrow: 'Everyday Workhorses', headline: 'Choose the machine that fits the routine.',
+    intro: 'Practical guidance for major and small appliances, organized around space, capacity, care and the features you will actually use.',
+    hero: 'photo-1574269909862-7e1d70bb8078',
+    collections: ['Kitchen Appliances', 'Laundry Planning', 'Small-Space Helpers', 'Care & Maintenance'],
+    guide: ['Measure every doorway', 'Compare usable capacity', 'Check service access', 'Plan ventilation and power'],
+    related: ['home', 'deals', 'tools'],
+  },
+  apparel: {
+    name: 'Apparel', eyebrow: 'The Wardrobe Edit', headline: 'Wear more of what you own.',
+    intro: 'A considered approach to everyday layers, occasion dressing, care and closet-building without trend-chasing.',
+    hero: 'photo-1483985988355-763728e1935b',
+    collections: ['Everyday Uniform', 'Weekend Layers', 'Occasion Ready', 'Care & Storage'],
+    guide: ['Start with fit', 'Check fabric care', 'Build around repeat wear', 'Buy for your real calendar'],
+    related: ['health-beauty', 'travel', 'home'],
+  },
+  'auctions-collectibles': {
+    name: 'Auctions & Collectibles', eyebrow: 'The Collector’s Room', headline: 'The hunt is half the pleasure.',
+    intro: 'Editorial guidance for vintage finds, memorabilia, bullion and auction browsing—without untracked marketplace destinations.',
+    hero: 'photo-1461360370896-922624d12aa1',
+    collections: ['Vintage Finds', 'Collectibles', 'Bullion Basics', 'Auction Strategy'],
+    guide: ['Research sold examples', 'Study condition carefully', 'Set a total-cost ceiling', 'Keep provenance records'],
+    related: ['books-media', 'hot-finds', 'refurbished-beauties'],
+  },
+  'his-hers': {
+    name: 'His & Hers', eyebrow: 'Gifts & Daily Style', headline: 'Thoughtful ideas, minus the guesswork.',
+    intro: 'Polished edits for grooming, useful gifts, travel and everyday style—organized around interests rather than stereotypes.',
+    hero: 'photo-1529139574466-a303027c1d8b',
+    collections: ['Daily Rituals', 'Useful Gifts', 'Travel Ready', 'Quiet Luxury'],
+    guide: ['Shop the person, not the category', 'Choose useful over novelty', 'Check sizing early', 'Include an easy exchange path'],
+    related: ['health-beauty', 'travel', 'books-media'],
+  },
+  kids: {
+    name: 'Kids & Family', eyebrow: 'Growing Together', headline: 'Make family life a little easier.',
+    intro: 'Play, organization, learning and family-time collections built around durability, age suitability and less household clutter.',
+    hero: 'photo-1503454537195-1dcabb73ffb9',
+    collections: ['Creative Play', 'Family Organization', 'Learning at Home', 'Weekend Together'],
+    guide: ['Check age guidance', 'Choose easy-clean materials', 'Prioritize open-ended play', 'Plan storage with the purchase'],
+    related: ['home', 'books-media', 'travel'],
+  },
+  sports: {
+    name: 'Sports', eyebrow: 'Game On', headline: 'More playing. Less overthinking.',
+    intro: 'A focused sports edit for training, team play, recovery and getting outside with the gear decision simplified.',
+    hero: 'photo-1461896836934-ffe607ba8211',
+    collections: ['Training Day', 'Team Sports', 'Outdoor Play', 'Recovery'],
+    guide: ['Fit comes first', 'Choose league-appropriate equipment', 'Protective gear is not optional', 'Buy for current ability'],
+    related: ['sports-outdoors', 'health-beauty', 'garden'],
+  },
+  'affiliate-partners': {
+    name: 'Featured Partners', eyebrow: 'Shop With Confidence', headline: 'Approved destinations, clearly presented.',
+    intro: 'A transparent directory of the approved partners currently featured across The Straight Cut’s editorial departments.',
+    hero: 'photo-1556742049-0cfed4f6a45d',
+    collections: ['Travel Partners', 'Home & Workshop', 'Road Technology', 'Self-Care & Digital'],
+    guide: ['Confirm final prices on the partner site', 'Review delivery or booking terms', 'Check returns and cancellation rules', 'Use the full disclosure for context'],
+    partners: [
+      ['hotels', 'Hotels & city stays', 'Approved hotel and resort browsing through Hotels.com.', 'Explore Hotels'],
+      ['vrbo', 'Vacation rentals', 'Approved whole-home vacation rental browsing through VRBO.', 'Explore VRBO'],
+      ['skylark', 'Luxury travel', 'Premium travel planning through Skylark Travel Group.', 'Explore Skylark'],
+      ['roamable', 'Travel connectivity', 'Approved travel connectivity offers through Roamable.', 'Explore Roamable'],
+      ['wrapItStorage', 'Storage & organization', 'Approved home, garage and workshop organization through Wrap-It Storage.', 'Explore Storage'],
+      ['rexing', 'Road technology', 'Approved dash cam and road technology browsing through Rexing.', 'Explore Rexing'],
+      ['bathorium', 'Bath & body', 'Approved bath and body browsing through Bathorium.', 'Explore Bathorium'],
+      ['gumroad', 'Digital resources', 'Approved digital downloads from The Straight Cut Shop.', 'Browse Digital Guides'],
+    ],
+    related: ['travel', 'home', 'electronics'],
+  },
+};
+
 const HOME_FEATURES = [
   ['Today’s Best Deals', 'A disciplined shortlist of value-minded opportunities—no manufactured urgency.', 'deals.html', 'photo-1607082349566-187342175e2f'],
   ['Staff Picks', 'The practical upgrades and smart ideas our editorial desk would look at first.', 'hot-finds.html', 'photo-1523275335684-37898b6baf30'],
@@ -275,4 +344,7 @@ function departmentsPage() {
 await writeFile(join(ROOT, 'index.html'), homepage(), 'utf8');
 await writeFile(join(ROOT, 'departments.html'), departmentsPage(), 'utf8');
 for (const slug of PAGE_ORDER) await writeFile(join(ROOT, pageUrl(slug)), departmentPage(slug, PAGES[slug]), 'utf8');
-console.log(`Built homepage, departments hub and ${PAGE_ORDER.length} storefront destinations.`);
+for (const [slug, page] of Object.entries(SECONDARY_PAGES)) {
+  await writeFile(join(ROOT, pageUrl(slug)), departmentPage(slug, page), 'utf8');
+}
+console.log(`Built homepage, departments hub and ${PAGE_ORDER.length + Object.keys(SECONDARY_PAGES).length} storefront destinations.`);
