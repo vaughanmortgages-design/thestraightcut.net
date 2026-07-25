@@ -266,7 +266,6 @@ const HOME_DEPARTMENTS = [
   ['Books', 'books-media.html', 'photo-1495446815901-a7297e633e8d'],
   ['Travel', 'travel.html', 'photo-1507525428034-b723cf961d3e'],
   ['Fashion', 'fashion.html', 'photo-1483985988355-763728e1935b'],
-  ['Toys & Kids', 'toys-kids.html', 'photo-1503454537195-1dcabb73ffb9'],
 ];
 
 const esc = (value = '') =>
