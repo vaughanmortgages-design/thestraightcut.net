@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "merchants": [
+    {
+      "id": "amazon",
+      "name": "Amazon",
+      "badge": "Amazon",
+      "trackingRequirement": "Approved SiteStripe URL containing tag straightcutgu-20"
+    },
+    {
+      "id": "ebay",
+      "name": "eBay",
+      "badge": "eBay",
+      "trackingRequirement": "Approved EPN URL containing campaign 5339155090"
+    }
+  ]
+}
