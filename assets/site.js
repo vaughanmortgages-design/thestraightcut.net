@@ -109,3 +109,10 @@
     fixBlogBar();
   }
 })();
+(function loadOfficialSocialLinks(){
+  if(document.querySelector('script[data-straight-cut-social-links]'))return;
+  const script=document.createElement('script');
+  script.src='/assets/social-links.js';
+  script.dataset.straightCutSocialLinks='';
+  document.head.append(script);
+})();
