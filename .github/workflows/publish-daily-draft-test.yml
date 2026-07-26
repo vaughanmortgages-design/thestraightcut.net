@@ -25,14 +25,17 @@ jobs:
             --data @- \
             "$CONTENT_STUDIO_WEBHOOK_URL" <<'JSON'
           {
-            "brand": "estack",
-            "site": "estack.ca",
-            "category": "Bullion",
-            "title": "Webhook Test",
-            "summary": "This is a test from GitHub Actions.",
-            "article": "This is only a test payload used to build the Make.com automation.",
+            "brand": "straightcut",
+            "site": "thestraightcut.net",
+            "category": "Pets",
+            "title": "Rocky Mountain Dog Pet Gear Test",
+            "summary": "Test draft for The Straight Cut Pets department.",
+            "article": "This is a test payload for The Straight Cut Pets content automation.",
             "image": "https://placehold.co/1080x1350/png",
             "status": "Draft",
+            "affiliateName": "Rocky Mountain Dog",
+            "affiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
+            "couponCode": "RAYCUTTER10",
             "timestamp": "${{ github.run_id }}"
           }
           JSON
