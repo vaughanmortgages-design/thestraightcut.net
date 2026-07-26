@@ -17,6 +17,22 @@ export const REQUIRED_VAULT_COLUMNS = [
   "Last Used Date"
 ];
 
+export const REQUIRED_LOGICAL_FIELDS = [
+  ["Brand", "brand"],
+  ["Affiliate Name", "affiliate_name", "program_name"],
+  ["Category", "category"],
+  ["Product Name", "product_name", "offer_link_name"],
+  ["Product URL", "product_url"],
+  ["Affiliate URL", "affiliate_url", "full_url"],
+  ["Coupon Code", "coupon_code"],
+  ["Commission", "commission", "commission_terms"],
+  ["Country", "country"],
+  ["Status", "status"],
+  ["Image URL", "image_url"],
+  ["Notes", "notes"],
+  ["Last Used Date", "last_used_date"]
+];
+
 const BRAND_ALIASES = new Map([
   ["estack.ca", "estack"],
   ["estack canada", "estack"],
@@ -91,6 +107,17 @@ function validHttpUrl(value) {
   }
 }
 
+function columnLetter(oneBasedIndex) {
+  let value = oneBasedIndex;
+  let output = "";
+  while (value > 0) {
+    value -= 1;
+    output = String.fromCharCode(65 + (value % 26)) + output;
+    value = Math.floor(value / 26);
+  }
+  return output;
+}
+
 function deriveCategory(row, affiliateName, productName) {
   const supplied = text(row.category);
   if (supplied) return supplied;
@@ -145,6 +172,7 @@ export function normalizeVaultRecord(row) {
     description: text(row.notes),
     notes: text(row.notes),
     lastUsedDate: text(row.last_used_date),
+    lastUsedColumn: text(row.__lastUsedColumn),
     sourceRow,
     active: normalized(row.status) === "active",
     featured: false,
@@ -233,17 +261,23 @@ export function validateVaultRecord(record, brandConfigs) {
 export function parseAffiliateVaultCsv(csv, brandConfigs) {
   const rows = parseCsv(csv);
   const headerLine = csv.split(/\r?\n/, 1)[0] ?? "";
-  const actualHeaders = new Set(
-    parseCsv(`${headerLine}\nplaceholder`)[0]
-      ? Object.keys(parseCsv(`${headerLine}\nplaceholder`)[0])
-      : []
+  const headerFixture = parseCsv(`${headerLine}\nplaceholder`)[0] ?? {};
+  const actualHeaderList = Object.keys(headerFixture).filter(
+    (header) => header !== "__rowNumber"
   );
+  const actualHeaders = new Set(actualHeaderList);
   const normalizedRequired = REQUIRED_VAULT_COLUMNS.map((header) =>
     header.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "")
   );
   const missingColumns = normalizedRequired.filter(
     (header) => !actualHeaders.has(header)
   );
+  const schemaErrors = REQUIRED_LOGICAL_FIELDS.filter(
+    ([, ...aliases]) => !aliases.some((alias) => actualHeaders.has(alias))
+  ).map(([label]) => `missing required column: ${label}`);
+  const lastUsedIndex = actualHeaderList.indexOf("last_used_date");
+  const lastUsedColumn =
+    lastUsedIndex >= 0 ? columnLetter(lastUsedIndex + 1) : "";
 
   const products = { estack: [], straightcut: [] };
   const errors = [];
@@ -252,6 +286,7 @@ export function parseAffiliateVaultCsv(csv, brandConfigs) {
   const seen = new Set();
 
   for (const row of rows) {
+    row.__lastUsedColumn = lastUsedColumn;
     const record = normalizeVaultRecord(row);
     if (!record.active) {
       skipped.push({
@@ -290,7 +325,15 @@ export function parseAffiliateVaultCsv(csv, brandConfigs) {
     if (products[record.brandKey]) products[record.brandKey].push(record);
   }
 
-  return { products, errors, skipped, duplicates, missingColumns };
+  return {
+    products,
+    errors,
+    skipped,
+    duplicates,
+    missingColumns,
+    schemaErrors,
+    headers: actualHeaderList
+  };
 }
 
 export async function loadAffiliateVault(url, brandConfigs) {
@@ -304,13 +347,14 @@ export async function loadAffiliateVault(url, brandConfigs) {
   }
   const csv = await response.text();
   if (!csv.trim()) throw new Error("Affiliate Vault CSV is empty");
-  return {
-    ...parseAffiliateVaultCsv(csv, brandConfigs),
-    source: url
-  };
+  const parsed = parseAffiliateVaultCsv(csv, brandConfigs);
+  if (parsed.schemaErrors.length) {
+    throw new Error(`Affiliate Vault schema mismatch: ${parsed.schemaErrors.join("; ")}`);
+  }
+  return { ...parsed, source: url, connection: "published-csv" };
 }
 
-export async function updateLastUsedDate(record, date) {
+export async function updateLastUsedDateViaWebhook(record, date) {
   if (!record) return "not applicable";
   if (!record.sourceRow) {
     throw new Error("Affiliate record is missing its source row; Last Used Date cannot be updated");

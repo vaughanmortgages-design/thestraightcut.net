@@ -5,7 +5,8 @@
 - Spreadsheet: `Affiliate Link Vault`
 - Spreadsheet ID: `1KzunQnNsPPCvTW5UbFWz9z4zl1o7u1QFped2vhCN1wo`
 - Tab: `Affiliate Link Vault`
-- Runtime input: published CSV stored in `AFFILIATE_VAULT_CSV_URL`
+- Runtime input: Google Sheets API using `GOOGLE_SERVICE_ACCOUNT_JSON`
+- Read-only fallback: published CSV stored in `AFFILIATE_VAULT_CSV_URL`
 
 The CSV URL should use Google Sheets' published form:
 
@@ -47,20 +48,17 @@ Do not use the browser edit URL as the runtime CSV value.
 9. POST the source row and date to the Last Used Date update webhook.
 10. Save the package as `Draft`; never publish it.
 
-## Current live-sheet blockers found on 2026-07-26
+## Live-sheet upgrade completed on 2026-07-26
 
-The current sheet uses nine legacy columns:
+The six missing fields were added after the existing nine columns without
+deleting or replacing source data:
 
-`Brand`, `Program Name`, `Contact`, `Commission Terms`, `Offer/Link Name`,
-`Full URL`, `Status`, `Placed On Page (URL)`, `Notes`.
+`Category`, `Product URL`, `Coupon Code`, `Country`, `Image URL`,
+`Last Used Date`.
 
-It is missing `Category`, `Product URL`, `Coupon Code`, `Country`, `Image URL`
-and `Last Used Date`. Existing relevant rows use `Confirmed`, `Confirmed live`
-or `Placed`, not `Active`, so strict production selection currently returns
-zero affiliate products.
-
-Money Metals Exchange and Sprott Money are present but marked `Confirmed`.
-Rocky Mountain Dog is not present. Its row must use:
+Valid production URLs were marked `Active`. Ambiguous embed, instruction,
+malformed and dashboard-verification rows were deliberately left unchanged for
+manual review. Rocky Mountain Dog was added using:
 
 - Brand: `TSC`
 - Affiliate Name: `Rocky Mountain Dog`

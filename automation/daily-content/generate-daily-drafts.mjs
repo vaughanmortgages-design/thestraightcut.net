@@ -11,8 +11,12 @@ import {
 } from "./lib.mjs";
 import {
   loadAffiliateVault,
-  updateLastUsedDate
+  updateLastUsedDateViaWebhook
 } from "./affiliate-vault.mjs";
+import {
+  loadAffiliateVaultFromGoogleSheets,
+  writeGoogleSheetValue
+} from "./google-sheets.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -227,10 +231,12 @@ async function sendToContentStudio(draft) {
 
 let vault;
 try {
-  vault = await loadAffiliateVault(
-    process.env.AFFILIATE_VAULT_CSV_URL,
-    config.brands
-  );
+  vault = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+    ? await loadAffiliateVaultFromGoogleSheets(config.brands)
+    : await loadAffiliateVault(
+        process.env.AFFILIATE_VAULT_CSV_URL,
+        config.brands
+      );
 } catch (error) {
   if (!dryRun) throw error;
   vault = {
@@ -283,7 +289,25 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
     if (!dryRun) {
       await writeDraft(brandKey, draft);
       await sendToContentStudio(draft);
-      if (product) await updateLastUsedDate(product, date);
+      if (product) {
+        if (vault.connection === "google-sheets-api") {
+          if (!product.lastUsedColumn) {
+            throw new Error(
+              "Affiliate Vault schema mismatch: Last Used Date column was not detected"
+            );
+          }
+          await writeGoogleSheetValue({
+            spreadsheetId: vault.spreadsheetId,
+            tabName: vault.tabName,
+            column: product.lastUsedColumn,
+            row: product.sourceRow,
+            value: date,
+            accessToken: vault.accessToken
+          });
+        } else {
+          await updateLastUsedDateViaWebhook(product, date);
+        }
+      }
       brandState.lastCategory = category;
       brandState.lastProductId = product?.id ?? null;
       brandState.lastRun = date;

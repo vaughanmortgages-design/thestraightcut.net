@@ -30,8 +30,10 @@ category or product from being selected again.
 
 ## Affiliate Vault source
 
-`AFFILIATE_VAULT_CSV_URL` points to the published CSV for the current Affiliate
-Link Vault Google Sheet. The vault is the only monetized-content source.
+The production connection uses the Google Sheets API with the service account
+stored in `GOOGLE_SERVICE_ACCOUNT_JSON`. The Vault spreadsheet ID and tab name
+are detected from configuration, with safe defaults for the current production
+Sheet. A published CSV remains supported as a read-only fallback.
 
 The canonical columns, in order, are:
 
@@ -56,11 +58,12 @@ Mountain Dog only.
 | --- | --- | --- |
 | `OPENAI_API_KEY` | Recommended | Generates structured drafts. Without it, the safe editorial templates run. |
 | `OPENAI_MODEL` | No | Defaults to `gpt-5.6`. |
-| `AFFILIATE_VAULT_CSV_URL` | Yes | Published CSV URL for the Affiliate Vault sheet. |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | Yes for production | Google service-account JSON. The service-account email must have Editor access to update Last Used Date. |
+| `AFFILIATE_VAULT_CSV_URL` | Fallback only | Published CSV URL used when service-account credentials are unavailable. |
 | `AFFILIATE_VAULT_SPREADSHEET_ID` | No | Defaults to the current Affiliate Link Vault spreadsheet ID. |
 | `AFFILIATE_VAULT_SHEET_NAME` | No | Defaults to `Affiliate Link Vault`. |
-| `AFFILIATE_VAULT_UPDATE_WEBHOOK_URL` | Required when a product is selected | Make.com/Apps Script endpoint that updates `Last Used Date`. |
-| `AFFILIATE_VAULT_UPDATE_WEBHOOK_TOKEN` | Recommended | Bearer token protecting the update endpoint. |
+| `AFFILIATE_VAULT_UPDATE_WEBHOOK_URL` | CSV fallback only | Make.com/Apps Script endpoint that updates `Last Used Date` when direct Sheets API access is not used. |
+| `AFFILIATE_VAULT_UPDATE_WEBHOOK_TOKEN` | CSV fallback only | Bearer token protecting the fallback update endpoint. |
 | `CONTENT_STUDIO_WEBHOOK_URL` | No | Sends the completed package to the existing PM Digital Content Studio/Make.com intake. |
 | `CONTENT_STUDIO_WEBHOOK_TOKEN` | No | Bearer token for the intake webhook. |
 
@@ -86,6 +89,9 @@ the Affiliate Vault.
 ## Schedule and approval
 
 `.github/workflows/daily-content-drafts.yml` runs once per day and may also be
-started manually. The workflow generates drafts, commits only the draft package,
-log and rotation state, and never deploys or publishes. Keep the content in
-`Draft` until a person changes its approval status.
+started manually. It also accepts the `affiliate-vault-updated`
+`repository_dispatch` event. The Apps Script trigger in
+`google-apps-script/AffiliateVaultChangeTrigger.gs` sends that event after an
+edit to the production Vault tab. The workflow generates drafts, commits only
+the draft package, log and rotation state, and never deploys or publishes. Keep
+the content in `Draft` until a person changes its approval status.

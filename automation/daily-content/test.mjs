@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import crypto from "node:crypto";
 import {
   asBoolean,
   chooseRotatingCategory,
@@ -12,8 +13,13 @@ import {
 import {
   parseAffiliateVaultCsv,
   REQUIRED_VAULT_COLUMNS,
-  updateLastUsedDate
+  updateLastUsedDateViaWebhook
 } from "./affiliate-vault.mjs";
+import {
+  loadAffiliateVaultFromGoogleSheets,
+  rowsToCsv,
+  writeGoogleSheetValue
+} from "./google-sheets.mjs";
 
 test("boolean inputs are normalized", () => {
   assert.equal(asBoolean("TRUE"), true);
@@ -226,7 +232,7 @@ test("Last Used Date webhook receives the exact source row and affiliate URL", a
     return { ok: true };
   };
   try {
-    await updateLastUsedDate(
+    await updateLastUsedDateViaWebhook(
       {
         sourceRow: 12,
         affiliateName: "Sprott Money",
@@ -251,6 +257,120 @@ test("Last Used Date webhook receives the exact source row and affiliate URL", a
     "https://www.sprottmoney.ca/?acc=paul-maladrino-5887a"
   );
   assert.equal(payload.lastUsedDate, "2026-07-29");
+});
+
+test("Google Sheets connector maps the production tab and detects Active products", async () => {
+  const { privateKey } = crypto.generateKeyPairSync("rsa", {
+    modulusLength: 2048,
+    privateKeyEncoding: { type: "pkcs8", format: "pem" },
+    publicKeyEncoding: { type: "spki", format: "pem" }
+  });
+  const originalCredentials = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+  process.env.GOOGLE_SERVICE_ACCOUNT_JSON = JSON.stringify({
+    client_email: "content-engine@example-project.iam.gserviceaccount.com",
+    private_key: privateKey
+  });
+  const rows = [
+    [
+      "Brand",
+      "Program Name",
+      "Contact",
+      "Commission Terms",
+      "Offer/Link Name",
+      "Full URL",
+      "Status",
+      "Placed On Page (URL)",
+      "Notes",
+      "Category",
+      "Product URL",
+      "Coupon Code",
+      "Country",
+      "Image URL",
+      "Last Used Date"
+    ],
+    [
+      "estack.ca",
+      "Sprott Money",
+      "",
+      "",
+      "Sprott Money Canada",
+      "https://www.sprottmoney.ca/?acc=paul-maladrino-5887a",
+      "Active",
+      "",
+      "Preserve exactly",
+      "Bullion",
+      "",
+      "",
+      "CA",
+      "",
+      "2026-07-20"
+    ]
+  ];
+  let requestNumber = 0;
+  const fetchImpl = async () => {
+    requestNumber += 1;
+    if (requestNumber === 1) {
+      return {
+        ok: true,
+        json: async () => ({ access_token: "test-access-token" })
+      };
+    }
+    return { ok: true, json: async () => ({ values: rows }) };
+  };
+  try {
+    const result = await loadAffiliateVaultFromGoogleSheets(
+      configForTest(),
+      fetchImpl
+    );
+    assert.equal(
+      result.spreadsheetId,
+      "1KzunQnNsPPCvTW5UbFWz9z4zl1o7u1QFped2vhCN1wo"
+    );
+    assert.equal(result.tabName, "Affiliate Link Vault");
+    assert.equal(result.products.estack.length, 1);
+    assert.equal(
+      result.products.estack[0].affiliateUrl,
+      "https://www.sprottmoney.ca/?acc=paul-maladrino-5887a"
+    );
+    assert.equal(result.products.estack[0].lastUsedColumn, "O");
+  } finally {
+    if (originalCredentials === undefined) {
+      delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    } else {
+      process.env.GOOGLE_SERVICE_ACCOUNT_JSON = originalCredentials;
+    }
+  }
+});
+
+test("Google Sheets writeback targets the detected Last Used Date cell", async () => {
+  let request;
+  const fetchImpl = async (url, options) => {
+    request = { url, options };
+    return { ok: true };
+  };
+  await writeGoogleSheetValue({
+    spreadsheetId: "sheet-id",
+    tabName: "Affiliate Link Vault",
+    column: "O",
+    row: 52,
+    value: "2026-07-30",
+    accessToken: "token",
+    fetchImpl
+  });
+  assert.match(request.url, /spreadsheets\/sheet-id\/values/);
+  assert.deepEqual(JSON.parse(request.options.body).values, [["2026-07-30"]]);
+});
+
+test("row-to-CSV mapping preserves commas and exact affiliate URLs", () => {
+  const csv = rowsToCsv([
+    ["Affiliate URL", "Notes"],
+    [
+      "https://example.com/?a=1&b=2",
+      "Keep commas, tracking parameters, and text"
+    ]
+  ]);
+  assert.match(csv, /https:\/\/example\.com\/\?a=1&b=2/);
+  assert.match(csv, /"Keep commas, tracking parameters, and text"/);
 });
 
 function configForTest() {
