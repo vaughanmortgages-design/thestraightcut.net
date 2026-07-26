@@ -86,6 +86,24 @@ export async function loadAffiliateVaultFromGoogleSheets(
   brandConfigs,
   fetchImpl = fetch
 ) {
+  const sheet = await readAffiliateVaultRows(fetchImpl);
+  const parsed = parseAffiliateVaultCsv(rowsToCsv(sheet.rows), brandConfigs);
+  if (parsed.schemaErrors.length) {
+    throw new Error(
+      `Affiliate Vault schema mismatch on ${sheet.tabName}: ${parsed.schemaErrors.join("; ")}`
+    );
+  }
+  return {
+    ...parsed,
+    spreadsheetId: sheet.spreadsheetId,
+    tabName: sheet.tabName,
+    source: `google-sheets://${sheet.spreadsheetId}/${sheet.tabName}`,
+    connection: "google-sheets-api",
+    accessToken: sheet.accessToken
+  };
+}
+
+export async function readAffiliateVaultRows(fetchImpl = fetch) {
   const spreadsheetId =
     process.env.AFFILIATE_VAULT_SPREADSHEET_ID || DEFAULT_SHEET_ID;
   const tabName =
@@ -110,18 +128,10 @@ export async function loadAffiliateVaultFromGoogleSheets(
   if (rows.length < 2) {
     throw new Error(`Google Sheet ${tabName} contains no affiliate records`);
   }
-  const parsed = parseAffiliateVaultCsv(rowsToCsv(rows), brandConfigs);
-  if (parsed.schemaErrors.length) {
-    throw new Error(
-      `Affiliate Vault schema mismatch on ${tabName}: ${parsed.schemaErrors.join("; ")}`
-    );
-  }
   return {
-    ...parsed,
     spreadsheetId,
     tabName,
-    source: `google-sheets://${spreadsheetId}/${tabName}`,
-    connection: "google-sheets-api",
+    rows,
     accessToken
   };
 }

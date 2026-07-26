@@ -1,0 +1,21 @@
+{
+  "spreadsheetId": "1KzunQnNsPPCvTW5UbFWz9z4zl1o7u1QFped2vhCN1wo",
+  "tabName": "Affiliate Link Vault",
+  "encoding": "UTF-8",
+  "sourceRows": 51,
+  "activeRows": 41,
+  "publishedRows": 41,
+  "invalidRows": [],
+  "duplicateRows": [],
+  "columns": [
+    "Brand",
+    "Affiliate Name",
+    "Category",
+    "Product Name",
+    "Product URL",
+    "Affiliate URL",
+    "Coupon Code",
+    "Country",
+    "Status"
+  ]
+}

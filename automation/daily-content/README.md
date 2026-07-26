@@ -92,6 +92,8 @@ the Affiliate Vault.
 started manually. It also accepts the `affiliate-vault-updated`
 `repository_dispatch` event. The Apps Script trigger in
 `google-apps-script/AffiliateVaultChangeTrigger.gs` sends that event after an
-edit to the production Vault tab. The workflow generates drafts, commits only
-the draft package, log and rotation state, and never deploys or publishes. Keep
-the content in `Draft` until a person changes its approval status.
+edit to the production Vault tab. The workflow regenerates the read-only Active
+affiliate feed documented in `CSV_PUBLISHER.md`, generates drafts, and commits
+only automation data, the draft package, log and rotation state. It never
+deploys or publishes website content. Keep the content in `Draft` until a
+person changes its approval status.

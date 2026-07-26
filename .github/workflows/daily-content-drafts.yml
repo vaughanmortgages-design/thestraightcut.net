@@ -25,6 +25,12 @@ jobs:
           node-version: "22"
       - name: Validate automation
         run: node --test automation/daily-content/test.mjs
+      - name: Publish active Affiliate Vault CSV
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          AFFILIATE_VAULT_SPREADSHEET_ID: ${{ vars.AFFILIATE_VAULT_SPREADSHEET_ID }}
+          AFFILIATE_VAULT_SHEET_NAME: ${{ vars.AFFILIATE_VAULT_SHEET_NAME }}
+        run: node automation/daily-content/csv-publisher.mjs
       - name: Generate draft packages
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -38,10 +44,10 @@ jobs:
           CONTENT_STUDIO_WEBHOOK_URL: ${{ secrets.CONTENT_STUDIO_WEBHOOK_URL }}
           CONTENT_STUDIO_WEBHOOK_TOKEN: ${{ secrets.CONTENT_STUDIO_WEBHOOK_TOKEN }}
         run: node automation/daily-content/generate-daily-drafts.mjs
-      - name: Save drafts only
+      - name: Save drafts and read-only feed
         run: |
           git config user.name "content-draft-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add automation/daily-content/state.json content/drafts
+          git add automation/daily-content/state.json automation/daily-content/public content/drafts
           git diff --cached --quiet || git commit -m "Add daily content drafts $(date -u +%F)"
           git push

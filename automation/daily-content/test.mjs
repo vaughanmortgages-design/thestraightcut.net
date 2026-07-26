@@ -20,6 +20,10 @@ import {
   rowsToCsv,
   writeGoogleSheetValue
 } from "./google-sheets.mjs";
+import {
+  buildActiveAffiliateFeed,
+  FEED_COLUMNS
+} from "./csv-publisher.mjs";
 
 test("boolean inputs are normalized", () => {
   assert.equal(asBoolean("TRUE"), true);
@@ -371,6 +375,106 @@ test("row-to-CSV mapping preserves commas and exact affiliate URLs", () => {
   ]);
   assert.match(csv, /https:\/\/example\.com\/\?a=1&b=2/);
   assert.match(csv, /"Keep commas, tracking parameters, and text"/);
+});
+
+test("active Affiliate Vault CSV excludes non-Active rows and preserves tracking", () => {
+  const rows = [
+    [
+      "Brand",
+      "Program Name",
+      "Contact",
+      "Commission Terms",
+      "Offer/Link Name",
+      "Full URL",
+      "Status",
+      "Placed On Page (URL)",
+      "Notes",
+      "Category",
+      "Product URL",
+      "Coupon Code",
+      "Country",
+      "Image URL",
+      "Last Used Date"
+    ],
+    [
+      "TSC",
+      "Rocky Mountain Dog",
+      "",
+      "",
+      "Rocky Mountain Dog",
+      "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
+      "Active",
+      "",
+      "",
+      "Pets",
+      "",
+      "RAYCUTTER10",
+      "CA",
+      "",
+      ""
+    ],
+    [
+      "TSC",
+      "Awin",
+      "",
+      "",
+      "Active offers",
+      "https://example.com/unconfirmed",
+      "Confirmed",
+      "",
+      "",
+      "Other",
+      "",
+      "",
+      "CA",
+      "",
+      ""
+    ]
+  ];
+  const result = buildActiveAffiliateFeed(rows);
+  assert.equal(result.report.activeRows, 1);
+  assert.equal(result.report.publishedRows, 1);
+  assert.deepEqual(result.report.columns, FEED_COLUMNS.map(({ output }) => output));
+  assert.match(
+    result.csv,
+    /https:\/\/rockymountaindog\.ca\/discount\/RAYCUTTER10\?ref=mcwboquj/
+  );
+  assert.match(result.csv, /RAYCUTTER10/);
+  assert.doesNotMatch(result.csv, /unconfirmed/);
+});
+
+test("active Affiliate Vault CSV fails safely when its schema changes", () => {
+  assert.throws(
+    () =>
+      buildActiveAffiliateFeed([
+        ["Brand", "Program Name", "Status"],
+        ["TSC", "Rocky Mountain Dog", "Active"]
+      ]),
+    /schema mismatch/
+  );
+});
+
+test("active Affiliate Vault CSV reports invalid Active rows", () => {
+  const headers = FEED_COLUMNS.map(({ output }) => output);
+  const result = buildActiveAffiliateFeed([
+    headers,
+    [
+      "TSC",
+      "Rocky Mountain Dog",
+      "Pets",
+      "Rocky Mountain Dog",
+      "",
+      "not-a-url",
+      "RAYCUTTER10",
+      "CA",
+      "Active"
+    ]
+  ]);
+  assert.equal(result.report.activeRows, 1);
+  assert.equal(result.report.publishedRows, 0);
+  assert.deepEqual(result.report.invalidRows, [
+    { row: 2, errors: ["invalid Affiliate URL"] }
+  ]);
 });
 
 function configForTest() {
