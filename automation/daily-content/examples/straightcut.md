@@ -2,6 +2,10 @@
 
 Status: **Draft**
 
+This example assumes the Rocky Mountain Dog row has been added to the Affiliate
+Vault with `Status=Active`. The current live vault does not yet contain that
+row, so the production generator will not select it until then.
+
 ## Buying guide
 
 ### Back-to-School Pet Gear: A Smarter Checklist

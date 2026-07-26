@@ -13,6 +13,7 @@
         "First-Time Buyers"
       ],
       "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
       "forbiddenTopics": ["affiliate loans", "personal loans", "credit offers"],
       "disclosure": "",
       "compliance": "Mortgage Agent Level 2 | FSRA #M25000307 | GNE Mortgages FSRA Brokerage #10394 | vaughanmortgages@gmail.com | 416-891-8684"
@@ -36,6 +37,20 @@
         "Credit Rebuilding"
       ],
       "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
+      "approvedMerchants": [
+        "CMI",
+        "CreditMarketing.ca",
+        "AFN",
+        "Advance Funds Network",
+        "Lead Scout",
+        "LeadScout",
+        "Money Metals Exchange",
+        "Kitco",
+        "Kitco US & Canada",
+        "Sprott Money",
+        "Sprott Money Canada"
+      ],
       "allowedPillars": ["Bullion", "Loans and Credit"],
       "disclosure": "eStack.ca may earn a commission when you use an approved partner link, at no additional cost to you."
     },
@@ -63,12 +78,13 @@
         "pinterestTitle",
         "pinterestDescription"
       ],
+      "allowedCountries": ["CA"],
       "approvedMerchants": ["Amazon", "eBay", "Rocky Mountain Dog"],
       "disclosure": "The Straight Cut may earn a commission when you purchase through links in this post, at no additional cost to you.",
-      "partners": {
+      "partnerRules": {
         "Rocky Mountain Dog": {
-          "affiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
-          "coupon": "RAYCUTTER10"
+          "expectedAffiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
+          "expectedCouponCode": "RAYCUTTER10"
         }
       }
     }

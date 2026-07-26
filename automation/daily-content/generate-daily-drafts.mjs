@@ -6,11 +6,13 @@ import { fileURLToPath } from "node:url";
 import {
   assertDraftPackage,
   chooseRotatingCategory,
-  extractProducts,
-  parseCsv,
   safeFileName,
   selectProduct
 } from "./lib.mjs";
+import {
+  loadAffiliateVault,
+  updateLastUsedDate
+} from "./affiliate-vault.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
@@ -29,22 +31,6 @@ const config = JSON.parse(
 );
 const statePath = path.join(here, "state.json");
 const state = JSON.parse(await fs.readFile(statePath, "utf8"));
-
-async function loadCatalog(url, brand) {
-  if (!url) return { products: [], errors: [], source: "no catalog configured" };
-  const response = await fetch(url, {
-    headers: { "user-agent": "daily-content-drafts/1.0" },
-    signal: AbortSignal.timeout(20_000)
-  });
-  if (!response.ok) throw new Error(`${brand} catalog returned HTTP ${response.status}`);
-  const text = await response.text();
-  const contentType = response.headers.get("content-type") ?? "";
-  const payload =
-    contentType.includes("csv") || url.includes("output=csv") || url.endsWith(".csv")
-      ? parseCsv(text)
-      : JSON.parse(text);
-  return { ...extractProducts(payload), source: url };
-}
 
 function fallbackDraft(brandKey, brand, category, product) {
   const link = product?.affiliateUrl;
@@ -106,14 +92,12 @@ ${brand.disclosure}`;
     };
   }
 
-  const rocky = brand.partners["Rocky Mountain Dog"];
-  const useRocky = !product && category === "Pets";
-  const effectiveLink = link || (useRocky ? rocky.affiliateUrl : "");
+  const effectiveLink = link || "";
   const title = productLine
     ? `${product.title}: What to Know Before You Buy`
     : `${category} Buying Guide: A Smarter Shortlist`;
-  const offer = useRocky
-    ? `Rocky Mountain Dog shoppers can use code ${rocky.coupon}.`
+  const offer = product?.couponCode
+    ? `${product.merchant} shoppers can use code ${product.couponCode}.`
     : "";
   const cta = effectiveLink ? `\n\nShop through the approved link: ${effectiveLink}` : "";
   const article = `# ${title}
@@ -241,22 +225,39 @@ async function sendToContentStudio(draft) {
   return "draft sent";
 }
 
-const catalogResults = {
-  estack: await loadCatalog(process.env.ESTACK_CATALOG_URL, "eStack"),
-  straightcut: await loadCatalog(process.env.TSC_CATALOG_URL, "The Straight Cut")
-};
+let vault;
+try {
+  vault = await loadAffiliateVault(
+    process.env.AFFILIATE_VAULT_CSV_URL,
+    config.brands
+  );
+} catch (error) {
+  if (!dryRun) throw error;
+  vault = {
+    products: { estack: [], straightcut: [] },
+    errors: [{ row: null, errors: [error.message] }],
+    skipped: [],
+    duplicates: [],
+    missingColumns: [],
+    source: "not configured"
+  };
+}
 const runLog = { date, startedAt: new Date().toISOString(), status: "running", brands: {} };
 
 for (const [brandKey, brand] of Object.entries(config.brands)) {
   if (selectedBrand && selectedBrand !== brandKey) continue;
   try {
     const brandState = state.brands[brandKey];
-    const category = chooseRotatingCategory(brand.categories, brandState.lastCategory, date);
-    const catalog = catalogResults[brandKey] ?? { products: [], errors: [], source: "not applicable" };
+    let category = chooseRotatingCategory(brand.categories, brandState.lastCategory, date);
+    const catalog = {
+      products: vault.products[brandKey] ?? [],
+      source: brandKey === "vmg" ? "not applicable" : vault.source
+    };
     const product =
       brandKey === "vmg"
         ? null
         : selectProduct(catalog.products, brandKey, brand, brandState, date);
+    if (product?.category) category = product.category;
     const generated = await aiDraft(
       brandKey,
       brand,
@@ -282,6 +283,7 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
     if (!dryRun) {
       await writeDraft(brandKey, draft);
       await sendToContentStudio(draft);
+      if (product) await updateLastUsedDate(product, date);
       brandState.lastCategory = category;
       brandState.lastProductId = product?.id ?? null;
       brandState.lastRun = date;
@@ -291,7 +293,10 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
       category,
       productId: product?.id ?? null,
       catalogSource: catalog.source,
-      catalogValidationErrors: catalog.errors
+      vaultValidationErrors: brandKey === "vmg" ? [] : vault.errors,
+      vaultSkippedRows: brandKey === "vmg" ? [] : vault.skipped,
+      vaultDuplicateRows: brandKey === "vmg" ? [] : vault.duplicates,
+      vaultMissingColumns: brandKey === "vmg" ? [] : vault.missingColumns
     };
   } catch (error) {
     runLog.brands[brandKey] = { status: "error", message: error.message };

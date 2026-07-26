@@ -111,9 +111,10 @@ export function parseCsv(text) {
   const headers = rows[0].map((header) =>
     header.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "")
   );
-  return rows.slice(1).map((cells) =>
-    Object.fromEntries(headers.map((header, index) => [header, cells[index] ?? ""]))
-  );
+  return rows.slice(1).map((cells, rowIndex) => ({
+    ...Object.fromEntries(headers.map((header, index) => [header, cells[index] ?? ""])),
+    __rowNumber: rowIndex + 2
+  }));
 }
 
 export function chooseRotatingCategory(categories, lastCategory, date) {
@@ -154,6 +155,7 @@ export function selectProduct(products, brandKey, config, state, date) {
       (a, b) =>
         Number(b.featured) - Number(a.featured) ||
         Number(b.seasonal) - Number(a.seasonal) ||
+        String(a.lastUsedDate || "").localeCompare(String(b.lastUsedDate || "")) ||
         a.id.localeCompare(b.id)
     )[0] ?? null
   );

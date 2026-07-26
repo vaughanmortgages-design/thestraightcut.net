@@ -11,8 +11,8 @@ review the current price, availability, shipping, payment terms and storage
 considerations directly on the approved merchant page. No price or availability
 should be assumed from an older post.
 
-Money Metals Exchange, Kitco and Sprott Money can be rotated when a valid
-catalog product and its stored affiliate URL are available.
+Money Metals Exchange, Kitco and Sprott Money can be rotated only when an
+`Active` Affiliate Vault record and its stored affiliate URL are available.
 
 eStack.ca may earn a commission when you use an approved partner link, at no
 additional cost to you.
