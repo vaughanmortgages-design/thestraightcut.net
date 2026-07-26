@@ -86,6 +86,14 @@
           "expectedAffiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
           "expectedCouponCode": "RAYCUTTER10"
         }
+      },
+      "departmentFeeds": {
+        "Pets": {
+          "page": "/pets",
+          "catalogCategory": "Pets",
+          "rotations": ["Featured Products", "Buying Guides", "Weekly Deals"],
+          "guidesSource": "data/pets-store.json"
+        }
       }
     }
   }

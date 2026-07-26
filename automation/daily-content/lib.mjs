@@ -124,6 +124,21 @@ export function chooseRotatingCategory(categories, lastCategory, date) {
   return categories[index];
 }
 
+export function selectDepartmentRotation(feed, catalog, date) {
+  if (!feed) return null;
+  const dayNumber = Math.floor(Date.parse(`${date}T00:00:00Z`) / 86_400_000);
+  const rotations = Array.isArray(feed.rotations) ? feed.rotations : [];
+  const guides = Array.isArray(catalog?.guides) ? catalog.guides : [];
+  return {
+    page: feed.page,
+    catalogCategory: feed.catalogCategory,
+    rotationType: rotations.length
+      ? rotations[Math.abs(dayNumber) % rotations.length]
+      : null,
+    guide: guides.length ? guides[Math.abs(dayNumber) % guides.length] : null
+  };
+}
+
 export function seasonalCategories(date) {
   const month = Number(date.slice(5, 7));
   if ([7, 8, 9].includes(month)) return ["Back to School"];

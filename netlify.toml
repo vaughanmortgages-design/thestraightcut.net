@@ -1,7 +1,17 @@
 [build]
-  command = "node scripts/build-storefront.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs"
+  command = "node scripts/build-storefront.mjs && node scripts/build-pets-store.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs"
   publish = "."
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/pets"
+  to = "/pets.html"
+  status = 200
+
+[[redirects]]
+  from = "/pets/"
+  to = "/pets.html"
+  status = 200

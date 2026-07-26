@@ -7,6 +7,7 @@ import {
   assertDraftPackage,
   chooseRotatingCategory,
   safeFileName,
+  selectDepartmentRotation,
   selectProduct
 } from "./lib.mjs";
 import {
@@ -39,7 +40,7 @@ const config = JSON.parse(
 const statePath = path.join(here, "state.json");
 const state = JSON.parse(await fs.readFile(statePath, "utf8"));
 
-function fallbackDraft(brandKey, brand, category, product) {
+function fallbackDraft(brandKey, brand, category, product, departmentPlan) {
   const link = product?.affiliateUrl;
   const productLine = product
     ? `${product.title} from ${product.merchant}${product.price ? ` (${product.price} ${product.currency})` : ""}`
@@ -100,9 +101,18 @@ ${brand.disclosure}`;
   }
 
   const effectiveLink = link || "";
+  const editorialSubject =
+    departmentPlan?.rotationType === "Buying Guides" && departmentPlan.guide
+      ? departmentPlan.guide.title
+      : departmentPlan?.rotationType
+      ? `${category} ${departmentPlan.rotationType}`
+      : category;
+  const guideLine = departmentPlan?.guide
+    ? `\n\nContinue with the ${departmentPlan.guide.title} guide: https://thestraightcut.net/pets-${departmentPlan.guide.slug}.html`
+    : "";
   const title = productLine
     ? `${product.title}: What to Know Before You Buy`
-    : `${category} Buying Guide: A Smarter Shortlist`;
+    : `${editorialSubject}: A Smarter Shortlist`;
   const offer = product?.couponCode
     ? `${product.merchant} shoppers can use code ${product.couponCode}.`
     : "";
@@ -121,7 +131,7 @@ The best shopping shortlist starts with the job the item needs to do. Compare ma
 
 ${productLine ? `Featured item: ${productLine}.` : `This is an editorial ${category} collection; no unverified product claims or prices are included.`}
 
-${offer}${cta}
+${offer}${cta}${guideLine}
 
 ${brand.disclosure}`;
   return {
@@ -135,7 +145,7 @@ ${brand.disclosure}`;
   };
 }
 
-async function aiDraft(brandKey, brand, category, product, fallback) {
+async function aiDraft(brandKey, brand, category, product, departmentPlan, fallback) {
   if (!process.env.OPENAI_API_KEY) return fallback;
   const prompt = {
     date,
@@ -144,6 +154,7 @@ async function aiDraft(brandKey, brand, category, product, fallback) {
     contentType: brand.contentType,
     permittedOutputs: brand.outputs,
     product,
+    departmentPlan,
     rules: {
       status: "Draft",
       factualGrounding: "Use only supplied product data. Never invent prices, specifications, rates, reviews, availability or affiliate URLs.",
@@ -299,12 +310,18 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
         ? null
         : selectProduct(catalog.products, brandKey, brand, brandState, date);
     if (product?.category) category = product.category;
+    const feed = brand.departmentFeeds?.[category];
+    const feedCatalog = feed?.guidesSource
+      ? JSON.parse(await fs.readFile(path.join(root, feed.guidesSource), "utf8"))
+      : null;
+    const departmentPlan = selectDepartmentRotation(feed, feedCatalog, date);
     const generated = await aiDraft(
       brandKey,
       brand,
       category,
       product,
-      fallbackDraft(brandKey, brand, category, product)
+      departmentPlan,
+      fallbackDraft(brandKey, brand, category, product, departmentPlan)
     );
     const draft = {
       schemaVersion: 1,
@@ -316,6 +333,7 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
       status: "Draft",
       approvalOptions: config.approvalStatuses,
       testMode: safeTest,
+      departmentPlan,
       product,
       outputs: brand.outputs,
       ...Object.fromEntries(brand.outputs.map((output) => [output, generated[output]])),

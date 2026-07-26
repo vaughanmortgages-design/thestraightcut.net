@@ -14,3 +14,13 @@ document.querySelector('[data-newsletter-form]')?.addEventListener('submit',(eve
   script.dataset.straightCutSocialLinks='';
   document.head.append(script);
 })();
+(function addPetsDepartmentNavigation(){
+  const navigation=document.querySelector('#site-nav');
+  if(!navigation||navigation.querySelector('a[href$="pets.html"]'))return;
+  const departments=[...navigation.querySelectorAll('a')].find((link)=>link.getAttribute('href')?.endsWith('departments.html'));
+  if(!departments)return;
+  const pets=document.createElement('a');
+  pets.href='/pets';
+  pets.textContent='Pets';
+  departments.insertAdjacentElement('afterend',pets);
+})();

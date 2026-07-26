@@ -8,6 +8,7 @@ import {
   extractProducts,
   parseCsv,
   seasonalCategories,
+  selectDepartmentRotation,
   selectProduct
 } from "./lib.mjs";
 import {
@@ -132,6 +133,25 @@ test("back-to-school products receive seasonal priority", () => {
   );
   assert.equal(selected.id, "two");
   assert.deepEqual(seasonalCategories("2026-08-12"), ["Back to School"]);
+});
+
+test("Pets department rotates content plans from its data source", () => {
+  const feed = {
+    page: "/pets",
+    catalogCategory: "Pets",
+    rotations: ["Featured Products", "Buying Guides", "Weekly Deals"]
+  };
+  const catalog = {
+    guides: [
+      { slug: "best-dog-beds", title: "Best Dog Beds" },
+      { slug: "best-cat-trees", title: "Best Cat Trees" }
+    ]
+  };
+  const first = selectDepartmentRotation(feed, catalog, "2026-07-26");
+  const next = selectDepartmentRotation(feed, catalog, "2026-07-27");
+  assert.equal(first.page, "/pets");
+  assert.notEqual(first.rotationType, next.rotationType);
+  assert.notEqual(first.guide.slug, next.guide.slug);
 });
 
 test("Affiliate Vault accepts only Active, Canadian, approved records", () => {
