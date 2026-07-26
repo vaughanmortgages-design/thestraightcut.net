@@ -1,0 +1,100 @@
+{
+  "approvalStatuses": ["Draft", "Approved", "Rejected", "Published"],
+  "brands": {
+    "vmg": {
+      "name": "Vaughan Mortgage Group",
+      "contentType": "mortgage education",
+      "categories": [
+        "Bank of Canada",
+        "Mortgage Rates",
+        "Renewals",
+        "Refinancing",
+        "HELOCs",
+        "First-Time Buyers"
+      ],
+      "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
+      "forbiddenTopics": ["affiliate loans", "personal loans", "credit offers"],
+      "disclosure": "",
+      "compliance": "Mortgage Agent Level 2 | FSRA #M25000307 | GNE Mortgages FSRA Brokerage #10394 | vaughanmortgages@gmail.com | 416-891-8684"
+    },
+    "estack": {
+      "name": "eStack.ca",
+      "contentType": "Canadian bullion, loans and credit education",
+      "categories": [
+        "Gold",
+        "Silver",
+        "Platinum",
+        "Money Metals Exchange",
+        "Kitco",
+        "Sprott Money",
+        "CMI",
+        "AFN",
+        "Lead Scout",
+        "Personal Loans",
+        "Auto Financing",
+        "Debt Consolidation",
+        "Credit Rebuilding"
+      ],
+      "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
+      "approvedMerchants": [
+        "CMI",
+        "CreditMarketing.ca",
+        "AFN",
+        "Advance Funds Network",
+        "Lead Scout",
+        "LeadScout",
+        "Money Metals Exchange",
+        "Kitco",
+        "Kitco US & Canada",
+        "Sprott Money",
+        "Sprott Money Canada"
+      ],
+      "allowedPillars": ["Bullion", "Loans and Credit"],
+      "disclosure": "eStack.ca may earn a commission when you use an approved partner link, at no additional cost to you."
+    },
+    "straightcut": {
+      "name": "The Straight Cut",
+      "contentType": "shopping publication",
+      "categories": [
+        "Pets",
+        "Automotive",
+        "Home and Kitchen",
+        "Electronics",
+        "Sports",
+        "Gaming",
+        "Fashion",
+        "Books",
+        "Collectibles",
+        "Back to School",
+        "Clearance"
+      ],
+      "outputs": [
+        "article",
+        "facebook",
+        "instagram",
+        "linkedin",
+        "pinterestTitle",
+        "pinterestDescription"
+      ],
+      "allowedCountries": ["CA"],
+      "approvedMerchants": ["Amazon", "eBay", "Rocky Mountain Dog"],
+      "disclosure": "The Straight Cut may earn a commission when you purchase through links in this post, at no additional cost to you.",
+      "partnerRules": {
+        "Rocky Mountain Dog": {
+          "expectedAffiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
+          "expectedCouponCode": "RAYCUTTER10"
+        }
+      },
+      "departmentFeeds": {
+        "Pets": {
+          "page": "/pets",
+          "catalogCategory": "Pets",
+          "rotations": ["Featured Products", "Buying Guides", "Weekly Deals"],
+          "guidesSource": "data/pets-store.json"
+        }
+      }
+    }
+  }
+}

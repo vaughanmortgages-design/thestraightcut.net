@@ -50,6 +50,7 @@ const SEARCH_INDEX = [
 const NAV_ITEMS = [
   { label: "Today's Deals", href: '/#top-deals' },
   { label: 'Departments', href: 'departments.html' },
+  { label: 'Pets', href: 'pets.html' },
   { label: 'Categories', href: '/#categories' },
   { label: 'Travel', href: 'travel.html' },
   { label: 'Latest', href: 'latest-deals.html' },

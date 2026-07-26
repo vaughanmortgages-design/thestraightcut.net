@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "brands": {
+    "vmg": {
+      "lastCategory": null,
+      "lastProductId": null,
+      "lastRun": null
+    },
+    "estack": {
+      "lastCategory": null,
+      "lastProductId": null,
+      "lastRun": null
+    },
+    "straightcut": {
+      "lastCategory": null,
+      "lastProductId": null,
+      "lastRun": null
+    }
+  }
+}
