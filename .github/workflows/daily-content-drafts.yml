@@ -1,0 +1,41 @@
+name: Daily Content Drafts
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-content-drafts
+  cancel-in-progress: false
+
+jobs:
+  generate-drafts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate automation
+        run: node --test automation/daily-content/test.mjs
+      - name: Generate draft packages
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          ESTACK_CATALOG_URL: ${{ vars.ESTACK_CATALOG_URL }}
+          TSC_CATALOG_URL: ${{ vars.TSC_CATALOG_URL }}
+          CONTENT_STUDIO_WEBHOOK_URL: ${{ secrets.CONTENT_STUDIO_WEBHOOK_URL }}
+          CONTENT_STUDIO_WEBHOOK_TOKEN: ${{ secrets.CONTENT_STUDIO_WEBHOOK_TOKEN }}
+        run: node automation/daily-content/generate-daily-drafts.mjs
+      - name: Save drafts only
+        run: |
+          git config user.name "content-draft-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add automation/daily-content/state.json content/drafts
+          git diff --cached --quiet || git commit -m "Add daily content drafts $(date -u +%F)"
+          git push
