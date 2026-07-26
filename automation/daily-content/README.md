@@ -62,6 +62,9 @@ Mountain Dog only.
 | `AFFILIATE_VAULT_CSV_URL` | Fallback only | Published CSV URL used when service-account credentials are unavailable. |
 | `AFFILIATE_VAULT_SPREADSHEET_ID` | No | Defaults to the current Affiliate Link Vault spreadsheet ID. |
 | `AFFILIATE_VAULT_SHEET_NAME` | No | Defaults to `Affiliate Link Vault`. |
+| `AFFILIATE_VAULT_WEBHOOK_SECRET` | Yes for change-trigger refresh | Shared HMAC secret stored in Netlify and Apps Script; never committed. |
+| `GITHUB_REPOSITORY_DISPATCH_TOKEN` | Yes for change-trigger refresh | Repository-scoped token stored in Netlify and used only after signature verification. |
+| `GITHUB_REPOSITORY` | No | Defaults to `vaughanmortgages-design/thestraightcut.net`. |
 | `AFFILIATE_VAULT_UPDATE_WEBHOOK_URL` | CSV fallback only | Make.com/Apps Script endpoint that updates `Last Used Date` when direct Sheets API access is not used. |
 | `AFFILIATE_VAULT_UPDATE_WEBHOOK_TOKEN` | CSV fallback only | Bearer token protecting the fallback update endpoint. |
 | `CONTENT_STUDIO_WEBHOOK_URL` | No | Sends the completed package to the existing PM Digital Content Studio/Make.com intake. |
@@ -91,9 +94,11 @@ the Affiliate Vault.
 `.github/workflows/daily-content-drafts.yml` runs once per day and may also be
 started manually. It also accepts the `affiliate-vault-updated`
 `repository_dispatch` event. The Apps Script trigger in
-`google-apps-script/AffiliateVaultChangeTrigger.gs` sends that event after an
-edit to the production Vault tab. The workflow regenerates the read-only Active
-affiliate feed documented in `CSV_PUBLISHER.md`, generates drafts, and commits
-only automation data, the draft package, log and rotation state. It never
-deploys or publishes website content. Keep the content in `Draft` until a
-person changes its approval status.
+`google-apps-script/AffiliateVaultChangeTrigger.gs` sends a signed request to
+the refresh endpoint after an edit to the production Vault tab. The endpoint
+validates, deduplicates and safely retries the GitHub dispatch. The workflow
+regenerates the read-only Active affiliate feed documented in
+`CSV_PUBLISHER.md`, generates drafts, and commits only automation data, the
+draft package, log and rotation state. It never deploys or publishes website
+content. Keep the content in `Draft` until a person changes its approval
+status. See `WEBHOOK.md` for authentication and retry details.

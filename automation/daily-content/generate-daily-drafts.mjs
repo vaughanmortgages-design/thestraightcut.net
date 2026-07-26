@@ -214,10 +214,17 @@ async function writeDraft(brandKey, draft) {
 
 async function sendToContentStudio(draft) {
   if (!process.env.CONTENT_STUDIO_WEBHOOK_URL) return "not configured";
+  const idempotencyKey = [
+    "daily-content",
+    process.env.CONTENT_TRIGGER_ID || draft.date,
+    draft.brandKey,
+    draft.date
+  ].join(":");
   const response = await fetch(process.env.CONTENT_STUDIO_WEBHOOK_URL, {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      "idempotency-key": idempotencyKey,
       ...(process.env.CONTENT_STUDIO_WEBHOOK_TOKEN
         ? { authorization: `Bearer ${process.env.CONTENT_STUDIO_WEBHOOK_TOKEN}` }
         : {})

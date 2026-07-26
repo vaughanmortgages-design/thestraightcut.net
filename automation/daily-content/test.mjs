@@ -24,6 +24,14 @@ import {
   buildActiveAffiliateFeed,
   FEED_COLUMNS
 } from "./csv-publisher.mjs";
+import {
+  createAffiliateVaultWebhook,
+  signWebhookBody
+} from "./webhook-core.mjs";
+import {
+  hasProcessedWebhookEvent,
+  markWebhookEventProcessed
+} from "./webhook-idempotency.mjs";
 
 test("boolean inputs are normalized", () => {
   assert.equal(asBoolean("TRUE"), true);
@@ -477,6 +485,143 @@ test("active Affiliate Vault CSV reports invalid Active rows", () => {
   ]);
 });
 
+test("signed Affiliate Vault webhook dispatches once and ignores duplicates", async () => {
+  const store = fakeEventStore();
+  let dispatches = 0;
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => store,
+    fetchImpl: async () => {
+      dispatches += 1;
+      return new Response(null, { status: 204 });
+    },
+    sleep: async () => {},
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: quietLogger()
+  });
+  const request = signedWebhookRequest();
+  const first = await webhook(request);
+  const second = await webhook(signedWebhookRequest());
+  assert.equal(first.status, 202);
+  assert.equal((await first.json()).status, "accepted");
+  assert.equal(second.status, 202);
+  assert.equal((await second.json()).status, "duplicate_ignored");
+  assert.equal(dispatches, 1);
+});
+
+test("Affiliate Vault webhook rejects an invalid signature", async () => {
+  let dispatches = 0;
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => fakeEventStore(),
+    fetchImpl: async () => {
+      dispatches += 1;
+      return new Response(null, { status: 204 });
+    },
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: quietLogger()
+  });
+  const request = signedWebhookRequest({
+    signature: `sha256=${"0".repeat(64)}`
+  });
+  const response = await webhook(request);
+  assert.equal(response.status, 401);
+  assert.equal(dispatches, 0);
+});
+
+test("Affiliate Vault webhook retries transient dispatch failures safely", async () => {
+  let dispatches = 0;
+  const sleeps = [];
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => fakeEventStore(),
+    fetchImpl: async () => {
+      dispatches += 1;
+      return dispatches === 1
+        ? new Response(null, { status: 503 })
+        : new Response(null, { status: 204 });
+    },
+    sleep: async (milliseconds) => sleeps.push(milliseconds),
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: quietLogger()
+  });
+  const response = await webhook(signedWebhookRequest());
+  const body = await response.json();
+  assert.equal(response.status, 202);
+  assert.equal(body.attempts, 2);
+  assert.equal(dispatches, 2);
+  assert.deepEqual(sleeps, [500]);
+});
+
+test("Affiliate Vault webhook does not retry permanent failures and logs them", async () => {
+  let dispatches = 0;
+  const errors = [];
+  const store = fakeEventStore();
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => store,
+    fetchImpl: async () => {
+      dispatches += 1;
+      return new Response(null, { status: 403 });
+    },
+    sleep: async () => {},
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: {
+      log: () => {},
+      info: () => {},
+      warn: () => {},
+      error: (message) => errors.push(message)
+    }
+  });
+  const response = await webhook(signedWebhookRequest());
+  assert.equal(response.status, 503);
+  assert.equal(dispatches, 1);
+  assert.ok(errors.some((entry) => entry.includes("dispatch_failed")));
+  assert.equal(store.entries.size, 1);
+  assert.ok([...store.entries.keys()][0].startsWith("failures/"));
+});
+
+test("accepted dispatch keeps its duplicate claim if completion logging fails", async () => {
+  const entries = new Map();
+  let writes = 0;
+  const store = {
+    entries,
+    async setJSON(key, value, options = {}) {
+      writes += 1;
+      if (writes === 2) throw new Error("completion store unavailable");
+      if (options.onlyIfNew && entries.has(key)) return { modified: false };
+      entries.set(key, value);
+      return { modified: true };
+    },
+    async delete(key) {
+      entries.delete(key);
+    }
+  };
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => store,
+    fetchImpl: async () => new Response(null, { status: 204 }),
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: quietLogger()
+  });
+  const response = await webhook(signedWebhookRequest());
+  assert.equal(response.status, 202);
+  assert.equal(entries.size, 1);
+  const duplicate = await webhook(signedWebhookRequest());
+  assert.equal((await duplicate.json()).status, "duplicate_ignored");
+});
+
+test("workflow event history prevents duplicate content runs", () => {
+  const state = { version: 1, brands: {}, processedWebhookEvents: [] };
+  assert.equal(hasProcessedWebhookEvent(state, "vault-event-001"), false);
+  const marked = markWebhookEventProcessed(state, "vault-event-001");
+  assert.equal(hasProcessedWebhookEvent(marked, "vault-event-001"), true);
+  assert.deepEqual(
+    markWebhookEventProcessed(marked, "vault-event-001"),
+    marked
+  );
+});
+
 function configForTest() {
   return {
     estack: {
@@ -503,5 +648,72 @@ function configForTest() {
         }
       }
     }
+  };
+}
+
+function webhookEnvironment() {
+  return {
+    AFFILIATE_VAULT_WEBHOOK_SECRET: "test-webhook-secret",
+    AFFILIATE_VAULT_SPREADSHEET_ID:
+      "1KzunQnNsPPCvTW5UbFWz9z4zl1o7u1QFped2vhCN1wo",
+    AFFILIATE_VAULT_SHEET_NAME: "Affiliate Link Vault",
+    GITHUB_REPOSITORY_DISPATCH_TOKEN: "test-github-token",
+    GITHUB_REPOSITORY: "owner/repository"
+  };
+}
+
+function signedWebhookRequest({ signature } = {}) {
+  const timestamp = "1800000000";
+  const eventId = "vault-event-001";
+  const body = JSON.stringify({
+    event: "affiliate-vault.updated",
+    event_id: eventId,
+    occurred_at: "2027-01-15T08:00:00.000Z",
+    spreadsheet_id: "1KzunQnNsPPCvTW5UbFWz9z4zl1o7u1QFped2vhCN1wo",
+    tab: "Affiliate Link Vault",
+    change: { row: 52, column: 12, a1_notation: "L52" }
+  });
+  return new Request(
+    "https://straightcut.net/.netlify/functions/affiliate-vault-webhook",
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-affiliate-vault-event-id": eventId,
+        "x-affiliate-vault-timestamp": timestamp,
+        "x-affiliate-vault-signature":
+          signature ??
+          `sha256=${signWebhookBody(
+            webhookEnvironment().AFFILIATE_VAULT_WEBHOOK_SECRET,
+            timestamp,
+            body
+          )}`
+      },
+      body
+    }
+  );
+}
+
+function fakeEventStore() {
+  const entries = new Map();
+  return {
+    entries,
+    async setJSON(key, value, options = {}) {
+      if (options.onlyIfNew && entries.has(key)) return { modified: false };
+      entries.set(key, value);
+      return { modified: true, etag: `etag-${entries.size}` };
+    },
+    async delete(key) {
+      entries.delete(key);
+    }
+  };
+}
+
+function quietLogger() {
+  return {
+    log: () => {},
+    info: () => {},
+    warn: () => {},
+    error: () => {}
   };
 }

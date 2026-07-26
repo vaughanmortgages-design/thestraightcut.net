@@ -20,18 +20,27 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Check webhook idempotency
+        id: webhook
+        env:
+          AFFILIATE_VAULT_EVENT_ID: ${{ github.event.client_payload.event_id }}
+        run: node automation/daily-content/webhook-idempotency.mjs check
       - uses: actions/setup-node@v4
+        if: steps.webhook.outputs.duplicate != 'true'
         with:
           node-version: "22"
       - name: Validate automation
+        if: steps.webhook.outputs.duplicate != 'true'
         run: node --test automation/daily-content/test.mjs
       - name: Publish active Affiliate Vault CSV
+        if: steps.webhook.outputs.duplicate != 'true'
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           AFFILIATE_VAULT_SPREADSHEET_ID: ${{ vars.AFFILIATE_VAULT_SPREADSHEET_ID }}
           AFFILIATE_VAULT_SHEET_NAME: ${{ vars.AFFILIATE_VAULT_SHEET_NAME }}
         run: node automation/daily-content/csv-publisher.mjs
       - name: Generate draft packages
+        if: steps.webhook.outputs.duplicate != 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
@@ -43,8 +52,15 @@ jobs:
           AFFILIATE_VAULT_UPDATE_WEBHOOK_TOKEN: ${{ secrets.AFFILIATE_VAULT_UPDATE_WEBHOOK_TOKEN }}
           CONTENT_STUDIO_WEBHOOK_URL: ${{ secrets.CONTENT_STUDIO_WEBHOOK_URL }}
           CONTENT_STUDIO_WEBHOOK_TOKEN: ${{ secrets.CONTENT_STUDIO_WEBHOOK_TOKEN }}
+          CONTENT_TRIGGER_ID: ${{ github.event.client_payload.event_id }}
         run: node automation/daily-content/generate-daily-drafts.mjs
+      - name: Mark webhook event processed
+        if: steps.webhook.outputs.duplicate != 'true'
+        env:
+          AFFILIATE_VAULT_EVENT_ID: ${{ github.event.client_payload.event_id }}
+        run: node automation/daily-content/webhook-idempotency.mjs mark
       - name: Save drafts and read-only feed
+        if: steps.webhook.outputs.duplicate != 'true'
         run: |
           git config user.name "content-draft-bot"
           git config user.email "actions@users.noreply.github.com"

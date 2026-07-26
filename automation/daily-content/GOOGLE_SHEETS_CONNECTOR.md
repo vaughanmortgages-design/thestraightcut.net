@@ -58,15 +58,16 @@ repository_dispatch: affiliate-vault-updated
 Install `google-apps-script/AffiliateVaultChangeTrigger.gs` as an installable
 on-edit trigger. Its Script Properties require:
 
-- `GITHUB_REPOSITORY_DISPATCH_TOKEN`
-- `GITHUB_REPOSITORY` (optional; defaults to
-  `vaughanmortgages-design/thestraightcut.net`)
+- `AFFILIATE_VAULT_WEBHOOK_URL`
+- `AFFILIATE_VAULT_WEBHOOK_SECRET`
 
-The GitHub token needs permission to create repository dispatch events for this
-repository. Apps Script requires access to the spreadsheet, installable
-triggers, Script Properties and external HTTP requests.
+The matching Netlify secret verifies each HMAC-SHA256 signature. The endpoint
+then creates the GitHub repository dispatch using a repository-scoped token
+stored only in Netlify. Apps Script requires access to the spreadsheet,
+installable triggers, Script Properties and external HTTP requests.
 
 The daily schedule remains as a recovery run if an edit event is missed.
+Authentication, idempotency and retry details are documented in `WEBHOOK.md`.
 
 ## Data mapping
 
