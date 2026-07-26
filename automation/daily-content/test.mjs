@@ -529,6 +529,25 @@ test("Affiliate Vault webhook rejects an invalid signature", async () => {
   assert.equal(dispatches, 0);
 });
 
+test("Affiliate Vault webhook rejects a correctly signed stale request", async () => {
+  let dispatches = 0;
+  const webhook = createAffiliateVaultWebhook({
+    getEventStore: () => fakeEventStore(),
+    fetchImpl: async () => {
+      dispatches += 1;
+      return new Response(null, { status: 204 });
+    },
+    now: () => 1_800_000_000_000,
+    env: webhookEnvironment(),
+    logger: quietLogger()
+  });
+  const response = await webhook(
+    signedWebhookRequest({ timestamp: "1799999000" })
+  );
+  assert.equal(response.status, 401);
+  assert.equal(dispatches, 0);
+});
+
 test("Affiliate Vault webhook retries transient dispatch failures safely", async () => {
   let dispatches = 0;
   const sleeps = [];
@@ -662,8 +681,10 @@ function webhookEnvironment() {
   };
 }
 
-function signedWebhookRequest({ signature } = {}) {
-  const timestamp = "1800000000";
+function signedWebhookRequest({
+  signature,
+  timestamp = "1800000000"
+} = {}) {
   const eventId = "vault-event-001";
   const body = JSON.stringify({
     event: "affiliate-vault.updated",
