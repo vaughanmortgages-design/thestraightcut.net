@@ -2,6 +2,12 @@ name: Daily Content Drafts
 
 on:
   workflow_dispatch:
+    inputs:
+      safe_test_mode:
+        description: Generate isolated test drafts without external writes or commits
+        required: true
+        default: true
+        type: boolean
   repository_dispatch:
     types: [affiliate-vault-updated]
   schedule:
@@ -18,6 +24,8 @@ jobs:
   generate-drafts:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      CONTENT_SAFE_TEST_MODE: ${{ inputs.safe_test_mode || 'false' }}
     steps:
       - uses: actions/checkout@v4
       - name: Check webhook idempotency
@@ -33,7 +41,7 @@ jobs:
         if: steps.webhook.outputs.duplicate != 'true'
         run: node --test automation/daily-content/test.mjs
       - name: Publish active Affiliate Vault CSV
-        if: steps.webhook.outputs.duplicate != 'true'
+        if: steps.webhook.outputs.duplicate != 'true' && env.CONTENT_SAFE_TEST_MODE != 'true'
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           AFFILIATE_VAULT_SPREADSHEET_ID: ${{ vars.AFFILIATE_VAULT_SPREADSHEET_ID }}
@@ -53,17 +61,26 @@ jobs:
           CONTENT_STUDIO_WEBHOOK_URL: ${{ secrets.CONTENT_STUDIO_WEBHOOK_URL }}
           CONTENT_STUDIO_WEBHOOK_TOKEN: ${{ secrets.CONTENT_STUDIO_WEBHOOK_TOKEN }}
           CONTENT_TRIGGER_ID: ${{ github.event.client_payload.event_id }}
+          AFFILIATE_VAULT_TEST_CSV_PATH: automation/daily-content/fixtures/safe-test-vault.csv
         run: node automation/daily-content/generate-daily-drafts.mjs
       - name: Mark webhook event processed
-        if: steps.webhook.outputs.duplicate != 'true'
+        if: steps.webhook.outputs.duplicate != 'true' && env.CONTENT_SAFE_TEST_MODE != 'true'
         env:
           AFFILIATE_VAULT_EVENT_ID: ${{ github.event.client_payload.event_id }}
         run: node automation/daily-content/webhook-idempotency.mjs mark
       - name: Save drafts and read-only feed
-        if: steps.webhook.outputs.duplicate != 'true'
+        if: steps.webhook.outputs.duplicate != 'true' && env.CONTENT_SAFE_TEST_MODE != 'true'
         run: |
           git config user.name "content-draft-bot"
           git config user.email "actions@users.noreply.github.com"
           git add automation/daily-content/state.json automation/daily-content/public content/drafts
           git diff --cached --quiet || git commit -m "Add daily content drafts $(date -u +%F)"
           git push
+      - name: Upload safe test drafts
+        if: steps.webhook.outputs.duplicate != 'true' && env.CONTENT_SAFE_TEST_MODE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-content-safe-test-${{ github.run_id }}
+          path: content/drafts/test/
+          if-no-files-found: error
+          retention-days: 7

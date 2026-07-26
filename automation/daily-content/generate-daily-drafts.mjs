@@ -11,6 +11,7 @@ import {
 } from "./lib.mjs";
 import {
   loadAffiliateVault,
+  parseAffiliateVaultCsv,
   updateLastUsedDateViaWebhook
 } from "./affiliate-vault.mjs";
 import {
@@ -29,6 +30,8 @@ const date =
 const brandArgIndex = process.argv.indexOf("--brand");
 const selectedBrand = brandArgIndex >= 0 ? process.argv[brandArgIndex + 1] : null;
 const dryRun = args.has("--dry-run");
+const safeTest =
+  args.has("--safe-test") || process.env.CONTENT_SAFE_TEST_MODE === "true";
 
 const config = JSON.parse(
   await fs.readFile(path.join(here, "config/brands.json"), "utf8")
@@ -198,7 +201,13 @@ async function aiDraft(brandKey, brand, category, product, fallback) {
 }
 
 async function writeDraft(brandKey, draft) {
-  const directory = path.join(root, "content/drafts", date, brandKey);
+  const directory = path.join(
+    root,
+    "content/drafts",
+    ...(safeTest ? ["test"] : []),
+    date,
+    brandKey
+  );
   await fs.mkdir(directory, { recursive: true });
   await fs.writeFile(
     path.join(directory, "draft.json"),
@@ -238,7 +247,20 @@ async function sendToContentStudio(draft) {
 
 let vault;
 try {
-  vault = process.env.GOOGLE_SERVICE_ACCOUNT_JSON
+  vault = safeTest
+    ? {
+        ...parseAffiliateVaultCsv(
+          await fs.readFile(
+            process.env.AFFILIATE_VAULT_TEST_CSV_PATH ||
+              path.join(here, "fixtures/safe-test-vault.csv"),
+            "utf8"
+          ),
+          config.brands
+        ),
+        source: "local safe-test fixture",
+        connection: "safe-test"
+      }
+    : process.env.GOOGLE_SERVICE_ACCOUNT_JSON
     ? await loadAffiliateVaultFromGoogleSheets(config.brands)
     : await loadAffiliateVault(
         process.env.AFFILIATE_VAULT_CSV_URL,
@@ -255,7 +277,13 @@ try {
     source: "not configured"
   };
 }
-const runLog = { date, startedAt: new Date().toISOString(), status: "running", brands: {} };
+const runLog = {
+  date,
+  testMode: safeTest,
+  startedAt: new Date().toISOString(),
+  status: "running",
+  brands: {}
+};
 
 for (const [brandKey, brand] of Object.entries(config.brands)) {
   if (selectedBrand && selectedBrand !== brandKey) continue;
@@ -287,6 +315,7 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
       title: generated.title,
       status: "Draft",
       approvalOptions: config.approvalStatuses,
+      testMode: safeTest,
       product,
       outputs: brand.outputs,
       ...Object.fromEntries(brand.outputs.map((output) => [output, generated[output]])),
@@ -295,8 +324,8 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
     assertDraftPackage(draft, brand);
     if (!dryRun) {
       await writeDraft(brandKey, draft);
-      await sendToContentStudio(draft);
-      if (product) {
+      if (!safeTest) await sendToContentStudio(draft);
+      if (product && !safeTest) {
         if (vault.connection === "google-sheets-api") {
           if (!product.lastUsedColumn) {
             throw new Error(
@@ -315,9 +344,11 @@ for (const [brandKey, brand] of Object.entries(config.brands)) {
           await updateLastUsedDateViaWebhook(product, date);
         }
       }
-      brandState.lastCategory = category;
-      brandState.lastProductId = product?.id ?? null;
-      brandState.lastRun = date;
+      if (!safeTest) {
+        brandState.lastCategory = category;
+        brandState.lastProductId = product?.id ?? null;
+        brandState.lastRun = date;
+      }
     }
     runLog.brands[brandKey] = {
       status: "success",
@@ -343,8 +374,15 @@ runLog.finishedAt = new Date().toISOString();
 if (dryRun) {
   console.log(JSON.stringify(runLog, null, 2));
 } else {
-  await fs.writeFile(statePath, `${JSON.stringify(state, null, 2)}\n`);
-  const logDirectory = path.join(root, "content/drafts", date);
+  if (!safeTest) {
+    await fs.writeFile(statePath, `${JSON.stringify(state, null, 2)}\n`);
+  }
+  const logDirectory = path.join(
+    root,
+    "content/drafts",
+    ...(safeTest ? ["test"] : []),
+    date
+  );
   await fs.mkdir(logDirectory, { recursive: true });
   await fs.writeFile(
     path.join(logDirectory, "run-log.json"),

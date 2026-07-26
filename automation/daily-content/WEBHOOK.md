@@ -128,3 +128,18 @@ repository dispatch events.
 
 Install `google-apps-script/AffiliateVaultChangeTrigger.gs` as an installable
 on-edit trigger after the endpoint is deployed and the secrets are configured.
+
+## Safe test mode
+
+Run the `Daily Content Drafts` workflow manually with `safe_test_mode` enabled.
+Safe test mode:
+
+- reads `fixtures/safe-test-vault.csv` instead of the production Sheet;
+- writes only to `content/drafts/test/<date>`;
+- uploads those drafts as a seven-day GitHub Actions artifact;
+- does not call Content Studio or any Last Used Date webhook;
+- does not update the production Sheet, state file, repository, or webhook
+  idempotency history.
+
+The checkbox defaults to enabled for manual runs. Scheduled and
+`repository_dispatch` runs remain production-mode runs.
