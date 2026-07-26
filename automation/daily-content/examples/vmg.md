@@ -23,6 +23,22 @@ Renewal coming up? Review your timing, current terms, future plans and complete
 borrowing needs before comparing options. General information only; lender
 criteria and qualification apply.
 
+## Instagram
+
+Mortgage renewal checklist:
+
+- Confirm your maturity date
+- Review your current terms
+- Consider your future plans
+- Prepare your documents
+- Compare the complete mortgage scenario
+
+General information only. Mortgage options depend on lender criteria, borrower
+qualification, property review and documentation.
+
+Mortgage Agent Level 2 | FSRA #M25000307 | GNE Mortgages FSRA Brokerage
+#10394 | vaughanmortgages@gmail.com | 416-891-8684
+
 ## LinkedIn
 
 A useful mortgage-renewal review looks beyond one headline number. Timing,

@@ -73,6 +73,7 @@ ${brand.compliance}`;
       title,
       article,
       facebook: `${category} decisions deserve more than a quick headline. Start with your timing, current terms, documents and long-term goals, then compare the complete mortgage scenario. General information only; qualification and lender criteria apply.\n\n${brand.compliance}`,
+      instagram: `${category} mortgage checklist:\n\n• Confirm your timing\n• Review current terms\n• Prepare your documents\n• Compare the complete scenario\n\nGeneral information only. Mortgage options depend on lender criteria, borrower qualification, property review and documentation.\n\n${brand.compliance}`,
       linkedin: `${category}: a useful client review starts with timing, current terms, cash flow, future plans and complete documentation. Looking at the full scenario helps borrowers compare options more clearly. General information only; lender criteria and qualification apply.\n\n${brand.compliance}`
     };
   }

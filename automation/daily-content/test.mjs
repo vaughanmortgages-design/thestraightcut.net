@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import {
   asBoolean,
   chooseRotatingCategory,
@@ -12,6 +13,35 @@ import {
 test("boolean inputs are normalized", () => {
   assert.equal(asBoolean("TRUE"), true);
   assert.equal(asBoolean("inactive"), false);
+});
+
+test("all three brands require LinkedIn and the correct daily outputs", () => {
+  const config = JSON.parse(
+    fs.readFileSync(
+      new URL("./config/brands.json", import.meta.url),
+      "utf8"
+    )
+  );
+  assert.deepEqual(config.brands.vmg.outputs, [
+    "article",
+    "facebook",
+    "instagram",
+    "linkedin"
+  ]);
+  assert.deepEqual(config.brands.estack.outputs, [
+    "article",
+    "facebook",
+    "instagram",
+    "linkedin"
+  ]);
+  assert.deepEqual(config.brands.straightcut.outputs, [
+    "article",
+    "facebook",
+    "instagram",
+    "linkedin",
+    "pinterestTitle",
+    "pinterestDescription"
+  ]);
 });
 
 test("published Google Sheet CSV is parsed with quoted values", () => {

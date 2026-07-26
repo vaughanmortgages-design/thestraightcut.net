@@ -8,7 +8,7 @@ website page.
 
 | Brand | Drafts |
 | --- | --- |
-| Vaughan Mortgage Group | Article, Facebook, LinkedIn |
+| Vaughan Mortgage Group | Article, Facebook, Instagram, LinkedIn |
 | eStack.ca | Article, Facebook, Instagram, LinkedIn |
 | The Straight Cut | Buying guide or featured-product post, Facebook, Instagram, LinkedIn, Pinterest title and description |
 
