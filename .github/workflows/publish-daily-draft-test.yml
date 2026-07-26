@@ -1,0 +1,38 @@
+name: Publish Daily Draft Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish-daily-draft-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send draft test payload
+        env:
+          CONTENT_STUDIO_WEBHOOK_URL: ${{ secrets.CONTENT_STUDIO_WEBHOOK_URL }}
+        run: |
+          if [ -z "$CONTENT_STUDIO_WEBHOOK_URL" ]; then
+            echo "::error::CONTENT_STUDIO_WEBHOOK_URL is not configured"
+            exit 1
+          fi
+
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --data @- \
+            "$CONTENT_STUDIO_WEBHOOK_URL" <<'JSON'
+          {
+            "brand": "estack",
+            "site": "estack.ca",
+            "category": "Bullion",
+            "title": "Webhook Test",
+            "summary": "This is a test from GitHub Actions.",
+            "article": "This is only a test payload used to build the Make.com automation.",
+            "image": "https://placehold.co/1080x1350/png",
+            "status": "Draft",
+            "timestamp": "${{ github.run_id }}"
+          }
+          JSON
