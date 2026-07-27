@@ -25,10 +25,13 @@
     "network": "CJ Affiliate",
     "category": "Pets",
     "merchantUrl": "https://www.canadapetcare.com/",
-    "affiliateUrl": null,
-    "status": "Approved - tracking link required",
+    "affiliateUrl": "https://www.jdoqocy.com/click-101746656-12779180",
+    "publisherId": "101746656",
+    "advertiserId": "4247933",
+    "creativeId": "12779180",
+    "status": "Active",
     "country": "Canada",
     "approvedDate": "2026-07-27",
-    "notes": "Program welcome confirmed. Add the exact CJ tracking URL before publishing this partner on the Pets page; do not substitute the merchant homepage."
+    "notes": "Exact CJ link generated for The Straight Cut. Do not publish the expired NYEAR15 seasonal coupon shown in the creative copy."
   }
 }
