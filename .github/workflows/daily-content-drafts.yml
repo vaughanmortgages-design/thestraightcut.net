@@ -62,7 +62,41 @@ jobs:
           CONTENT_STUDIO_WEBHOOK_TOKEN: ${{ secrets.CONTENT_STUDIO_WEBHOOK_TOKEN }}
           CONTENT_TRIGGER_ID: ${{ github.event.client_payload.event_id }}
           AFFILIATE_VAULT_TEST_CSV_PATH: automation/daily-content/fixtures/safe-test-vault.csv
-        run: node automation/daily-content/generate-daily-drafts.mjs
+        run: |
+          cat > "$RUNNER_TEMP/content-studio-brand-normalizer.mjs" <<'NODE'
+          const nativeFetch = globalThis.fetch;
+
+          globalThis.fetch = async (input, init = {}) => {
+            const requestUrl = typeof input === "string" ? input : input.url;
+
+            if (
+              requestUrl === process.env.CONTENT_STUDIO_WEBHOOK_URL &&
+              typeof init.body === "string"
+            ) {
+              const payload = JSON.parse(init.body);
+              const allowedBrands = new Set(["straightcut", "estack", "vmg"]);
+
+              if (!allowedBrands.has(payload.brandKey)) {
+                throw new Error(
+                  `Unsupported Content Studio brand key: ${payload.brandKey}`
+                );
+              }
+
+              init = {
+                ...init,
+                body: JSON.stringify({
+                  ...payload,
+                  brand: payload.brandKey
+                })
+              };
+            }
+
+            return nativeFetch(input, init);
+          };
+          NODE
+
+          node --import "$RUNNER_TEMP/content-studio-brand-normalizer.mjs" \
+            automation/daily-content/generate-daily-drafts.mjs
       - name: Mark webhook event processed
         if: steps.webhook.outputs.duplicate != 'true' && env.CONTENT_SAFE_TEST_MODE != 'true'
         env:
