@@ -7,30 +7,194 @@
     "heroImage": "https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1800&q=82"
   },
   "collections": [
-    {"name":"Dogs","description":"Walks, rest, play and everyday care.","image":"https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=900&q=80","href":"#dogs"},
-    {"name":"Cats","description":"Comfort, climbing, feeding and enrichment.","image":"https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=900&q=80","href":"#cats"},
-    {"name":"Fish & Aquariums","description":"Starter setups, water care and calm displays.","image":"https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=900&q=80","href":"#fish-aquariums"},
-    {"name":"Birds","description":"Habitats, feeding and daily enrichment.","image":"https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=900&q=80","href":"#birds"},
-    {"name":"Small Pets","description":"Habitats, bedding and thoughtful essentials.","image":"https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&w=900&q=80","href":"#small-pets"},
-    {"name":"Pet Health","description":"Routine care questions and safer shopping checks.","image":"https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=900&q=80","href":"#pet-health"},
-    {"name":"Pet Insurance","description":"Editorial questions to compare before choosing coverage.","image":"https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=900&q=80","href":"#pet-insurance"},
-    {"name":"Travel & Outdoor","description":"Harnesses, carriers and road-ready routines.","image":"https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=900&q=80","href":"#travel-outdoor"},
-    {"name":"Grooming","description":"Coat, nail and cleanup essentials.","image":"https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=900&q=80","href":"#grooming"},
-    {"name":"Beds & Furniture","description":"Rest, support and pet-friendly spaces.","image":"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=900&q=80","href":"#beds-furniture"},
-    {"name":"Food & Treats","description":"Storage, serving and reward-time ideas.","image":"https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=900&q=80","href":"#food-treats"},
-    {"name":"Automatic Feeders","description":"Scheduled feeding with practical safeguards.","image":"https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=900&q=80","href":"/pets-best-automatic-feeders.html"},
-    {"name":"Pet Cameras","description":"A clearer look at home while you are away.","image":"https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=900&q=80","href":"/pets-best-pet-cameras.html"}
+    {
+      "name": "Dogs",
+      "description": "Walks, rest, play and everyday care.",
+      "image": "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=900&q=80",
+      "href": "#dogs"
+    },
+    {
+      "name": "Cats",
+      "description": "Comfort, climbing, feeding and enrichment.",
+      "image": "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=900&q=80",
+      "href": "#cats"
+    },
+    {
+      "name": "Fish & Aquariums",
+      "description": "Starter setups, water care and calm displays.",
+      "image": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=900&q=80",
+      "href": "#fish-aquariums"
+    },
+    {
+      "name": "Birds",
+      "description": "Habitats, feeding and daily enrichment.",
+      "image": "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=900&q=80",
+      "href": "#birds"
+    },
+    {
+      "name": "Small Pets",
+      "description": "Habitats, bedding and thoughtful essentials.",
+      "image": "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&w=900&q=80",
+      "href": "#small-pets"
+    },
+    {
+      "name": "Pet Health",
+      "description": "Routine care questions and safer shopping checks.",
+      "image": "https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=900&q=80",
+      "href": "#pet-health"
+    },
+    {
+      "name": "Pet Insurance",
+      "description": "Editorial questions to compare before choosing coverage.",
+      "image": "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=900&q=80",
+      "href": "#pet-insurance"
+    },
+    {
+      "name": "Travel & Outdoor",
+      "description": "Harnesses, carriers and road-ready routines.",
+      "image": "https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=900&q=80",
+      "href": "#travel-outdoor"
+    },
+    {
+      "name": "Grooming",
+      "description": "Coat, nail and cleanup essentials.",
+      "image": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=900&q=80",
+      "href": "#grooming"
+    },
+    {
+      "name": "Beds & Furniture",
+      "description": "Rest, support and pet-friendly spaces.",
+      "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=900&q=80",
+      "href": "#beds-furniture"
+    },
+    {
+      "name": "Food & Treats",
+      "description": "Storage, serving and reward-time ideas.",
+      "image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?auto=format&fit=crop&w=900&q=80",
+      "href": "#food-treats"
+    },
+    {
+      "name": "Automatic Feeders",
+      "description": "Scheduled feeding with practical safeguards.",
+      "image": "https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=900&q=80",
+      "href": "/pets-best-automatic-feeders.html"
+    },
+    {
+      "name": "Pet Cameras",
+      "description": "A clearer look at home while you are away.",
+      "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=900&q=80",
+      "href": "/pets-best-pet-cameras.html"
+    }
   ],
   "guides": [
-    {"slug":"best-dog-beds","title":"Best Dog Beds","description":"How to compare support, sizing, covers and cleanup.","image":"https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80","checks":["Measure sleeping length, not just body length","Match support to age and mobility","Prioritize removable washable covers","Confirm the return policy before sizing up"]},
-    {"slug":"best-dog-harnesses","title":"Best Dog Harnesses","description":"Fit, control and comfort checks for daily walks.","image":"https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1200&q=80","checks":["Measure neck and chest at the maker’s points","Check adjustment range and strap placement","Choose visibility for low-light walks","Recheck fit after the first few outings"]},
-    {"slug":"best-dog-toys","title":"Best Dog Toys","description":"Choose play styles, materials and sizes more safely.","image":"https://images.unsplash.com/photo-1535294435445-d7249524ef2e?auto=format&fit=crop&w=1200&q=80","checks":["Match the toy to the dog’s play style","Choose a size that cannot be swallowed","Inspect seams and surfaces regularly","Supervise new toys until wear is understood"]},
-    {"slug":"best-cat-trees","title":"Best Cat Trees","description":"Stability, scratching surfaces and placement explained.","image":"https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1200&q=80","checks":["Measure floor space and ceiling clearance","Prioritize a wide stable base","Check platform size for the cat","Place it where the household spends time"]},
-    {"slug":"best-automatic-feeders","title":"Best Automatic Feeders","description":"Capacity, scheduling and cleaning checks before buying.","image":"https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=1200&q=80","checks":["Confirm food type and kibble-size compatibility","Check portion controls and schedule limits","Look for washable food-contact parts","Plan a backup for power or connectivity loss"]},
-    {"slug":"best-aquarium-starter-kits","title":"Best Aquarium Starter Kits","description":"A practical checklist for tanks, filtration and setup.","image":"https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=1200&q=80","checks":["Choose the species before choosing tank size","Confirm filtration and heater requirements","Allow time for a safe cycling process","Budget for testing and ongoing water care"]},
-    {"slug":"best-pet-cameras","title":"Best Pet Cameras","description":"Privacy, placement and useful features considered.","image":"https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80","checks":["Choose the viewing angle before the feature list","Review account and video privacy controls","Confirm alert and subscription requirements","Place cords and hardware out of reach"]},
-    {"slug":"best-pet-travel-accessories","title":"Best Pet Travel Accessories","description":"Carriers, restraint, hydration and cleanup essentials.","image":"https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=1200&q=80","checks":["Check carrier dimensions and travel rules","Use vehicle restraints designed for the pet","Pack familiar food, water and identification","Test the setup before the full trip"]},
-    {"slug":"best-pet-deals-this-week","title":"Best Pet Deals This Week","description":"How to spot useful value without false urgency.","image":"https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1200&q=80","checks":["Start with products already on the shopping list","Verify the live merchant price","Compare size, quantity and delivered cost","Skip unfamiliar consumables without checking ingredients"]}
+    {
+      "slug": "best-dog-beds",
+      "title": "Best Dog Beds",
+      "description": "How to compare support, sizing, covers and cleanup.",
+      "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Measure sleeping length, not just body length",
+        "Match support to age and mobility",
+        "Prioritize removable washable covers",
+        "Confirm the return policy before sizing up"
+      ]
+    },
+    {
+      "slug": "best-dog-harnesses",
+      "title": "Best Dog Harnesses",
+      "description": "Fit, control and comfort checks for daily walks.",
+      "image": "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Measure neck and chest at the maker’s points",
+        "Check adjustment range and strap placement",
+        "Choose visibility for low-light walks",
+        "Recheck fit after the first few outings"
+      ]
+    },
+    {
+      "slug": "best-dog-toys",
+      "title": "Best Dog Toys",
+      "description": "Choose play styles, materials and sizes more safely.",
+      "image": "https://images.unsplash.com/photo-1535294435445-d7249524ef2e?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Match the toy to the dog’s play style",
+        "Choose a size that cannot be swallowed",
+        "Inspect seams and surfaces regularly",
+        "Supervise new toys until wear is understood"
+      ]
+    },
+    {
+      "slug": "best-cat-trees",
+      "title": "Best Cat Trees",
+      "description": "Stability, scratching surfaces and placement explained.",
+      "image": "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Measure floor space and ceiling clearance",
+        "Prioritize a wide stable base",
+        "Check platform size for the cat",
+        "Place it where the household spends time"
+      ]
+    },
+    {
+      "slug": "best-automatic-feeders",
+      "title": "Best Automatic Feeders",
+      "description": "Capacity, scheduling and cleaning checks before buying.",
+      "image": "https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Confirm food type and kibble-size compatibility",
+        "Check portion controls and schedule limits",
+        "Look for washable food-contact parts",
+        "Plan a backup for power or connectivity loss"
+      ]
+    },
+    {
+      "slug": "best-aquarium-starter-kits",
+      "title": "Best Aquarium Starter Kits",
+      "description": "A practical checklist for tanks, filtration and setup.",
+      "image": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Choose the species before choosing tank size",
+        "Confirm filtration and heater requirements",
+        "Allow time for a safe cycling process",
+        "Budget for testing and ongoing water care"
+      ]
+    },
+    {
+      "slug": "best-pet-cameras",
+      "title": "Best Pet Cameras",
+      "description": "Privacy, placement and useful features considered.",
+      "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Choose the viewing angle before the feature list",
+        "Review account and video privacy controls",
+        "Confirm alert and subscription requirements",
+        "Place cords and hardware out of reach"
+      ]
+    },
+    {
+      "slug": "best-pet-travel-accessories",
+      "title": "Best Pet Travel Accessories",
+      "description": "Carriers, restraint, hydration and cleanup essentials.",
+      "image": "https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Check carrier dimensions and travel rules",
+        "Use vehicle restraints designed for the pet",
+        "Pack familiar food, water and identification",
+        "Test the setup before the full trip"
+      ]
+    },
+    {
+      "slug": "best-pet-deals-this-week",
+      "title": "Best Pet Deals This Week",
+      "description": "How to spot useful value without false urgency.",
+      "image": "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1200&q=80",
+      "checks": [
+        "Start with products already on the shopping list",
+        "Verify the live merchant price",
+        "Compare size, quantity and delivered cost",
+        "Skip unfamiliar consumables without checking ingredients"
+      ]
+    }
   ],
   "partners": [
     {
@@ -41,6 +205,14 @@
       "couponCode": "RAYCUTTER10",
       "commission": "10%",
       "cta": "Explore Rocky Mountain Dog"
+    },
+    {
+      "name": "Canada Pet Care",
+      "category": "Pet Health",
+      "description": "Pet health and everyday care products from an approved CJ affiliate partner.",
+      "affiliateUrl": "https://www.jdoqocy.com/click-101746656-12779180",
+      "couponCode": "",
+      "cta": "Shop Canada Pet Care"
     }
   ]
 }
