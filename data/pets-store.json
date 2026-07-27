@@ -41,6 +41,14 @@
       "couponCode": "RAYCUTTER10",
       "commission": "10%",
       "cta": "Explore Rocky Mountain Dog"
+    },
+    {
+      "name": "Canada Pet Care",
+      "category": "Pet Health",
+      "description": "Pet health and everyday care products from an approved CJ affiliate partner.",
+      "affiliateUrl": "https://www.jdoqocy.com/click-101746656-12779180",
+      "couponCode": "",
+      "cta": "Shop Canada Pet Care"
     }
   ]
 }
