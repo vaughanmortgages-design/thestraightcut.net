@@ -41,6 +41,20 @@
       "couponCode": "RAYCUTTER10",
       "commission": "10%",
       "cta": "Explore Rocky Mountain Dog"
+    },
+    {
+      "name": "Natural Nutrition For Dogs",
+      "category": "Dog Nutrition",
+      "description": "A digital guide about homemade food for dogs. Review the publisher’s information before purchasing.",
+      "affiliateUrl": "https://3a9d39qr-nebvwb0niqhejefa9.hop.clickbank.net",
+      "cta": "View the Dog Nutrition Guide"
+    },
+    {
+      "name": "24h Dog Food Label Service",
+      "category": "Dog Nutrition",
+      "description": "A remote dog-food label service offered through the approved Digistore24 destination.",
+      "affiliateUrl": "https://www.digistore24.com/redir/667057/straightcutguide0825/",
+      "cta": "View the Dog Food Label Service"
     }
   ]
 }
