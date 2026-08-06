@@ -7,6 +7,16 @@ function renderSearch(){if(!searchInput||!searchResults)return;const query=searc
 searchButton?.addEventListener('click',()=>{const open=searchButton.getAttribute('aria-expanded')==='true';searchButton.setAttribute('aria-expanded',String(!open));if(searchPanel)searchPanel.hidden=open;if(!open)searchInput?.focus()});
 searchInput?.addEventListener('input',renderSearch);document.querySelector('[data-search-submit]')?.addEventListener('click',renderSearch);searchInput?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();renderSearch()}});
 document.querySelector('[data-newsletter-form]')?.addEventListener('submit',(event)=>{event.preventDefault();const form=event.currentTarget;const email=form.querySelector('input[type="email"]');const message=form.querySelector('[data-form-message]');if(!email?.value)return;if(message)message.textContent='Thanks—your email app will open to complete signup.';window.location.href=`mailto:hello@thestraightcut.net?subject=${encodeURIComponent('Join The Saturday Cut')}&body=${encodeURIComponent(`Please add ${email.value} to The Saturday Cut.`)}`});
+(function addAmazonShoppingStrip(){
+  if(document.querySelector('[data-amazon-shopping-strip]'))return;
+  const hero=document.querySelector('.home-hero');
+  if(!hero)return;
+  const strip=document.createElement('section');
+  strip.dataset.amazonShoppingStrip='';
+  strip.setAttribute('aria-label','Shop Amazon Canada');
+  strip.innerHTML=`<div style="max-width:1180px;margin:0 auto;padding:22px 20px;text-align:center"><p style="margin:0 0 8px;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase">Amazon.ca shopping</p><h2 style="margin:0 0 10px">Shop useful everyday finds on Amazon Canada</h2><p style="margin:0 auto 16px;max-width:760px">Browse home, tools, electronics, automotive and more. As an Amazon Associate, The Straight Cut earns from qualifying purchases.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="button gold" href="https://www.amazon.ca/?tag=straightcutgu-20" target="_blank" rel="sponsored nofollow noopener">Shop Amazon.ca ↗</a><a class="button glass" href="https://www.amazon.ca/s?k=home+improvement&tag=straightcutgu-20" target="_blank" rel="sponsored nofollow noopener">Home Improvement ↗</a><a class="button glass" href="https://www.amazon.ca/s?k=tools&tag=straightcutgu-20" target="_blank" rel="sponsored nofollow noopener">Tools ↗</a><a class="button glass" href="https://www.amazon.ca/s?k=electronics&tag=straightcutgu-20" target="_blank" rel="sponsored nofollow noopener">Electronics ↗</a></div></div>`;
+  hero.insertAdjacentElement('afterend',strip);
+})();
 (function loadOfficialSocialLinks(){
   if(document.querySelector('script[data-straight-cut-social-links]'))return;
   const script=document.createElement('script');
