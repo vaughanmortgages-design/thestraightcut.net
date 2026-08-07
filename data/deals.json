@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-08-07T20:45:00-04:00",
+  "generatedAt": "2026-08-07T21:16:48.979Z",
   "source": "TSC Deal Engine Master",
-  "policy": "Only approved, monetized listings with valid price history should be published here.",
+  "policy": "Only approved, monetized listings with valid price history are published here.",
+  "count": 0,
   "deals": []
 }
