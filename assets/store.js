@@ -27,6 +27,37 @@ document.querySelector('[data-newsletter-form]')?.addEventListener('submit',(eve
   section.innerHTML=`<div class="section-heading"><span class="section-kicker">Collectibles & Kids Picks</span><h2>Pokémon and LEGO, right up front.</h2><p>Two fast-growing deal sections with current Amazon.ca and eBay finds.</p></div><div class="editorial-grid"><a class="editorial-card" href="/pokemon-deals.html"><span class="editorial-card-copy"><span class="card-kicker">Pokémon Deals</span><h3>Cards, ETBs & collector finds</h3><p>Elite Trainer Boxes, booster bundles, Funko and more.</p><span class="card-action">Shop Pokémon →</span></span></a><a class="editorial-card" href="/lego-deals.html"><span class="editorial-card-copy"><span class="card-kicker">LEGO Deals</span><h3>Star Wars, Technic & Speed Champions</h3><p>Current LEGO listings pulled into one quick browse.</p><span class="card-action">Shop LEGO →</span></span></a></div>`;
   hero.insertAdjacentElement('afterend',section);
 })();
+(function addDealOfTheDay(){
+  if(document.querySelector('[data-deal-of-day]'))return;
+  const hero=document.querySelector('.home-hero');
+  if(!hero)return;
+  fetch('/data/deals.json',{cache:'no-store'})
+    .then((response)=>response.ok?response.json():Promise.reject(new Error('feed unavailable')))
+    .then((data)=>{
+      const rows=Array.isArray(data?.deals)?data.deals:[];
+      if(!rows.length)return;
+      const deal=[...rows].sort((a,b)=>Number(b.dealScore||0)-Number(a.dealScore||0)||Number(b.dropPct||0)-Number(a.dropPct||0))[0];
+      if(!deal?.affiliateURL||!deal?.product)return;
+      const currency=deal.currency||'CAD';
+      const current=Number(deal.currentPrice);
+      const high=Number(deal.highPrice);
+      const price=Number.isFinite(current)?new Intl.NumberFormat('en-CA',{style:'currency',currency}).format(current):deal.currentPrice||'';
+      const highPrice=Number.isFinite(high)&&high>current?new Intl.NumberFormat('en-CA',{style:'currency',currency}).format(high):'';
+      const rawDrop=Number(deal.dropPct||0);
+      const dropPct=rawDrop>1?rawDrop:rawDrop*100;
+      const image=String(deal.imageURL||'').replace(/"/g,'&quot;');
+      const section=document.createElement('section');
+      section.dataset.dealOfDay='';
+      section.setAttribute('aria-label','Deal of the Day');
+      section.style.cssText='background:#0d0d0f;color:#fff;padding:42px 20px;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)';
+      section.innerHTML=`<div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(220px,380px) 1fr;gap:34px;align-items:center"><div style="background:#fff;border-radius:18px;padding:18px;min-height:280px;display:flex;align-items:center;justify-content:center">${image?`<img src="${image}" alt="" loading="eager" style="max-width:100%;max-height:320px;object-fit:contain">`:''}</div><div><span style="display:inline-block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#d5b85b;margin-bottom:10px">Deal of the Day · ${deal.category||'Featured'}</span><h2 style="font-size:clamp(2rem,5vw,4rem);line-height:1.02;margin:0 0 14px">${deal.product}</h2><div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 12px"><strong style="font-size:2rem">${price}</strong>${highPrice?`<span style="text-decoration:line-through;color:#aaa">Tracked high ${highPrice}</span>`:''}${dropPct>0?`<span style="color:#65d487;font-weight:700">${Math.round(dropPct)}% below tracked high</span>`:''}</div><p style="max-width:720px;color:#d2d2d2;margin:0 0 18px">Selected automatically from approved, monetized listings in the TSC Deal Engine. Price and availability can change at the merchant.</p><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="button gold" href="${deal.affiliateURL}" target="_blank" rel="sponsored nofollow noopener">View Deal ↗</a><a class="button glass" href="/live-deals.html">See All Live Deals</a></div><p style="font-size:.78rem;color:#9d9d9d;margin:14px 0 0">Affiliate disclosure: The Straight Cut may earn a commission from qualifying purchases or partner links, at no additional cost to you.</p></div></div>`;
+      hero.insertAdjacentElement('afterend',section);
+      const style=document.createElement('style');
+      style.textContent='@media(max-width:760px){[data-deal-of-day]>div{grid-template-columns:1fr!important}[data-deal-of-day] h2{font-size:2rem!important}}';
+      document.head.append(style);
+    })
+    .catch(()=>{});
+})();
 (function loadOfficialSocialLinks(){
   if(document.querySelector('script[data-straight-cut-social-links]'))return;
   const script=document.createElement('script');
