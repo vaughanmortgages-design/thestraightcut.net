@@ -1,3 +1,4 @@
+# Keeps sitemap.xml synchronized with indexable top-level HTML pages.
 name: Update Sitemap
 
 on:
