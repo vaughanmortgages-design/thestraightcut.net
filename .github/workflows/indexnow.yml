@@ -1,0 +1,65 @@
+name: IndexNow Submit
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  submit-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Netlify deploy
+        run: sleep 90
+
+      - name: Submit sitemap URLs to IndexNow
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SITEMAP_URL="https://thestraightcut.net/sitemap.xml"
+          KEY="dfe95358c2104ad9b6d556f58313c997"
+          KEY_LOCATION="https://thestraightcut.net/dfe95358c2104ad9b6d556f58313c997.txt"
+
+          for attempt in 1 2 3; do
+            if curl -fsS "$SITEMAP_URL" -o sitemap.xml; then
+              break
+            fi
+            sleep 30
+          done
+
+          python3 - <<'PY'
+          import json
+          import xml.etree.ElementTree as ET
+
+          key = "dfe95358c2104ad9b6d556f58313c997"
+          key_location = "https://thestraightcut.net/dfe95358c2104ad9b6d556f58313c997.txt"
+          root = ET.parse("sitemap.xml").getroot()
+          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          urls = [n.text.strip() for n in root.findall("sm:url/sm:loc", ns) if n.text]
+
+          payload = {
+              "host": "thestraightcut.net",
+              "key": key,
+              "keyLocation": key_location,
+              "urlList": urls,
+          }
+
+          with open("payload.json", "w", encoding="utf-8") as f:
+              json.dump(payload, f)
+
+          print(f"Submitting {len(urls)} URLs to IndexNow")
+          PY
+
+          HTTP_CODE=$(curl -sS -o response.txt -w "%{http_code}" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data-binary @payload.json \
+            https://api.indexnow.org/indexnow)
+
+          echo "IndexNow HTTP status: $HTTP_CODE"
+          cat response.txt || true
+
+          case "$HTTP_CODE" in
+            200|202) exit 0 ;;
+            *) exit 1 ;;
+          esac
