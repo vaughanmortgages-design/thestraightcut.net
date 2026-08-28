@@ -9,47 +9,79 @@ jobs:
   submit-indexnow:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
       - name: Wait for Netlify deploy
         run: sleep 90
 
-      - name: Submit sitemap URLs to IndexNow
+      - name: Submit changed URLs to IndexNow
         shell: bash
         run: |
           set -euo pipefail
 
-          SITEMAP_URL="https://thestraightcut.net/sitemap.xml"
           KEY="dfe95358c2104ad9b6d556f58313c997"
           KEY_LOCATION="https://thestraightcut.net/dfe95358c2104ad9b6d556f58313c997.txt"
 
-          for attempt in 1 2 3; do
-            if curl -fsS "$SITEMAP_URL" -o sitemap.xml; then
-              break
-            fi
-            sleep 30
-          done
-
           python3 - <<'PY'
           import json
-          import xml.etree.ElementTree as ET
+          import os
+          import subprocess
+          from pathlib import Path
+          from urllib.parse import quote
 
+          host = "thestraightcut.net"
           key = "dfe95358c2104ad9b6d556f58313c997"
-          key_location = "https://thestraightcut.net/dfe95358c2104ad9b6d556f58313c997.txt"
-          root = ET.parse("sitemap.xml").getroot()
-          ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-          urls = [n.text.strip() for n in root.findall("sm:url/sm:loc", ns) if n.text]
+          key_location = f"https://{host}/{key}.txt"
 
-          payload = {
-              "host": "thestraightcut.net",
-              "key": key,
-              "keyLocation": key_location,
-              "urlList": urls,
-          }
+          def to_url(path):
+              path = path.replace('\\', '/').lstrip('./')
+              if path == 'index.html':
+                  return f"https://{host}/"
+              if path.endswith('/index.html'):
+                  path = path[:-10]
+                  return f"https://{host}/{quote(path, safe='/')}"
+              if path.endswith('.html'):
+                  return f"https://{host}/{quote(path, safe='/')}"
+              return None
 
-          with open("payload.json", "w", encoding="utf-8") as f:
-              json.dump(payload, f)
+          event = os.environ.get('GITHUB_EVENT_NAME', '')
+          urls = []
 
-          print(f"Submitting {len(urls)} URLs to IndexNow")
+          if event == 'workflow_dispatch':
+              urls = [f"https://{host}/"]
+          else:
+              before = os.environ.get('GITHUB_EVENT_BEFORE', '')
+              sha = os.environ.get('GITHUB_SHA', 'HEAD')
+              if before and set(before) != {'0'}:
+                  cmd = ['git', 'diff', '--name-only', before, sha]
+              else:
+                  cmd = ['git', 'diff', '--name-only', 'HEAD^', 'HEAD']
+              changed = subprocess.check_output(cmd, text=True).splitlines()
+              urls = [u for u in (to_url(p) for p in changed) if u]
+
+          urls = sorted(set(urls))
+          if not urls:
+              print('No public HTML pages changed; nothing to submit to IndexNow.')
+              Path('skip_indexnow').write_text('1')
+          else:
+              payload = {
+                  'host': host,
+                  'key': key,
+                  'keyLocation': key_location,
+                  'urlList': urls,
+              }
+              Path('payload.json').write_text(json.dumps(payload), encoding='utf-8')
+              print(f"Submitting {len(urls)} changed URL(s) to IndexNow")
+              for url in urls:
+                  print(url)
           PY
+
+          if [ -f skip_indexnow ]; then
+            exit 0
+          fi
 
           HTTP_CODE=$(curl -sS -o response.txt -w "%{http_code}" \
             -H "Content-Type: application/json; charset=utf-8" \
