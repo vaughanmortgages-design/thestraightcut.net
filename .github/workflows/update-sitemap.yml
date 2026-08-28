@@ -1,0 +1,42 @@
+name: Update Sitemap
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rebuild sitemap
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Commit sitemap if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- sitemap.xml; then
+            echo "Sitemap already current."
+            exit 0
+          fi
+
+          git config user.name 'vaughanmortgages-design'
+          git config user.email 'vaughanmortgages@gmail.com'
+          git add sitemap.xml
+          git commit -m 'Refresh sitemap dates and URLs'
+          git pull --rebase origin main
+          git push origin HEAD:main
