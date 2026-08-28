@@ -20,55 +20,85 @@ const encodeAttr = (value = '') => value
 
 const stripTags = (value = '') => decodeBasic(value.replace(/<[^>]*>/g, ' '));
 
-const tailFor = (file, title) => {
-  const haystack = `${file} ${title}`.toLowerCase();
-  if (/travel|vacation|hotel|getaway|flight|trip/.test(haystack)) {
-    return 'Compare stays, trip-planning details and practical travel options before you book.';
-  }
-  if (/book|little.?lamb|kids|children|toy/.test(haystack)) {
-    return 'Explore family-friendly picks, useful comparisons and straightforward guidance before you buy.';
-  }
-  if (/guide|buying|how-to|checklist/.test(haystack)) {
-    return 'Get practical comparisons, key buying checks and straightforward advice before you spend.';
-  }
-  if (/collection|department|category/.test(haystack)) {
-    return 'Browse curated categories, practical comparisons and useful picks designed to reduce guesswork.';
-  }
-  if (/deal|clearance|hot-find|refurb|sale|discount/.test(haystack)) {
-    return 'Browse curated finds, compare value and check current offers before you decide what to buy.';
-  }
-  if (/affiliate|partner/.test(haystack)) {
-    return 'Explore approved partners, practical comparisons and clear disclosures before you click or buy.';
-  }
-  if (/bullion|gold|silver|loan|finance|credit/.test(haystack)) {
-    return 'Compare resources, partner options and key considerations before choosing a provider or product.';
-  }
-  return 'Browse practical buying guidance, curated picks and straightforward comparisons from The Straight Cut.';
+const GENERATED_MARKERS = [
+  'Get practical comparisons, key buying checks',
+  'Browse curated categories, practical comparisons',
+  'Compare stays, trip-planning details',
+  'Explore family-friendly picks, useful comparisons',
+  'Browse practical buying guidance, curated picks',
+  'Browse curated finds, compare value',
+  'Explore approved partners, practical comparisons',
+  'Compare resources, partner options',
+];
+
+const cleanSubject = ({ title, h1, file }) => {
+  let subject = decodeBasic(title)
+    .replace(/\s*(?:\||—)\s*The Straight Cut\s*$/i, '')
+    .trim();
+
+  if (subject.includes(' | ')) subject = subject.split(' | ')[0].trim();
+  if (!subject) subject = stripTags(h1);
+  if (!subject) subject = file.replace(/\.html$/i, '').replace(/[-_]+/g, ' ');
+
+  subject = subject
+    .replace(/\s+/g, ' ')
+    .replace(/\s+Buying Guide$/i, '')
+    .trim();
+
+  return subject;
 };
 
-const makeDescription = ({ current, title, h1, file }) => {
-  let base = decodeBasic(current);
-  const cleanTitle = decodeBasic(title).replace(/\s*\|\s*The Straight Cut\s*$/i, '').trim();
-  const cleanH1 = stripTags(h1);
+const suffixFor = (file, subject) => {
+  const haystack = `${file} ${subject}`.toLowerCase();
 
-  if (!base) {
-    const subject = cleanTitle || cleanH1 || file.replace(/\.html$/i, '').replace(/[-_]+/g, ' ');
-    base = `${subject} at The Straight Cut.`;
+  if (/travel|vacation|hotel|getaway|flight|trip/.test(haystack)) {
+    return 'stays, trip details and practical travel options from The Straight Cut to help you plan or book with more confidence.';
+  }
+  if (/book|little.?lamb|kids|children|toy/.test(haystack)) {
+    return 'family-friendly picks, useful comparisons and practical guidance from The Straight Cut to help you choose what to buy.';
+  }
+  if (/guide|buying|how-to|checklist/.test(haystack)) {
+    return 'practical buying checks, useful comparisons and clear guidance from The Straight Cut to help you decide before you buy.';
+  }
+  if (/collection|department|category/.test(haystack)) {
+    return 'curated picks, practical comparisons and useful shopping guidance from The Straight Cut to help you choose with less guesswork.';
+  }
+  if (/deal|clearance|hot-find|refurb|sale|discount/.test(haystack)) {
+    return 'curated finds, current value and practical shopping guidance from The Straight Cut to help you decide before you buy.';
+  }
+  if (/affiliate|partner/.test(haystack)) {
+    return 'approved partner options, useful buying checks and clear affiliate disclosures from The Straight Cut before you click or buy.';
+  }
+  if (/bullion|gold|silver|loan|finance|credit/.test(haystack)) {
+    return 'key considerations, partner options and practical information from The Straight Cut before you choose a provider or product.';
+  }
+  return 'curated picks, practical buying guidance and straightforward comparisons from The Straight Cut to help you choose with less guesswork.';
+};
+
+const fitSubject = (subject, suffix) => {
+  const maxSubject = MAX_LEN - suffix.length - 2;
+  if (subject.length <= maxSubject) return subject;
+
+  const clipped = subject.slice(0, Math.max(1, maxSubject + 1));
+  const boundary = clipped.lastIndexOf(' ');
+  return (boundary > 8 ? clipped.slice(0, boundary) : clipped.slice(0, maxSubject)).replace(/[\s:;,.\-|—]+$/, '').trim();
+};
+
+const makeDescription = ({ title, h1, file }) => {
+  if (file === 'affiliate-disclosure.html') {
+    return 'The Straight Cut Affiliate Disclosure explains how affiliate links and partner commissions work, including Amazon, eBay, CJ, Awin and Gumroad.';
+  }
+  if (file === 'privacy-policy.html') {
+    return 'The Straight Cut Privacy Policy explains how the site handles analytics, cookies, contact information and related data practices.';
+  }
+  if (file === 'terms-of-use.html') {
+    return 'The Straight Cut Terms of Use cover site content, affiliate information, deal timing and the rules for using The Straight Cut services.';
   }
 
-  if (base.length < MIN_LEN) {
-    const tail = tailFor(file, cleanTitle || cleanH1);
-    base = `${base.replace(/[.!?]?$/, '.')} ${tail}`.replace(/\s+/g, ' ').trim();
-  }
-
-  if (base.length > MAX_LEN) {
-    const clipped = base.slice(0, MAX_LEN + 1);
-    const boundary = Math.max(clipped.lastIndexOf('. '), clipped.lastIndexOf('; '), clipped.lastIndexOf(', '), clipped.lastIndexOf(' '));
-    base = clipped.slice(0, boundary > MIN_LEN ? boundary : MAX_LEN).replace(/[\s,;:-]+$/, '').trim();
-    if (!/[.!?]$/.test(base)) base += '.';
-  }
-
-  return base;
+  const subject = cleanSubject({ title, h1, file });
+  const suffix = suffixFor(file, subject);
+  const fittedSubject = fitSubject(subject, suffix);
+  return `${fittedSubject}: ${suffix}`;
 };
 
 const entries = await readdir(ROOT, { withFileTypes: true });
@@ -90,21 +120,24 @@ for (const file of htmlFiles) {
   const current = metaMatch?.[1] ?? '';
   const currentDecoded = decodeBasic(current);
 
-  if (currentDecoded.length >= MIN_LEN) continue;
+  const generatedPreviously = GENERATED_MARKERS.some((marker) => currentDecoded.includes(marker));
+  const needsRepair = !metaMatch || currentDecoded.length < MIN_LEN || generatedPreviously;
+  if (!needsRepair) continue;
 
-  const next = makeDescription({ current, title, h1, file });
+  const next = makeDescription({ title, h1, file });
+  if (next.length < MIN_LEN || next.length > MAX_LEN || !/[.!?]$/.test(next)) {
+    throw new Error(`Generated invalid description for ${file}: ${next.length} chars :: ${next}`);
+  }
+
   const encoded = encodeAttr(next);
 
   if (metaMatch) {
     html = html.replace(metaMatch[0], `<meta name="description" content="${encoded}">`);
+  } else if (/<\/title>/i.test(html)) {
+    html = html.replace(/<\/title>/i, `</title><meta name="description" content="${encoded}">`);
   } else {
-    const headPos = html.search(/<\/title>/i);
-    if (headPos >= 0) {
-      html = html.replace(/<\/title>/i, `</title><meta name="description" content="${encoded}">`);
-    } else {
-      report.push({ file, status: 'skipped-no-title' });
-      continue;
-    }
+    report.push({ file, status: 'skipped-no-title' });
+    continue;
   }
 
   const ogRegexA = /<meta\s+property=["']og:description["']\s+content=["']([\s\S]*?)["']\s*\/?\s*>/i;
@@ -122,5 +155,5 @@ for (const file of htmlFiles) {
 }
 
 console.log(`Scanned ${htmlFiles.length} top-level HTML files.`);
-console.log(`Updated ${report.filter((row) => row.after).length} short or missing meta descriptions.`);
+console.log(`Updated ${report.filter((row) => row.after).length} short, missing or previously generated meta descriptions.`);
 for (const row of report) console.log(JSON.stringify(row));
