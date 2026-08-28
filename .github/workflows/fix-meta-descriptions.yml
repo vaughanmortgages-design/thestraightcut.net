@@ -1,0 +1,44 @@
+name: Fix Meta Descriptions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fix-meta-descriptions.mjs'
+      - '.github/workflows/fix-meta-descriptions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair-meta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Audit and repair short meta descriptions
+        run: node scripts/fix-meta-descriptions.mjs
+
+      - name: Commit SEO fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- '*.html'; then
+            echo 'No HTML meta description changes needed.'
+            exit 0
+          fi
+
+          git config user.name 'vaughanmortgages-design'
+          git config user.email 'vaughanmortgages@gmail.com'
+          git add -- '*.html'
+          git commit -m 'Improve short meta descriptions for Bing SEO'
+          git push origin HEAD:main
