@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07090d">
+  <title>RallyGrid | Play Racing, Pickleball, Golf & Billiards</title>
+  <meta name="description" content="Enter RallyGrid, a growing browser arcade for racing, pickleball, golf and billiards. No download required. Play free and chase your personal best.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://thestraightcut.net/rallygrid/">
+  <link rel="stylesheet" href="../assets/store.css">
+  <style>
+    :root{--rg-red:#ff2d2d;--rg-red2:#b50014;--rg-silver:#d7dbe0;--rg-dark:#07090d;--rg-panel:#10141b;--rg-line:#2b313a;--rg-white:#f8fafc;--rg-muted:#9ca6b4}
+    body{background:var(--rg-dark);color:var(--rg-white)}
+    .rg-wrap{overflow:hidden;background:radial-gradient(circle at 75% 10%,rgba(255,45,45,.16),transparent 28%),linear-gradient(180deg,#080b10,#05070a 55%,#090b0f)}
+    .rg-hero{min-height:720px;padding:clamp(5rem,9vw,8rem) clamp(1.25rem,6vw,6rem);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:clamp(2rem,5vw,6rem);align-items:center;position:relative;border-bottom:1px solid #1d2229}
+    .rg-hero:before{content:"";position:absolute;inset:auto -20% 6% 42%;height:2px;background:linear-gradient(90deg,transparent,var(--rg-red),transparent);transform:rotate(-8deg);box-shadow:0 0 28px rgba(255,45,45,.9)}
+    .rg-kicker{display:inline-flex;gap:.55rem;align-items:center;font-size:.72rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#ff6c6c}.rg-kicker:before{content:"";width:28px;height:2px;background:var(--rg-red)}
+    .rg-title{margin:.8rem 0 1.15rem;font-size:clamp(4rem,9vw,9.5rem);line-height:.78;letter-spacing:-.075em;font-weight:950;text-transform:uppercase}.rg-title span{display:block}.rg-title .grid{color:var(--rg-red);text-shadow:0 0 40px rgba(255,45,45,.18)}
+    .rg-lede{max-width:680px;color:#c6ccd5;font-size:clamp(1.05rem,1.6vw,1.32rem);line-height:1.65}.rg-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem}.rg-btn{display:inline-flex;min-height:52px;align-items:center;justify-content:center;padding:.9rem 1.35rem;border-radius:4px;text-decoration:none;text-transform:uppercase;font-size:.78rem;font-weight:900;letter-spacing:.08em;transition:.18s}.rg-btn.primary{background:var(--rg-red);color:#fff;box-shadow:0 10px 30px rgba(255,45,45,.25)}.rg-btn.secondary{border:1px solid #4a525e;color:#fff;background:#11161d}.rg-btn:hover{transform:translateY(-2px)}
+    .rg-proof{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.6rem;color:#8e99a8;font-size:.78rem}.rg-proof span{padding:.5rem .7rem;border:1px solid #2a3038;background:#0c1016;border-radius:999px}
+    .rg-console{position:relative;min-height:520px;border:1px solid #2c333e;border-radius:26px;padding:18px;background:linear-gradient(145deg,#121720,#080b10);box-shadow:0 30px 80px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,255,255,.025);transform:perspective(1000px) rotateY(-6deg) rotateX(2deg)}
+    .rg-console:after{content:"";position:absolute;inset:-1px;border-radius:26px;pointer-events:none;box-shadow:0 0 70px rgba(255,45,45,.08)}
+    .rg-screen{height:100%;min-height:482px;border-radius:16px;overflow:hidden;border:1px solid #232a34;background:radial-gradient(circle at 72% 18%,rgba(255,45,45,.28),transparent 25%),radial-gradient(circle at 20% 70%,rgba(255,255,255,.08),transparent 28%),linear-gradient(160deg,#111721,#080b10 72%)}
+    .rg-screen-top{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #202630}.rg-mark{font-weight:1000;letter-spacing:.07em}.rg-mark b{color:var(--rg-red)}.rg-live{font-size:.67rem;color:#8bff9f;letter-spacing:.1em;text-transform:uppercase}
+    .rg-race-visual{position:relative;height:258px;overflow:hidden;background:linear-gradient(180deg,transparent,rgba(0,0,0,.35)),repeating-linear-gradient(100deg,transparent 0 90px,rgba(255,255,255,.025) 92px 94px)}.track{position:absolute;width:145%;height:180px;left:-22%;bottom:-85px;border:42px solid #343a42;border-radius:50%;transform:rotate(-8deg);box-shadow:inset 0 0 0 3px #b9bdc2,inset 0 0 0 7px #23272d}.track:after{content:"";position:absolute;inset:-48px;border:4px dashed rgba(255,255,255,.6);border-radius:50%}.car{position:absolute;left:47%;bottom:42px;font-size:86px;filter:drop-shadow(0 16px 14px rgba(0,0,0,.6));transform:rotate(-7deg)}.speed{position:absolute;right:18px;top:22px;text-align:right}.speed b{display:block;font-size:42px;line-height:.85}.speed small{font-size:.65rem;color:#aab2bc;letter-spacing:.12em}.lap{position:absolute;left:18px;top:22px;padding:.55rem .7rem;background:rgba(0,0,0,.45);border:1px solid #313843;border-radius:8px;font-size:.73rem}.lap b{color:var(--rg-red)}
+    .rg-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}.rg-mini{min-height:108px;border:1px solid #252c35;background:#0c1117;border-radius:12px;padding:12px;text-decoration:none;color:white;display:flex;flex-direction:column;justify-content:space-between}.rg-mini i{font-style:normal;font-size:25px}.rg-mini strong{font-size:.9rem}.rg-mini small{color:#8f99a6}
+    .rg-section{padding:clamp(4.5rem,8vw,7.5rem) clamp(1.25rem,6vw,6rem)}.rg-section.alt{background:#0d1117}.rg-head{max-width:780px;margin-bottom:2.2rem}.rg-head h2{margin:.55rem 0 .8rem;font-size:clamp(2.6rem,6vw,5.8rem);line-height:.92;letter-spacing:-.055em;text-transform:uppercase}.rg-head p{color:var(--rg-muted);font-size:1.05rem;line-height:1.7}.rg-games{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.rg-card{position:relative;min-height:360px;border:1px solid #292f38;border-radius:16px;padding:1.35rem;overflow:hidden;background:linear-gradient(160deg,#171c24,#0b0e13);text-decoration:none;color:white;display:flex;flex-direction:column;justify-content:flex-end;transition:.2s}.rg-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 20%,var(--glow),transparent 34%);opacity:.8}.rg-card>*{position:relative}.rg-card .icon{font-size:60px;margin-bottom:auto}.rg-card .tag{font-size:.64rem;color:#9fa8b4;letter-spacing:.12em;text-transform:uppercase}.rg-card h3{font-size:1.7rem;margin:.35rem 0}.rg-card p{color:#9fa8b4;line-height:1.55;margin:0 0 1rem}.rg-card b{color:#fff;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase}.rg-card:hover{transform:translateY(-5px);border-color:#555f6c}.rg-card.race{--glow:rgba(255,45,45,.42)}.rg-card.pickle{--glow:rgba(195,255,0,.28)}.rg-card.golf{--glow:rgba(0,198,255,.3)}.rg-card.pool{--glow:rgba(156,82,255,.28)}
+    .rg-feature{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(2rem,5vw,5rem);align-items:center}.rg-feature-copy h2{font-size:clamp(3rem,7vw,7rem);line-height:.85;letter-spacing:-.065em;text-transform:uppercase;margin:.7rem 0 1rem}.rg-feature-copy p{color:#aeb6c2;line-height:1.7;font-size:1.08rem}.rg-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.rg-stat{padding:1.25rem;border:1px solid #2a3039;background:#0b0f14;border-radius:14px}.rg-stat b{display:block;font-size:2.5rem;color:var(--rg-red)}.rg-stat span{font-size:.7rem;color:#929ca9;letter-spacing:.12em;text-transform:uppercase}
+    .rg-pro{padding:clamp(4rem,8vw,7rem) clamp(1.25rem,6vw,6rem);background:radial-gradient(circle at 80% 20%,rgba(255,45,45,.2),transparent 30%),linear-gradient(145deg,#12171f,#080a0e);border-top:1px solid #272d36;border-bottom:1px solid #272d36}.rg-pro-inner{max-width:1040px;margin:auto;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center}.rg-pro h2{font-size:clamp(3rem,6vw,6rem);line-height:.9;letter-spacing:-.06em;margin:.5rem 0;text-transform:uppercase}.rg-pro p{max-width:650px;color:#aab3bf;line-height:1.7}.rg-price{text-align:center;padding:2rem;border:1px solid #454d59;background:rgba(7,9,13,.8);border-radius:18px;min-width:250px}.rg-price strong{display:block;font-size:3rem}.rg-price span{display:block;color:#939daa;font-size:.78rem;margin:.25rem 0 1rem}
+    .rg-final{text-align:center;padding:clamp(5rem,10vw,9rem) 1.25rem}.rg-final h2{font-size:clamp(3.2rem,8vw,8rem);line-height:.86;letter-spacing:-.07em;text-transform:uppercase;margin:0 auto 1rem;max-width:1000px}.rg-final h2 b{color:var(--rg-red)}.rg-final p{color:#9ba4b0;max-width:640px;margin:0 auto 2rem;line-height:1.7}
+    .rg-tiny{margin-top:1rem;color:#69727e;font-size:.72rem}
+    @media(max-width:980px){.rg-hero,.rg-feature,.rg-pro-inner{grid-template-columns:1fr}.rg-console{transform:none}.rg-games{grid-template-columns:repeat(2,1fr)}.rg-price{max-width:360px}}
+    @media(max-width:620px){.rg-hero{min-height:auto;padding-top:4rem}.rg-title{font-size:clamp(3.7rem,18vw,6rem)}.rg-console{min-height:430px;padding:10px}.rg-screen{min-height:408px}.rg-race-visual{height:220px}.car{font-size:64px}.rg-mini-grid{grid-template-columns:1fr 1fr}.rg-mini:last-child{grid-column:1/-1}.rg-games{grid-template-columns:1fr}.rg-card{min-height:280px}.rg-actions .rg-btn{width:100%}.rg-proof{gap:.5rem}.rg-pro-inner{text-align:left}.rg-price{width:100%}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="store-header">
+    <div class="utility-bar"><span>The Straight Cut presents</span><a href="/">Back to The Straight Cut</a></div>
+    <div class="nav-shell"><a class="wordmark" href="/">THE STRAIGHT <em>CUT</em></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button><nav id="site-nav" class="store-nav"><a href="/">TSC Home</a><a href="#games">Games</a><a href="#pro">RallyGrid Pro</a><a href="https://rallygrid-mu.vercel.app" target="_blank" rel="noopener">Play Now</a></nav></div>
+  </header>
+  <main id="main" class="rg-wrap">
+    <section class="rg-hero">
+      <div>
+        <span class="rg-kicker">Browser arcade · live beta</span>
+        <h1 class="rg-title"><span>RALLY</span><span class="grid">GRID</span></h1>
+        <p class="rg-lede">Racing, pickleball, golf and billiards in one growing arcade. Jump in from your browser, chase a better score and see how far you can push it.</p>
+        <div class="rg-actions"><a class="rg-btn primary" href="https://rallygrid-mu.vercel.app" target="_blank" rel="noopener">Play RallyGrid Free</a><a class="rg-btn secondary" href="#games">See the Games</a></div>
+        <div class="rg-proof"><span>No app download</span><span>Instant browser play</span><span>Skill-based challenges</span></div>
+      </div>
+      <div class="rg-console" aria-label="RallyGrid game preview">
+        <div class="rg-screen">
+          <div class="rg-screen-top"><div class="rg-mark">RALLY<b>GRID</b></div><div class="rg-live">● live beta</div></div>
+          <div class="rg-race-visual"><div class="lap">LAP <b>2 / 3</b></div><div class="speed"><b>287</b><small>KM/H</small></div><div class="track"></div><div class="car">🏎️</div></div>
+          <div class="rg-mini-grid"><a class="rg-mini" href="https://rallygrid-mu.vercel.app/vs" target="_blank" rel="noopener"><i>🏓</i><strong>Pickleball VS</strong><small>Phone vs phone</small></a><a class="rg-mini" href="https://rallygrid-mu.vercel.app/golf" target="_blank" rel="noopener"><i>⛳</i><strong>Long Drive</strong><small>Beat your best</small></a><a class="rg-mini" href="https://rallygrid-mu.vercel.app/billiards" target="_blank" rel="noopener"><i>🎱</i><strong>Billiards</strong><small>Build the run</small></a></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="games" class="rg-section alt">
+      <div class="rg-head"><span class="rg-kicker">Choose your challenge</span><h2>Four ways to chase a better score.</h2><p>RallyGrid is built around quick, understandable challenges. Pick a game, play it immediately, then come back and try to beat yourself.</p></div>
+      <div class="rg-games">
+        <a class="rg-card race" href="https://rallygrid-mu.vercel.app/race" target="_blank" rel="noopener"><div class="icon">🏎️</div><span class="tag">Flagship challenge</span><h3>Formula Rush</h3><p>Three-lap Formula-style sprint racing with an eight-car grid, lap timing and XP rewards.</p><b>Start racing →</b></a>
+        <a class="rg-card pickle" href="https://rallygrid-mu.vercel.app/vs" target="_blank" rel="noopener"><div class="icon">🏓</div><span class="tag">Two-player</span><h3>Pickleball VS</h3><p>Phone-vs-phone pickleball. First to 11, win by 2. Grab another player and settle it.</p><b>Play pickleball →</b></a>
+        <a class="rg-card golf" href="https://rallygrid-mu.vercel.app/golf" target="_blank" rel="noopener"><div class="icon">⛳</div><span class="tag">Solo challenge</span><h3>Long Drive</h3><p>Time the swing, fight the conditions and keep chasing a longer drive.</p><b>Take a swing →</b></a>
+        <a class="rg-card pool" href="https://rallygrid-mu.vercel.app/billiards" target="_blank" rel="noopener"><div class="icon">🎱</div><span class="tag">Solo challenge</span><h3>Billiards</h3><p>Line it up, pot cleanly and see how long you can keep the run alive.</p><b>Play billiards →</b></a>
+      </div>
+    </section>
+
+    <section class="rg-section">
+      <div class="rg-feature">
+        <div class="rg-feature-copy"><span class="rg-kicker">The flagship</span><h2>Get on the grid.</h2><p>Formula Rush is the lead RallyGrid experience: a quick three-lap sprint built around speed, timing and a simple question — can you finish better on the next run?</p><div class="rg-actions"><a class="rg-btn primary" href="https://rallygrid-mu.vercel.app/race" target="_blank" rel="noopener">Start Formula Rush</a></div></div>
+        <div class="rg-stat-grid"><div class="rg-stat"><b>3</b><span>race laps</span></div><div class="rg-stat"><b>8</b><span>car grid</span></div><div class="rg-stat"><b>0</b><span>downloads</span></div><div class="rg-stat"><b>1</b><span>goal: chase #1</span></div></div>
+      </div>
+    </section>
+
+    <section id="pro" class="rg-pro">
+      <div class="rg-pro-inner">
+        <div><span class="rg-kicker">Founding player offer</span><h2>RallyGrid Pro</h2><p>Support the growing arcade and carry Pro status across RallyGrid as new features and challenges are added. The current Founders Pass is a one-time purchase during the live beta.</p></div>
+        <div class="rg-price"><strong>CA$4.99</strong><span>one-time Founders Pass</span><a class="rg-btn primary" href="https://buy.stripe.com/14A28sfyJ9VL10A3Ja4F200" target="_blank" rel="noopener">Unlock Pro</a></div>
+      </div>
+    </section>
+
+    <section class="rg-final"><span class="rg-kicker">Enough watching</span><h2>Play. Compete. <b>Chase #1.</b></h2><p>No app download. No long setup. Open RallyGrid, pick a challenge and put a score on the board.</p><a class="rg-btn primary" href="https://rallygrid-mu.vercel.app" target="_blank" rel="noopener">Enter RallyGrid</a><div class="rg-tiny">RallyGrid is currently in live beta. Features may change as the arcade grows.</div></section>
+  </main>
+  <footer class="store-footer"><div class="footer-top"><div><a class="wordmark" href="/">THE STRAIGHT <em>CUT</em></a><p>RallyGrid is a featured interactive project from The Straight Cut.</p></div><div><h2>RallyGrid</h2><a href="https://rallygrid-mu.vercel.app" target="_blank" rel="noopener">Play Free</a><a href="https://rallygrid-mu.vercel.app/race" target="_blank" rel="noopener">Formula Rush</a><a href="https://rallygrid-mu.vercel.app/vs" target="_blank" rel="noopener">Pickleball VS</a></div><div><h2>The Straight Cut</h2><a href="/">Home</a><a href="/affiliate-disclosure.html">Affiliate Disclosure</a></div></div><div class="footer-bottom"><p>RallyGrid is a skill-based browser arcade. No wagering.</p><p>© 2026 The Straight Cut</p></div></footer>
+  <script src="../assets/store.js"></script>
+</body>
+</html>
