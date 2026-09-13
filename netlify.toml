@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/build-storefront.mjs && node scripts/build-pets-store.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/inject-latest-deals-link.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs"
+  command = "node scripts/build-storefront.mjs && node scripts/build-pets-store.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/inject-latest-deals-link.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs && node scripts/activate-upsell-tracking.mjs"
   publish = "."
 
 [functions]
@@ -15,3 +15,27 @@
   from = "/pets/"
   to = "/pets.html"
   status = 200
+
+[[redirects]]
+  from = "/go/wedding-bundle"
+  to = "https://littlelambsjourney.etsy.com?utm_source=thestraightcut&utm_medium=website&utm_campaign=wedding_bundle"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/go/wedding-bundle-gumroad"
+  to = "https://straightcut.gumroad.com?utm_source=thestraightcut&utm_medium=website&utm_campaign=wedding_bundle"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/go/little-lambs-printables"
+  to = "https://littlelambsjourney.etsy.com?utm_source=thestraightcut&utm_medium=website&utm_campaign=little_lambs_printables"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/go/little-lambs-printables-gumroad"
+  to = "https://straightcut.gumroad.com?utm_source=thestraightcut&utm_medium=website&utm_campaign=little_lambs_printables"
+  status = 302
+  force = true
