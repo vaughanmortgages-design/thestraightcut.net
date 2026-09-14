@@ -29,6 +29,7 @@ const PAGES = {
     hero: 'photo-1607082349566-187342175e2f',
     collections: ['Today’s Shortlist', 'Best Value', 'Seasonal Opportunities', 'Worth a Second Look'],
     guide: ['Confirm the final merchant price', 'Compare the full cost, not the headline', 'Buy for a real need', 'Check returns before checkout'],
+    partners: [['rexing', '20% off new smart-tech releases', 'Shop Rexing’s featured battery charger, 2-in-1 jump starter and tire inflator, plus the wireless CarPlay and Android Auto AI Box. Confirm the live price and eligibility before checkout.', 'Shop the Rexing Offer']],
     related: ['clearance', 'hot-finds', 'electronics'],
   },
   clearance: {
@@ -84,7 +85,10 @@ const PAGES = {
     hero: 'photo-1498049794561-7780e7231661',
     collections: ['Smart Home', 'Audio & Listening', 'Power & Charging', 'Road Technology'],
     guide: ['Start with compatibility', 'Buy the feature you will use', 'Plan cable and power needs', 'Keep privacy settings in mind'],
-    partners: [['rexing', 'Dash cams & road technology', 'Explore approved Rexing driving technology for commuting, road trips and parked vehicles.', 'Explore Rexing']],
+    partners: [
+      ['rexing', '20% off new smart-tech releases', 'Shop Rexing’s featured battery charger, 2-in-1 jump starter and tire inflator, plus the wireless CarPlay and Android Auto AI Box. Confirm the live price and eligibility before checkout.', 'Shop the Rexing Offer'],
+      ['rexing', 'Dash cams & road technology', 'Explore approved Rexing driving technology for commuting, road trips and parked vehicles.', 'Explore Rexing'],
+    ],
     related: ['refurbished-beauties', 'auto', 'video-games'],
   },
   auto: {
@@ -94,6 +98,7 @@ const PAGES = {
     collections: ['Road Technology', 'Interior Organization', 'Weekend Drive', 'Garage Ready'],
     guide: ['Confirm vehicle compatibility', 'Keep sightlines clear', 'Plan safe cable routing', 'Choose gear that stores easily'],
     partners: [
+      ['rexing', '20% off new smart-tech releases', 'Shop Rexing’s featured battery charger, 2-in-1 jump starter and tire inflator, plus the wireless CarPlay and Android Auto AI Box. Confirm the live price and eligibility before checkout.', 'Shop the Rexing Offer'],
       ['rexing', 'Road-ready camera systems', 'Explore approved Rexing dash cams and driving technology without unverified product claims.', 'Explore Dash Cams'],
       ['wrapItStorage', 'Garage & cable organization', 'Bring order to extension cords, hoses and workshop essentials.', 'Organize the Garage'],
     ],
