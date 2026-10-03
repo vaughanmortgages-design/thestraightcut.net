@@ -1,5 +1,5 @@
 const destinations=[
-['Deals','deals.html','deals value seasonal offers'],['Pokémon Deals','pokemon-deals.html','pokemon pokémon cards elite trainer box booster bundle funko collectibles'],['LEGO Deals','lego-deals.html','lego star wars technic speed champions collectibles building sets'],['Vintage Disney Finds','vintage-disney.html','disney amazon vintage ebay collectibles pins watches park souvenirs figurines animation art'],['Clearance','clearance.html','clearance end cap last chance'],['Hot Finds','hot-finds.html','trending new staff picks weekend finds'],['Refurbished Beauties','refurbished-beauties.html','renewed laptops phones tablets technology'],['Travel & Getaways','travel.html','hotels vacation rentals luxury travel weekend'],['Home & Kitchen','home.html','home kitchen storage organization'],['Electronics','electronics.html','electronics audio charging smart home'],['Automotive','auto.html','auto automotive dash cams garage'],['Sports & Outdoors','sports-outdoors.html','sports outdoors fitness camping'],['Pets','pets.html','pets dogs cats travel enrichment'],['Health & Beauty','health-beauty.html','health beauty bath grooming recovery'],['Garden','garden.html','garden patio outdoor'],['Workshop','tools.html','workshop tools diy organization'],['Books & Media','books-media.html','books media digital reading'],['Video Games','video-games.html','video games gaming console pc'],['Senior Living','senior-living.html','senior living comfort independence'],['Buying Guides','buying-guides.html','buying guides compare advice']];
+['Deals','deals.html','deals value seasonal offers'],['Temu Offers','temu.html','temu affiliate savings campaign promo code als430197'],['Pokémon Deals','pokemon-deals.html','pokemon pokémon cards elite trainer box booster bundle funko collectibles'],['LEGO Deals','lego-deals.html','lego star wars technic speed champions collectibles building sets'],['Vintage Disney Finds','vintage-disney.html','disney amazon vintage ebay collectibles pins watches park souvenirs figurines animation art'],['Clearance','clearance.html','clearance end cap last chance'],['Hot Finds','hot-finds.html','trending new staff picks weekend finds'],['Refurbished Beauties','refurbished-beauties.html','renewed laptops phones tablets technology'],['Travel & Getaways','travel.html','hotels vacation rentals luxury travel weekend'],['Home & Kitchen','home.html','home kitchen storage organization'],['Electronics','electronics.html','electronics audio charging smart home'],['Automotive','auto.html','auto automotive dash cams garage'],['Sports & Outdoors','sports-outdoors.html','sports outdoors fitness camping'],['Pets','pets.html','pets dogs cats travel enrichment'],['Health & Beauty','health-beauty.html','health beauty bath grooming recovery'],['Garden','garden.html','garden patio outdoor'],['Workshop','tools.html','workshop tools diy organization'],['Books & Media','books-media.html','books media digital reading'],['Video Games','video-games.html','video games gaming console pc'],['Senior Living','senior-living.html','senior living comfort independence'],['Buying Guides','buying-guides.html','buying guides compare advice']];
 const menuButton=document.querySelector('.menu-toggle');const nav=document.querySelector('#site-nav');
 menuButton?.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));nav?.classList.toggle('open',!open)});
 const searchButton=document.querySelector('.search-toggle');const searchPanel=document.querySelector('#global-search');const searchInput=document.querySelector('#global-search-input');const searchResults=document.querySelector('[data-search-results]');
@@ -74,6 +74,33 @@ document.querySelector('[data-newsletter-form]')?.addEventListener('submit',(eve
   pets.href='/pets';
   pets.textContent='Pets';
   departments.insertAdjacentElement('afterend',pets);
+})();
+(function addRetailerNavigation(){
+  const navigation=document.querySelector('#site-nav');
+  if(!navigation)return;
+  const deals=[...navigation.querySelectorAll('a')].find((link)=>link.getAttribute('href')?.endsWith('deals.html'));
+  let anchor=deals;
+  const retailerLinks=[
+    ['amazon.html','Amazon'],
+    ['ebay.html','eBay'],
+    ['temu.html','Temu']
+  ];
+  retailerLinks.forEach(([href,label])=>{
+    let existing=[...navigation.querySelectorAll('a')].find((link)=>link.getAttribute('href')?.endsWith(href));
+    if(existing){anchor=existing;return}
+    const link=document.createElement('a');
+    link.href='/'+href;
+    link.textContent=label;
+    if(anchor){anchor.insertAdjacentElement('afterend',link);anchor=link}else{navigation.prepend(link);anchor=link}
+  });
+  document.querySelectorAll('.store-footer .footer-top > div').forEach((column)=>{
+    const heading=column.querySelector('h2');
+    if(heading?.textContent.trim()!=='Shop')return;
+    retailerLinks.forEach(([href,label])=>{
+      if(column.querySelector(`a[href$="${href}"]`))return;
+      const link=document.createElement('a');link.href='/'+href;link.textContent=label==='Temu'?'Temu Offers':label+' Picks';column.prepend(link);
+    });
+  });
 })();
 (function addCollectiblesNavigation(){
   const navigation=document.querySelector('#site-nav');
