@@ -1,10 +1,5 @@
 {
-  "approvalStatuses": [
-    "Draft",
-    "Approved",
-    "Rejected",
-    "Published"
-  ],
+  "approvalStatuses": ["Draft", "Approved", "Rejected", "Published"],
   "brands": {
     "vmg": {
       "name": "Vaughan Mortgage Group",
@@ -17,20 +12,9 @@
         "HELOCs",
         "First-Time Buyers"
       ],
-      "outputs": [
-        "article",
-        "facebook",
-        "instagram",
-        "linkedin"
-      ],
-      "allowedCountries": [
-        "CA"
-      ],
-      "forbiddenTopics": [
-        "affiliate loans",
-        "personal loans",
-        "credit offers"
-      ],
+      "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
+      "forbiddenTopics": ["affiliate loans", "personal loans", "credit offers"],
       "disclosure": "",
       "compliance": "Mortgage Agent Level 2 | FSRA #M25000307 | GNE Mortgages FSRA Brokerage #10394 | vaughanmortgages@gmail.com | 416-891-8684"
     },
@@ -52,15 +36,8 @@
         "Debt Consolidation",
         "Credit Rebuilding"
       ],
-      "outputs": [
-        "article",
-        "facebook",
-        "instagram",
-        "linkedin"
-      ],
-      "allowedCountries": [
-        "CA"
-      ],
+      "outputs": ["article", "facebook", "instagram", "linkedin"],
+      "allowedCountries": ["CA"],
       "approvedMerchants": [
         "CMI",
         "CreditMarketing.ca",
@@ -74,10 +51,7 @@
         "Sprott Money",
         "Sprott Money Canada"
       ],
-      "allowedPillars": [
-        "Bullion",
-        "Loans and Credit"
-      ],
+      "allowedPillars": ["Bullion", "Loans and Credit"],
       "disclosure": "eStack.ca may earn a commission when you use an approved partner link, at no additional cost to you."
     },
     "straightcut": {
@@ -104,15 +78,8 @@
         "pinterestTitle",
         "pinterestDescription"
       ],
-      "allowedCountries": [
-        "CA"
-      ],
-      "approvedMerchants": [
-        "Amazon",
-        "eBay",
-        "Temu",
-        "Rocky Mountain Dog"
-      ],
+      "allowedCountries": ["CA"],
+      "approvedMerchants": ["Amazon", "eBay", "Temu", "Rocky Mountain Dog"],
       "disclosure": "The Straight Cut may earn a commission when you purchase through links in this post, at no additional cost to you.",
       "partnerRules": {
         "Rocky Mountain Dog": {
@@ -128,11 +95,7 @@
         "Pets": {
           "page": "/pets",
           "catalogCategory": "Pets",
-          "rotations": [
-            "Featured Products",
-            "Buying Guides",
-            "Weekly Deals"
-          ],
+          "rotations": ["Featured Products", "Buying Guides", "Weekly Deals"],
           "guidesSource": "data/pets-store.json"
         }
       }
