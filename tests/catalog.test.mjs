@@ -43,6 +43,16 @@ p-2,Vintage Book,eBay,Books,Collectible edition,https://example.com/book.jpg,${a
   assert.equal(products[0].affiliate_url, affiliate);
 });
 
+test('importer allows only the verified Temu campaign link', () => {
+  const affiliate = 'https://temu.to/k/gb6nt247wyz';
+  const csv = `${header}
+p-temu,Temu Campaign,Temu,Deals,Verified campaign,https://example.com/temu.jpg,${affiliate},,CAD,TRUE,TRUE
+p-temu-bad,Temu Plain URL,Temu,Deals,Unverified URL,https://example.com/temu2.jpg,https://www.temu.com/example.html,,CAD,TRUE,FALSE`;
+  const { products, report } = importCatalog(csv);
+  assert.equal(report.imported_rows, 1);
+  assert.equal(report.invalid_rows, 1);
+  assert.equal(products[0].affiliate_url, affiliate);
+});
 test('importer rejects Slickdeals, missing images and duplicates', () => {
   const csv = `${header}
 p-3,Invalid Deal,Amazon,Electronics,Invalid,https://example.com/item.jpg,https://slickdeals.net/f/123?tag=straightcutgu-20,10,CAD,TRUE,FALSE

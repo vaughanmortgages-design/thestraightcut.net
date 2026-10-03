@@ -10,7 +10,7 @@ const catalog = JSON.parse(await readFile(join(SHOP, 'data', 'products.json'), '
 const products = Array.isArray(catalog.products) ? catalog.products : [];
 
 const CATEGORIES = [
-  ['deals', "Today's Deals", 'Freshly validated offers from approved Amazon and eBay links.', 'photo-1607082349566-187342175e2f'],
+  ['deals', "Today's Deals", 'Freshly validated offers from approved Amazon, eBay and Temu links.', 'photo-1607082349566-187342175e2f'],
   ['clearance', 'Clearance', 'Verified end-cap finds without invented markdowns or false urgency.', 'photo-1472851294608-062f824d29cc'],
   ['new-arrivals', 'New Arrivals', 'Recently added products from the live catalog.', 'photo-1441986300917-64674bd600d8'],
   ['home', 'Home & Kitchen', 'Useful upgrades for cooking, storage, comfort and daily routines.', 'photo-1556911220-bff31c812dba'],
@@ -90,7 +90,7 @@ function header() {
     .join('');
   return `<a class="skip-link" href="#main">Skip to content</a>
 <header class="shop-header">
-  <div class="shop-utility"><a href="/">The Straight Cut publication</a><span>Amazon + eBay shopping edit</span></div>
+  <div class="shop-utility"><a href="/">The Straight Cut publication</a><span>Amazon + eBay + Temu shopping edit</span></div>
   <div class="shop-nav-shell">
     <a class="shop-wordmark" href="/shop/">The Straight <em>Cut</em> Shop</a>
     <nav id="shop-nav" class="shop-nav" aria-label="Shop navigation">${departmentLinks}<a href="/shop/#departments">All departments</a></nav>
@@ -104,7 +104,7 @@ function footer() {
   <div><a class="shop-wordmark" href="/shop/">The Straight <em>Cut</em> Shop</a><p>A catalog-powered shopping edit. Product details, availability and prices can change at the merchant.</p></div>
   <div><strong>Collections</strong><a href="/shop/collections/back-to-school/">Back to School</a><a href="/shop/collections/prime-picks/">Prime Picks</a><a href="/shop/collections/ebay-finds/">eBay Finds</a></div>
   <div><strong>Trust</strong><a href="/affiliate-disclosure.html">Affiliate Disclosure</a><a href="/privacy-policy.html">Privacy</a><a href="/terms-of-use.html">Terms</a><a href="/">Shopping publication</a></div>
-  <p class="shop-legal">As an Amazon Associate, The Straight Cut earns from qualifying purchases. We may also earn commissions from eBay purchases, at no additional cost to you.</p>
+  <p class="shop-legal">As an Amazon Associate, The Straight Cut earns from qualifying purchases. We may also earn commissions or other compensation from eBay and Temu qualifying activity, at no additional cost to you.</p>
 </footer>
 <script src="/shop/assets/shop.js" defer></script>`;
 }
@@ -163,14 +163,14 @@ function homePage() {
   const trending = products.filter((product) => product.trending);
   const clearance = products.filter((product) => product.clearance || product.category_slug === 'clearance');
   return `${head({
-    title: 'Shop Amazon and eBay',
-    description: 'A curated Amazon and eBay shopping showroom from The Straight Cut, powered by verified product links from the production catalog.',
+    title: 'Shop Amazon, eBay and Temu',
+    description: 'A curated Amazon, eBay and Temu shopping showroom from The Straight Cut, powered by verified product links from the production catalog.',
     canonical: `${SITE}/shop/`,
     hero,
     schemas: [breadcrumbSchema([['Home', '/'], ['Shop', '/shop/']])],
   })}
 <body>${header()}<main id="main">
-  <section class="shop-hero" style="--hero:url('${hero}')"><div class="shop-hero-shade"></div><div class="shop-hero-copy"><small>The Amazon + eBay edit</small><h1>Shop smarter.<br><em>Find better.</em></h1><p>A quieter, curated way to browse useful products. Every Shop Now link comes directly from the production catalog.</p><div><a class="primary-button" href="#departments">Browse departments</a><a class="secondary-button" href="/">Read The Straight Cut</a></div></div></section>
+  <section class="shop-hero" style="--hero:url('${hero}')"><div class="shop-hero-shade"></div><div class="shop-hero-copy"><small>The Amazon + eBay + Temu edit</small><h1>Shop smarter.<br><em>Find better.</em></h1><p>A quieter, curated way to browse useful products. Every Shop Now link comes directly from the production catalog.</p><div><a class="primary-button" href="#departments">Browse departments</a><a class="secondary-button" href="/">Read The Straight Cut</a></div></div></section>
   ${productSection("Today's Deals", 'Current finds selected from validated catalog rows.', deals, 'deals')}
   ${productSection('Staff Picks', 'Products marked for the editorial shortlist.', staff, 'staff-picks')}
   ${productSection('Trending', 'Products currently marked as trending in the catalog.', trending, 'trending')}
@@ -185,7 +185,7 @@ function categoryPage(category) {
   const hero = image(heroId);
   const items = products.filter((product) => product.category_slug === slug);
   const cards = items.length
-    ? `${disclosure()}<div class="catalog-tools"><label>Search this department<input type="search" data-product-search placeholder="Search ${esc(name)}"></label><label>Merchant<select data-merchant-filter><option value="">All merchants</option><option>Amazon</option><option>eBay</option></select></label></div><div class="product-grid">${productGrid(items, 24)}</div><p class="no-results" data-no-results hidden>No matching products.</p>`
+    ? `${disclosure()}<div class="catalog-tools"><label>Search this department<input type="search" data-product-search placeholder="Search ${esc(name)}"></label><label>Merchant<select data-merchant-filter><option value="">All merchants</option><option>Amazon</option><option>eBay</option><option>Temu</option></select></label></div><div class="product-grid">${productGrid(items, 24)}</div><p class="no-results" data-no-results hidden>No matching products.</p>`
     : `<div class="catalog-empty"><h2>Keep exploring the shopping edit.</h2><p>Move through the department store by interest, season or the next useful upgrade.</p><a class="primary-button" href="/shop/#departments">View all departments</a></div>`;
   return `${head({
     title: name,

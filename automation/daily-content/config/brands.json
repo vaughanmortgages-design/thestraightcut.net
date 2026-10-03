@@ -79,12 +79,16 @@
         "pinterestDescription"
       ],
       "allowedCountries": ["CA"],
-      "approvedMerchants": ["Amazon", "eBay", "Rocky Mountain Dog"],
+      "approvedMerchants": ["Amazon", "eBay", "Temu", "Rocky Mountain Dog"],
       "disclosure": "The Straight Cut may earn a commission when you purchase through links in this post, at no additional cost to you.",
       "partnerRules": {
         "Rocky Mountain Dog": {
           "expectedAffiliateUrl": "https://rockymountaindog.ca/discount/RAYCUTTER10?ref=mcwboquj",
           "expectedCouponCode": "RAYCUTTER10"
+        },
+        "Temu": {
+          "expectedAffiliateUrl": "https://temu.to/k/gb6nt247wyz",
+          "expectedCouponCode": "als430197"
         }
       },
       "departmentFeeds": {
