@@ -35,7 +35,7 @@ export const REQUIRED_FIELDS = [
   'affiliate_url',
 ];
 
-export const MERCHANTS = new Set(['Amazon', 'eBay']);
+export const MERCHANTS = new Set(['Amazon', 'eBay', 'Temu']);
 
 export const CATEGORY_SLUGS = new Map([
   ['todays deals', 'deals'],
@@ -217,6 +217,10 @@ function validAffiliateUrl(product) {
     );
   }
 
+  if (product.merchant === 'Temu') {
+    return product.affiliate_url === 'https://temu.to/k/gb6nt247wyz';
+  }
+
   return false;
 }
 
@@ -388,7 +392,7 @@ export function toCatalogXml(products) {
   <channel>
     <title>The Straight Cut Product Catalog</title>
     <link>https://thestraightcut.net/</link>
-    <description>Validated Amazon and eBay products published by The Straight Cut.</description>
+    <description>Validated Amazon, eBay and Temu products published by The Straight Cut.</description>
 ${items}
   </channel>
 </rss>
