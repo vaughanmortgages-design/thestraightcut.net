@@ -113,13 +113,13 @@ console.log(`Activated ${activatedLinks} affiliate shopping links across ${chang
 
 const dhgateUrl = 'https://www.linkusee.com/cHU6sJ5m';
 const dhgateNav = '<a href="dhgate.html">DHgate</a>';
-const dhgateSection = '<section id="dhgate" class="section warm"><div class="section-heading"><span class="section-kicker">DHgate</span><h2>DHgate marketplace listings.</h2><p>Review the seller, delivery costs and return terms before buying.</p></div><a class="feature-tile" href="dhgate.html"><span>DHgate</span><p>View our linked listing and the checks to make before checkout.</p><b>View DHgate listing →</b></a></section>';
+const dhgateSection = '<section id="dhgate" class="section warm"><div class="section-heading"><span class="section-kicker">DHgate</span><h2>DHgate marketplace listings.</h2><p>Review the seller, delivery costs and return terms before buying.</p></div><a class="feature-tile" href="dhgate.html" style="--tile:url(\'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=78\')"><span>DHgate</span><p>View our linked listing and the checks to make before checkout.</p><b>View DHgate listing →</b></a></section>';
 const homepagePath = join(ROOT, 'index.html');
 let homepageHtml = await readFile(homepagePath, 'utf8');
-if (!homepageHtml.includes('id="dhgate"')) {
+if (!homepageHtml.includes('href="dhgate.html"')) {
   const marker = '<section class="section warm"><div class="section-heading"><span class="section-kicker">Shop by retailer</span>';
   if (!homepageHtml.includes(marker)) throw new Error('Homepage retailer section missing');
-  homepageHtml = homepageHtml.replace(marker, dhgateSection + marker);
+  homepageHtml = homepageHtml.replace('</main>', dhgateSection + '</main>');
 }
 homepageHtml = homepageHtml.replace('Amazon · eBay · Temu · Benable · Canada', 'Amazon · eBay · Temu · Benable · DHgate · Canada');
 await writeFile(homepagePath, homepageHtml, 'utf8');
