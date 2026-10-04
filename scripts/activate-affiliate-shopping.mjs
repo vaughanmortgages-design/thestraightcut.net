@@ -110,3 +110,27 @@ for (const file of files) {
 }
 
 console.log(`Activated ${activatedLinks} affiliate shopping links across ${changedFiles} HTML files.`);
+
+const dhgateUrl = 'https://www.linkusee.com/cHU6sJ5m';
+const dhgateNav = '<a href="dhgate.html">DHgate</a>';
+const dhgateSection = '<section id="dhgate" class="section warm"><div class="section-heading"><span class="section-kicker">DHgate</span><h2>DHgate marketplace listings.</h2><p>Review the seller, delivery costs and return terms before buying.</p></div><a class="feature-tile" href="dhgate.html"><span>DHgate</span><p>View our linked listing and the checks to make before checkout.</p><b>View DHgate listing →</b></a></section>';
+const homepagePath = join(ROOT, 'index.html');
+let homepageHtml = await readFile(homepagePath, 'utf8');
+if (!homepageHtml.includes('id="dhgate"')) {
+  const marker = '<section class="section warm"><div class="section-heading"><span class="section-kicker">Shop by retailer</span>';
+  if (!homepageHtml.includes(marker)) throw new Error('Homepage retailer section missing');
+  homepageHtml = homepageHtml.replace(marker, dhgateSection + marker);
+}
+homepageHtml = homepageHtml.replace('Amazon · eBay · Temu · Benable · Canada', 'Amazon · eBay · Temu · Benable · DHgate · Canada');
+await writeFile(homepagePath, homepageHtml, 'utf8');
+for (const file of files) {
+  const path = join(ROOT, file);
+  let html = await readFile(path, 'utf8');
+  html = html.replace(/(<nav id="site-nav"[^>]*>)([\s\S]*?)(<\/nav>)/, (all, open, links, close) =>
+    links.includes('href="dhgate.html"') ? all : open + links + dhgateNav + close);
+  await writeFile(path, html, 'utf8');
+}
+const dhgatePage = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0c0c0d"><title>DHgate | The Straight Cut</title><meta name="description" content="View The Straight Cut's linked DHgate marketplace listing, affiliate disclosure and buying checks."><link rel="canonical" href="https://thestraightcut.net/dhgate.html"><link rel="stylesheet" href="assets/store.css"></head><body><a class="skip-link" href="#main">Skip to content</a><header class="store-header"><div class="utility-bar"><span>Independent shopping guidance for Canada</span><a href="affiliate-disclosure.html">How we earn</a></div><div class="nav-shell"><a class="wordmark" href="/">THE STRAIGHT <em>CUT</em></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button><nav id="site-nav" class="store-nav"><a href="shop-picks.html">Top Picks</a><a href="amazon.html">Amazon</a><a href="ebay.html">eBay</a><a href="temu.html">Temu</a><a href="benable.html">Benable</a><a href="dhgate.html" aria-current="page">DHgate</a></nav></div></header><main id="main"><section class="section ink"><div class="section-heading"><span class="section-kicker">DHgate marketplace</span><h1>DHgate on The Straight Cut.</h1><p>Review the listing and seller details before deciding to buy. Final price, shipping, availability and returns are shown by the marketplace.</p></div><aside class="affiliate-note"><strong>Affiliate disclosure:</strong> The Straight Cut may earn a commission from qualifying purchases through the link below.</aside></section><section class="section warm"><div class="section-heading"><span class="section-kicker">Linked seller listing</span><h2>Pikachu Illustrator card listing</h2><p>The seller describes this as a 1998 Japanese Pokémon Illustrator card graded PSA 10. <strong>The Straight Cut has not verified the card's authenticity, age or PSA grading.</strong></p><p>Before purchasing, request the certification number and confirm it with PSA, compare the actual item with its certification record, and review seller history, shipping and refund terms. A certification number alone does not authenticate the item offered.</p></div><a class="button dark" href="${dhgateUrl}" target="_blank" rel="sponsored nofollow noopener">VIEW SELLER LISTING ↗</a><p>This link opens the seller listing. It is not an endorsement of the seller's authenticity or grading claims.</p></section><section class="section light"><div class="section-heading"><h2>Keep browsing.</h2></div><div class="hero-actions"><a class="button dark" href="shop-picks.html">Top picks</a><a class="button dark" href="benable.html">Benable lists</a></div></section></main><footer class="store-footer"><a class="wordmark" href="/">THE STRAIGHT <em>CUT</em></a><p><a href="affiliate-disclosure.html">Affiliate disclosure</a></p><p>© 2026 The Straight Cut</p></footer><script src="assets/store.js"></script></body></html>`;
+await writeFile(join(ROOT, 'dhgate.html'), dhgatePage, 'utf8');
+console.log('Added DHgate page, homepage entry and navigation links.');
