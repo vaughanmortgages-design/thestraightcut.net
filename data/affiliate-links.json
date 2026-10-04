@@ -28,5 +28,15 @@
   "benable": {
     "profile": "https://benable.com/raycutter",
     "rule": "Use the official The Straight Cut Benable profile URL or verified list URLs. Do not invent Benable deep links."
+  },
+  "dhgate": {
+    "store": "https://www.linkusee.com/jQSnJNQ8",
+    "cupHolder": {
+      "title": "Car Cup Holder Expander",
+      "url": "https://www.linkusee.com/cr8Pgj7N",
+      "productUrl": "https://www.dhgate.com/product/car-cup-holder-expander-cupholder-adapter/1098495312.html"
+    },
+    "legacyCollectible": "https://www.linkusee.com/cHU6sJ5m",
+    "rule": "Preserve exact user-generated affiliate URLs. Check current price, availability, delivery and seller terms before buying."
   }
 }
