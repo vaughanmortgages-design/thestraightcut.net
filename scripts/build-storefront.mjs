@@ -310,7 +310,7 @@ function partnerCard(key, title, body, label) {
 }
 
 function newsletter() {
-  return `<section id="newsletter" class="newsletter"><div><span class="section-kicker">The Saturday Cut</span><h2>One smart browse. Zero clutter.</h2><p>New edits, seasonal ideas and partner finds—delivered with the same no-noise approach as the store.</p></div><form data-newsletter-form><label for="newsletter-email">Email address</label><div><input id="newsletter-email" type="email" required placeholder="you@example.com"><button type="submit">Join the list</button></div><p data-form-message aria-live="polite"></p></form></section>`;
+  return `<section id="newsletter" class="newsletter"><div><span class="section-kicker">The Saturday Cut</span><h2>One smart browse. Zero clutter.</h2><p>New edits, seasonal ideas and partner finds—delivered with the same no-noise approach as the store.</p></div><form name="tsc-newsletter" method="POST" action="/newsletter-success.html" data-netlify="true" netlify-honeypot="bot-field" data-newsletter-form><input type="hidden" name="form-name" value="tsc-newsletter"><p class="newsletter-honeypot" hidden><label>Leave this empty<input name="bot-field" tabindex="-1" autocomplete="off"></label></p><label for="newsletter-email">Email address</label><div><input id="newsletter-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"><button type="submit">Join the list</button></div><label class="newsletter-consent"><input type="checkbox" name="consent" value="yes" required> I agree to receive The Straight Cut’s shopping emails. I can unsubscribe at any time.</label><p data-form-message role="status" aria-live="polite"></p></form></section>`;
 }
 
 function departmentPage(slug, page) {

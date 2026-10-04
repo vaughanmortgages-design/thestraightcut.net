@@ -8,7 +8,24 @@ const searchButton=document.querySelector('.search-toggle');const searchPanel=do
 function renderSearch(){if(!searchInput||!searchResults)return;const query=searchInput.value.trim().toLowerCase();if(!query){searchResults.innerHTML='';return}const matches=destinations.filter(([name,,keywords])=>`${name} ${keywords}`.toLowerCase().includes(query)).slice(0,6);searchResults.innerHTML=matches.length?matches.map(([name,href])=>`<a href="${href}">${name} <span aria-hidden="true">→</span></a>`).join(''):'<span>No exact match. Try “Pokémon,” “LEGO,” “travel,” “home” or “deals.”</span>'}
 searchButton?.addEventListener('click',()=>{const open=searchButton.getAttribute('aria-expanded')==='true';searchButton.setAttribute('aria-expanded',String(!open));if(searchPanel)searchPanel.hidden=open;if(!open)searchInput?.focus()});
 searchInput?.addEventListener('input',renderSearch);document.querySelector('[data-search-submit]')?.addEventListener('click',renderSearch);searchInput?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();renderSearch()}});
-document.querySelector('[data-newsletter-form]')?.addEventListener('submit',(event)=>{event.preventDefault();const form=event.currentTarget;const email=form.querySelector('input[type="email"]');const message=form.querySelector('[data-form-message]');if(!email?.value)return;if(message)message.textContent='Thanks—your email app will open to complete signup.';window.location.href=`mailto:hello@thestraightcut.net?subject=${encodeURIComponent('Join The Saturday Cut')}&body=${encodeURIComponent(`Please add ${email.value} to The Saturday Cut.`)}`});
+document.querySelector('[data-newsletter-form]')?.addEventListener('submit',async(event)=>{
+ event.preventDefault();
+ const form=event.currentTarget;
+ if(form.dataset.submitting==='true'||!form.reportValidity())return;
+ const button=form.querySelector('button[type="submit"]');
+ const message=form.querySelector('[data-form-message]');
+ form.dataset.submitting='true';button.disabled=true;button.textContent='Joining…';
+ if(message)message.textContent='';
+ try{
+  const response=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()});
+  if(!response.ok)throw new Error('Signup failed');
+  form.reset();button.textContent='Joined';
+  if(message)message.textContent='You’re on the list. Thanks for joining The Straight Cut.';
+ }catch{
+  button.disabled=false;button.textContent='Join the list';
+  if(message)message.textContent='Your signup could not be saved. Please try again.';
+ }finally{delete form.dataset.submitting;}
+});
 (function addDealOfTheDay(){
   if(document.querySelector('[data-deal-of-day]'))return;
   const hero=document.querySelector('.home-hero');

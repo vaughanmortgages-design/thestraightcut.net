@@ -24,3 +24,5 @@
 .store-nav a{white-space:nowrap}
 @media(min-width:1051px){.nav-shell{padding-top:1rem;padding-bottom:1rem}}
 @media(max-width:1050px){.store-nav{top:100%;align-items:flex-start;max-height:75vh;overflow-y:auto}.store-nav a{padding:.4rem 0}.nav-shell{position:relative}}
+
+.newsletter .newsletter-consent{display:flex;align-items:flex-start;gap:.65rem;margin-top:1rem;font:400 .85rem/1.5 var(--sans);letter-spacing:0;text-transform:none}.newsletter .newsletter-consent input{width:18px;height:18px;min-height:18px;flex:0 0 18px;padding:0;margin:.2rem 0 0;accent-color:#111}.newsletter .newsletter-honeypot[hidden]{display:none}.newsletter button:disabled{opacity:.7;cursor:default}
