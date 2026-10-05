@@ -133,3 +133,11 @@ function repairBlogLink(){
  });
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',repairBlogLink);else repairBlogLink();
+
+(function loadRetailerLogos(){
+ if(document.querySelector('script[data-tsc-retailer-logos]'))return;
+ const script=document.createElement('script');
+ script.src='/assets/retailer-logos.js';
+ script.dataset.tscRetailerLogos='';
+ document.head.append(script);
+})();
