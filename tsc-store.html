@@ -908,9 +908,13 @@
       <div class="newsletter-inner">
         <h3>New guides drop regularly.</h3>
         <p>Get notified when new products hit the store — no spam, just straight updates.</p>
-        <form class="newsletter-form" action="mailto:hello@thestraightcut.net" method="get" enctype="text/plain">
-          <input type="email" name="email" placeholder="Your email address" required />
+        <form class="newsletter-form" name="tsc-newsletter" method="POST" action="/newsletter-success.html" data-netlify="true" netlify-honeypot="bot-field" data-newsletter-form>
+          <input type="hidden" name="form-name" value="tsc-newsletter">
+          <p hidden><label>Leave empty: <input name="bot-field"></label></p>
+          <input type="email" name="email" autocomplete="email" placeholder="Your email address" required />
           <button type="submit">Join the list →</button>
+          <label style="flex-basis:100%;font-size:.8rem;line-height:1.5"><input type="checkbox" name="consent" value="yes" required> I agree to receive occasional emails from The Straight Cut. I can unsubscribe by replying to an email.</label>
+          <p data-form-message aria-live="polite" style="flex-basis:100%;font-size:.85rem"></p>
         </form>
       </div>
     </div>
