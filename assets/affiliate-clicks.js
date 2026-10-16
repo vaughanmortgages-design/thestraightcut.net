@@ -1,6 +1,8 @@
 /* Sitewide affiliate outbound-click measurement; never sends visitor personal data. */
 (function () {
   'use strict';
+  if (window.__tscAffiliateClickListener) return;
+  window.__tscAffiliateClickListener = true;
   const retailerDomains = [
     ['amazon', 'Amazon'], ['amzn.to', 'Amazon'], ['ebay', 'eBay'],
     ['temu', 'Temu'], ['benable', 'Benable'], ['dhgate', 'DHgate'],
