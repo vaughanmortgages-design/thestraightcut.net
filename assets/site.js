@@ -1,3 +1,4 @@
+(function(){if(document.querySelector('script[data-tsc-analytics-bootstrap]'))return;var script=document.createElement('script');script.src='/assets/affiliate-bootstrap.js';script.dataset.tscAnalyticsBootstrap='';document.head.appendChild(script);})();
 (function(){
   var menuButtons=document.querySelectorAll('[data-menu-btn]');
   menuButtons.forEach(function(btn){
