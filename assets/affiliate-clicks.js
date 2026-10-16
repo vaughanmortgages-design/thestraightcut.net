@@ -5,7 +5,7 @@
   window.__tscAffiliateClickListener = true;
   const retailerDomains = [
     ['amazon', 'Amazon'], ['amzn.to', 'Amazon'], ['ebay', 'eBay'],
-    ['temu', 'Temu'], ['benable', 'Benable'], ['dhgate', 'DHgate'],
+    ['temu', 'Temu'], ['benable', 'Benable'], ['dhgate', 'DHgate'], ['linkusee.com', 'DHgate'],
     ['etsy', 'Etsy'], ['gumroad', 'Gumroad'],
     ['dpbolvw.net', 'CJ Affiliate'], ['anrdoezrs.net', 'CJ Affiliate'],
     ['jdoqocy.com', 'CJ Affiliate'], ['tkqlhce.com', 'CJ Affiliate'],
