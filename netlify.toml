@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/build-storefront.mjs && node scripts/build-pets-store.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/inject-latest-deals-link.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs && node scripts/activate-upsell-tracking.mjs && node scripts/feature-books.mjs"
+  command = "node scripts/build-storefront.mjs && node scripts/build-pets-store.mjs && node scripts/activate-affiliate-shopping.mjs && node scripts/inject-hero-fix.mjs && node scripts/inject-latest-deals-link.mjs && node scripts/generate-sitemap.mjs && node scripts/refresh-catalog.mjs && node scripts/build-shop.mjs && node scripts/activate-upsell-tracking.mjs && node scripts/feature-books.mjs && node scripts/inject-commerce-analytics.mjs"
   publish = "."
 
 [functions]
@@ -38,4 +38,17 @@
   from = "/go/little-lambs-printables-gumroad"
   to = "https://straightcut.gumroad.com?utm_source=thestraightcut&utm_medium=website&utm_campaign=little_lambs_printables"
   status = 302
+  force = true
+
+# Serve the existing store page at the canonical /store address.
+[[redirects]]
+  from = "/store"
+  to = "/tsc-store.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/favicon.svg"
+  status = 301
   force = true
