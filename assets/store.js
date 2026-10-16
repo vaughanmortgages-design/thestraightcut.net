@@ -20,6 +20,7 @@ document.querySelector('[data-newsletter-form]')?.addEventListener('submit',asyn
  try{
   const response=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()});
   if(!response.ok)throw new Error('Signup failed');
+  if(typeof window.gtag==='function')window.gtag('event','newsletter_signup',{source_page:location.pathname});
   form.reset();button.textContent='Joined';
   if(message)message.textContent='You’re on the list. Thanks for joining The Straight Cut.';
  }catch{
