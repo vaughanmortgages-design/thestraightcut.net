@@ -1,3 +1,4 @@
+(function(){if(document.querySelector('script[data-tsc-analytics-bootstrap]'))return;var script=document.createElement('script');script.src='/assets/affiliate-bootstrap.js';script.dataset.tscAnalyticsBootstrap='';document.head.appendChild(script);})();
 const pageKey=(href='')=>new URL(href,location.origin).pathname.replace(/\.html$/, '').replace(/\/$/, '');
 const pageLink=(root,href)=>[...(root?.querySelectorAll('a')||[])].find(link=>pageKey(link.getAttribute('href'))===pageKey(href));
 const destinations=[
