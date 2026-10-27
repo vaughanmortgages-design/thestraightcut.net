@@ -12,7 +12,7 @@ const PARTNERS = {
   rexing: { name: 'Rexing', url: 'https://www.tkqlhce.com/click-101746656-15019509' },
   bathorium: { name: 'Bathorium', url: 'https://www.awin1.com/cread.php?awinmid=120413&awinaffid=2902393' },
   skylark: { name: 'Skylark Travel Group', url: 'https://www.awin1.com/cread.php?awinmid=106305&awinaffid=2902393' },
-  roamable: { name: 'Roamable', url: 'https://www.awin1.com/awclick.php?gid=581576&mid=118127&awinaffid=2936205&linkid=4514497&clickref=' },
+  roamable: { name: 'Roamable', url: 'https://www.awin1.com/awclick.php?gid=581576&mid=118127&awinaffid=2902393&linkid=4514497&clickref=' },
   gumroad: { name: 'The Straight Cut Shop', url: 'https://straightcut.gumroad.com' },
   temu: { name: 'Temu', url: 'https://temu.to/k/gb6nt247wyz' },
   benable: { name: 'Benable', url: 'https://benable.com/raycutter' },
